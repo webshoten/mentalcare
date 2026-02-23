@@ -49,3 +49,7 @@ Running `sst dev` starts the following simultaneously:
 - Astro dev server (frontend)
 - Local Lambda function emulation
 - Type auto-generation — watches `typedefs.ts` and updates `graphql-env.d.ts` automatically
+
+## Assisted By
+
+Development assisted by [Claude](https://claude.ai/) (Anthropic).

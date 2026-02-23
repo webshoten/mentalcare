@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "biomejs.biome",
+        "ms-vscode.vscode-typescript-next",
+        "astro-build.astro-vscode"
+    ],
+    "unwantedRecommendations": [
+        "dbaeumer.vscode-eslint"
+    ]
+}

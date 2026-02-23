@@ -1,0 +1,32 @@
+{
+  "name": "@mentalcare/web",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "biome:check": "biome check .",
+    "biome:format": "biome format . --write",
+    "biome:lint": "biome lint .",
+    "biome:fix": "biome check . --apply"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.4.2",
+    "@tanstack/react-query": "^5.90.21",
+    "astro": "^5.0.0",
+    "gql.tada": "^1.9.0",
+    "graphql": "^16.12.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "sst": "*"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.1.4",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "chokidar-cli": "^3.0.0",
+    "typescript": "^5"
+  }
+}

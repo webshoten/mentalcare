@@ -1,0 +1,19 @@
+{
+  "name": "mentalcare",
+  "version": "0.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:mcp": "bash ./scripts/chrome-mcp.sh"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.1.4",
+    "@tsconfig/node22": "^22",
+    "tsx": "^4",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "sst": "^3"
+  }
+}

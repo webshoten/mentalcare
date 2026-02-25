@@ -1,31 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { executeGraphQL, graphql } from "../graphql/client";
-import { HelloWorldIsland } from "../components/HelloWorldIsland";
-
-const HelloQuery = graphql(`
-  query Hello {
-    hello
-  }
-`);
-
-let ssrHello: string | null = null;
-let error: string | null = null;
-
-try {
-  const result = await executeGraphQL(HelloQuery);
-  ssrHello = result.hello;
-} catch (e) {
-  error = String(e);
-}
 ---
 
 <Layout title="TEST Page">
   <h1>MentalCare</h1>
-
-  {error && <p>Error: {error}</p>}
-
-  <p>SSR: {ssrHello}</p>
-
-  <HelloWorldIsland client:load />
 </Layout>

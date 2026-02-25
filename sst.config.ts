@@ -10,10 +10,21 @@ export default $config({
     };
   },
   async run() {
+    const counselorTable = new sst.aws.Dynamo("CounselorTable", {
+      fields: { id: "string" },
+      primaryIndex: { hashKey: "id" },
+    });
+
     const api = new sst.aws.ApiGatewayV2("MyApi");
 
-    api.route("POST /graphql", "packages/functions/src/api.handler");
-    api.route("GET /graphql", "packages/functions/src/api.handler");
+    api.route("POST /graphql", {
+      handler: "packages/functions/src/api.handler",
+      link: [counselorTable],
+    });
+    api.route("GET /graphql", {
+      handler: "packages/functions/src/api.handler",
+      link: [counselorTable],
+    });
 
     if ($dev) {
       new sst.x.DevCommand("GqlTadaWatch", {

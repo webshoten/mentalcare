@@ -6,7 +6,8 @@
   ],
   "scripts": {
     "dev:mcp": "bash ./scripts/chrome-mcp.sh",
-    "gen": "tsx packages/functions/src/generate-schema.ts && gql.tada generate-output --tsconfig packages/web/tsconfig.json"
+    "gen": "tsx packages/functions/src/generate-schema.ts && gql.tada generate-output --tsconfig packages/web/tsconfig.json",
+    "seed": "sst shell tsx packages/scripts/seed.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.4",

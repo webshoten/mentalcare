@@ -1,12 +1,12 @@
-import { Example } from "@mentalcare/core/example";
 import { createSchema } from "graphql-yoga";
+import { counselorResolvers } from "./counselor/resolver";
 import { typeDefs } from "./typedefs";
 
 export const schema = createSchema({
   typeDefs,
   resolvers: {
     Query: {
-      hello: () => Example.hello(),
+      ...counselorResolvers.Query,
     },
   },
 });

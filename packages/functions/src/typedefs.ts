@@ -1,5 +1,25 @@
 export const typeDefs = /* GraphQL */ `
+
+  # カウンセラーの対応可能状態
+  enum CounselorAvailability {
+    AVAILABLE   # 今すぐ可
+    SOON        # 15分後〜
+    LATER       # 30分後〜
+    OFFLINE     # オフライン（バブル非表示）
+  }
+
+  type Counselor {
+    id: ID!
+    name: String!
+    photoUrl: String
+    availability: CounselorAvailability!
+    availableAt: String   # SOON / LATER の場合、対応開始予定時刻（ISO8601）
+    rating: Float         # 平均評価
+    sessionCount: Int!    # 累計セッション数
+  }
+
   type Query {
-    hello: String!
+    # バブル画面用：AVAILABLE / SOON / LATER のカウンセラー一覧
+    availableCounselors: [Counselor!]!
   }
 `;

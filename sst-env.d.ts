@@ -6,6 +6,10 @@
 
 declare module "sst" {
   export interface Resource {
+    "CounselorTable": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
     "MyApi": {
       "type": "sst.aws.ApiGatewayV2"
       "url": string

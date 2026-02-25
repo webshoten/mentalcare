@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { CounselorList } from '../components/counselor/CounselorList';
+---
+
+<Layout title="今すぐ話せるカウンセラー">
+  <h1 style="font-size: 22px; font-weight: 700; margin-bottom: 24px;">
+    今すぐ話せるカウンセラー
+  </h1>
+  <CounselorList client:load />
+</Layout>

@@ -3,7 +3,12 @@
 
 export type introspection_types = {
     'Boolean': unknown;
-    'Query': { kind: 'OBJECT'; name: 'Query'; fields: { 'hello': { name: 'hello'; type: { kind: 'NON_NULL'; name: never; ofType: { kind: 'SCALAR'; name: 'String'; ofType: null; }; } }; }; };
+    'Counselor': { kind: 'OBJECT'; name: 'Counselor'; fields: { 'availability': { name: 'availability'; type: { kind: 'NON_NULL'; name: never; ofType: { kind: 'ENUM'; name: 'CounselorAvailability'; ofType: null; }; } }; 'availableAt': { name: 'availableAt'; type: { kind: 'SCALAR'; name: 'String'; ofType: null; } }; 'id': { name: 'id'; type: { kind: 'NON_NULL'; name: never; ofType: { kind: 'SCALAR'; name: 'ID'; ofType: null; }; } }; 'name': { name: 'name'; type: { kind: 'NON_NULL'; name: never; ofType: { kind: 'SCALAR'; name: 'String'; ofType: null; }; } }; 'photoUrl': { name: 'photoUrl'; type: { kind: 'SCALAR'; name: 'String'; ofType: null; } }; 'rating': { name: 'rating'; type: { kind: 'SCALAR'; name: 'Float'; ofType: null; } }; 'sessionCount': { name: 'sessionCount'; type: { kind: 'NON_NULL'; name: never; ofType: { kind: 'SCALAR'; name: 'Int'; ofType: null; }; } }; }; };
+    'CounselorAvailability': { name: 'CounselorAvailability'; enumValues: 'AVAILABLE' | 'SOON' | 'LATER' | 'OFFLINE'; };
+    'Float': unknown;
+    'ID': unknown;
+    'Int': unknown;
+    'Query': { kind: 'OBJECT'; name: 'Query'; fields: { 'availableCounselors': { name: 'availableCounselors'; type: { kind: 'NON_NULL'; name: never; ofType: { kind: 'LIST'; name: never; ofType: { kind: 'NON_NULL'; name: never; ofType: { kind: 'OBJECT'; name: 'Counselor'; ofType: null; }; }; }; } }; }; };
     'String': unknown;
 };
 

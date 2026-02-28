@@ -7,37 +7,18 @@
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/sst",
-            "runtimeArgs": ["dev"],
+            "runtimeArgs": [
+                "dev"
+            ],
             "env": {
-                "ENABLE_MCP_DEVTOOLS": "true"
+                "ENABLE_MCP_DEVTOOLS": "true",
+                "NODE_OPTIONS": "--inspect=0"
             },
             "console": "integratedTerminal",
-            "skipFiles": ["<node_internals>/**"]
+            "autoAttachChildProcesses": true,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
         },
-
-        // ─── Astro ─────────────────────────────────────────────
-        {
-            "name": "Astro: dev",
-            "type": "node-terminal",
-            "request": "launch",
-            "command": "npm run dev",
-            "cwd": "${workspaceFolder}/packages/web",
-            "skipFiles": ["<node_internals>/**"],
-            "serverReadyAction": {
-                "pattern": "Local.+(https?://.+)",
-                "uriFormat": "%s",
-                "action": "debugWithChrome"
-            }
-        },
-
-        // ─── Attach ────────────────────────────────────────────
-        {
-            "name": "Attach to Node Process",
-            "type": "node",
-            "request": "attach",
-            "port": 9229,
-            "restart": true,
-            "skipFiles": ["<node_internals>/**"]
-        }
     ]
 }

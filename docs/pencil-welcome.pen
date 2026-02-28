@@ -5475,1155 +5475,17 @@
       ]
     },
     {
-      "type": "text",
-      "id": "MUz5r",
-      "x": 283,
-      "y": -2871,
-      "name": "Start here",
-      "fill": "#ff8303ff",
-      "content": "Start Here",
-      "lineHeight": 1.399999976158142,
-      "fontFamily": "Funnel Display",
-      "fontSize": 320,
-      "fontWeight": "500",
-      "letterSpacing": -4
-    },
-    {
-      "type": "text",
-      "id": "ifWF1",
-      "x": 1.1368683772161603e-13,
-      "y": -2216,
-      "name": "Step 2",
-      "fill": "#ff8303ff",
-      "textGrowth": "fixed-width",
-      "width": 845,
-      "content": "Step 1: Basics",
-      "lineHeight": 1.399999976158142,
-      "fontFamily": "Funnel Display",
-      "fontSize": 100,
-      "fontWeight": "600"
-    },
-    {
-      "type": "prompt",
-      "id": "2wZ9Y",
-      "x": 1909,
-      "y": -1990,
-      "model": "cursor-composer",
-      "width": 582,
-      "height": 219,
-      "content": "Add 3 more rows to the Step 2 Frame with some funny rover names."
-    },
-    {
-      "type": "text",
-      "id": "tTKjr",
-      "x": 1909,
-      "y": -2216,
-      "name": "Step 3",
-      "fill": "#ff8303ff",
-      "content": "Step 2: Vibe design",
-      "lineHeight": 1.399999976158142,
-      "fontFamily": "Funnel Display",
-      "fontSize": 100,
-      "fontWeight": "600"
-    },
-    {
-      "type": "prompt",
-      "id": "zHxSZ",
-      "x": 1.1368683772161603e-13,
-      "y": -1990,
-      "model": "cursor-composer",
-      "width": 361,
-      "height": 219,
-      "content": "Turn the \"Step 1 Frame\" into dark mode."
-    },
-    {
-      "type": "text",
-      "id": "tU9Hf",
-      "x": 382,
-      "y": -1870,
-      "name": "Step 2",
-      "fill": "#959595ff",
-      "content": "← Click \"Run\" here",
-      "lineHeight": 1.399999976158142,
-      "fontFamily": "Inter",
-      "fontSize": 100,
-      "fontWeight": "600"
-    },
-    {
-      "type": "text",
-      "id": "mHHN1",
-      "x": 2513,
-      "y": -1869,
-      "name": "Step 2",
-      "fill": "#ff8303ff",
-      "content": "←",
-      "lineHeight": 1.399999976158142,
-      "fontFamily": "Inter",
-      "fontSize": 100,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
-      "id": "CzlXB",
-      "x": 3747,
-      "y": -1531,
-      "name": "Step 3 Frame",
-      "theme": {
-        "Mode": "Dark"
-      },
-      "clip": true,
-      "width": 1440,
-      "height": 900,
-      "fill": "$--background"
-    },
-    {
-      "type": "prompt",
-      "id": "fS3BI",
-      "x": 3747,
-      "y": -1990,
-      "model": "cursor-composer",
-      "width": 1005,
-      "height": 219,
-      "content": "Design a dashboard in the \"Step 3 Frame\" for a rover management platform using the components\n- add a sidebar for navigation\n- add rover stats and table with available rovers for rent in the content body"
-    },
-    {
-      "type": "text",
-      "id": "5jTfc",
-      "x": 3747,
-      "y": -2216,
-      "name": "Step 4",
-      "fill": "#ff8303ff",
-      "content": "Step 3: Pencil it out!",
-      "lineHeight": 1.399999976158142,
-      "fontFamily": "Funnel Display",
-      "fontSize": 100,
-      "fontWeight": "600"
-    },
-    {
-      "type": "prompt",
-      "id": "e51uh",
-      "x": 5668,
-      "y": -1990,
-      "model": "claude-4.5-sonnet",
-      "width": 1005,
-      "height": 229,
-      "content": "Setup and create a NextJS project with all necessary configuration files\n- use React, Typescript and Tailwind CSS v4\n- replicate \"Step 3 Frame\" design in the code"
-    },
-    {
-      "type": "text",
-      "id": "4csXI",
-      "x": 5668,
-      "y": -2216,
-      "name": "Step 5",
-      "fill": "#ff8303ff",
-      "content": "Final Step: Generate React code",
-      "lineHeight": 1.399999976158142,
-      "fontFamily": "Funnel Display",
-      "fontSize": 100,
-      "fontWeight": "600"
-    },
-    {
-      "type": "frame",
-      "id": "cOnQP",
-      "x": 0,
-      "y": -1565,
-      "name": "Step 1 Frame",
-      "theme": {
-        "Mode": "Light"
-      },
-      "clip": true,
-      "width": 1440,
-      "height": 900,
-      "fill": "$--background",
-      "children": [
-        {
-          "id": "Ko6AF",
-          "type": "ref",
-          "ref": "d5ZTS",
-          "x": 0,
-          "y": 0,
-          "descendants": {
-            "NvL81": {
-              "children": [
-                {
-                  "id": "eGOU8",
-                  "type": "ref",
-                  "ref": "h12kK"
-                },
-                {
-                  "id": "Ct09n",
-                  "type": "ref",
-                  "ref": "dOLzc"
-                },
-                {
-                  "id": "oUCen",
-                  "type": "ref",
-                  "ref": "X6nwq"
-                },
-                {
-                  "id": "NMbml",
-                  "type": "ref",
-                  "ref": "X6nwq"
-                },
-                {
-                  "id": "2u0Td",
-                  "type": "ref",
-                  "ref": "X6nwq"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "type": "frame",
-          "id": "jV147",
-          "name": "Content",
-          "clip": true,
-          "width": "fill_container",
-          "height": 900,
-          "layout": "vertical",
-          "gap": 24,
-          "padding": 24,
-          "children": [
-            {
-              "id": "V2SYW",
-              "type": "ref",
-              "ref": "Kbr4h",
-              "x": 24,
-              "y": 24,
-              "name": "Tabs",
-              "width": "fit_content",
-              "height": 40,
-              "flipX": false,
-              "flipY": false,
-              "children": [
-                {
-                  "id": "EKcSr",
-                  "type": "ref",
-                  "ref": "KbyBJ",
-                  "x": 4,
-                  "y": 4,
-                  "descendants": {
-                    "248ys": {
-                      "x": 12,
-                      "y": 6,
-                      "content": "Integrations"
-                    }
-                  }
-                },
-                {
-                  "id": "faJgQ",
-                  "type": "ref",
-                  "ref": "BdBJJ",
-                  "x": 116,
-                  "y": 4,
-                  "descendants": {
-                    "248ys": {
-                      "content": "Billing"
-                    }
-                  }
-                },
-                {
-                  "id": "B6TiH",
-                  "type": "ref",
-                  "ref": "BdBJJ",
-                  "x": 189,
-                  "y": 4,
-                  "descendants": {
-                    "248ys": {
-                      "content": "Profile"
-                    }
-                  }
-                },
-                {
-                  "id": "dGLeT",
-                  "type": "ref",
-                  "ref": "BdBJJ",
-                  "x": 264,
-                  "y": 4,
-                  "descendants": {
-                    "248ys": {
-                      "content": "Advanced"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "id": "p1r72",
-              "type": "ref",
-              "ref": "nIj3a",
-              "x": 24,
-              "y": 88,
-              "width": "fill_container"
-            },
-            {
-              "id": "GqMoS",
-              "type": "ref",
-              "ref": "yLiVX",
-              "x": 24,
-              "y": 196,
-              "width": "fill_container",
-              "descendants": {
-                "iC3n0": {
-                  "children": [
-                    {
-                      "id": "VZdSB",
-                      "type": "ref",
-                      "ref": "T73Cd",
-                      "children": [
-                        {
-                          "id": "AG4YD",
-                          "type": "ref",
-                          "ref": "tbrR4"
-                        },
-                        {
-                          "id": "GkMsj",
-                          "type": "ref",
-                          "ref": "tbrR4"
-                        },
-                        {
-                          "id": "MTOr5",
-                          "type": "ref",
-                          "ref": "tbrR4"
-                        },
-                        {
-                          "id": "tapg1",
-                          "type": "ref",
-                          "ref": "tbrR4"
-                        },
-                        {
-                          "id": "qIKqw",
-                          "type": "ref",
-                          "ref": "tbrR4"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "oLoRH",
-                      "type": "ref",
-                      "ref": "T73Cd",
-                      "children": [
-                        {
-                          "id": "9tiSi",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "a1KTQ",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "QOEGC",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "U1Vgi",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "lOxqV",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "QtacS",
-                      "type": "ref",
-                      "ref": "T73Cd",
-                      "children": [
-                        {
-                          "id": "uqf2F",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "DUztJ",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "fuzdv",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "btWWS",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "FwWTQ",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "vrbkM",
-                      "type": "ref",
-                      "ref": "T73Cd",
-                      "children": [
-                        {
-                          "id": "dXw5w",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "62vsl",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "wW3Ky",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "YU4v3",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "L8MeZ",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "9mwBt",
-                      "type": "ref",
-                      "ref": "T73Cd",
-                      "children": [
-                        {
-                          "id": "gbamQ",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "EPpJM",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "tNRTe",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "1InjP",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        },
-                        {
-                          "id": "mhKru",
-                          "type": "ref",
-                          "ref": "uKYIj"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "DynJU",
-      "x": 5668,
-      "y": -1531,
-      "name": "fyi",
-      "width": 1440,
-      "height": 128,
-      "fill": "#6b6b6bff",
-      "stroke": {
-        "align": "inside",
-        "thickness": 1
-      },
-      "layout": "vertical",
-      "gap": 24,
-      "padding": 40,
-      "children": [
-        {
-          "type": "text",
-          "id": "DNjZZ",
-          "name": "Connect MCP server",
-          "fill": "#ffffffff",
-          "content": "You might need to save this file to your workspace/project.",
-          "lineHeight": 1.399999976158142,
-          "fontFamily": "Inter",
-          "fontSize": 36,
-          "fontWeight": "normal"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "id": "pQr0G",
-      "x": 40.000015258789176,
-      "y": -508,
-      "name": "For best results select Claude Sonnet 4.5 as a model",
-      "fill": "fff",
-      "content": "FYI: When you run the prompt, you will have to allow the MCP calls.",
-      "lineHeight": 1.399999976158142,
-      "fontFamily": "Inter",
-      "fontSize": 34,
-      "fontWeight": "normal"
-    },
-    {
-      "type": "frame",
-      "id": "CyTSW",
-      "x": 0.000015258789176186838,
-      "y": -548,
-      "name": "fyi",
-      "width": 1440,
-      "height": 128,
-      "fill": "#6b6b6bff",
-      "stroke": {
-        "align": "inside",
-        "thickness": 1
-      },
-      "layout": "vertical",
-      "gap": 24,
-      "padding": 40,
-      "children": [
-        {
-          "type": "text",
-          "id": "LWde7",
-          "name": "Connect MCP server",
-          "fill": "#ffffffff",
-          "content": "You might need to approve the MCP calls.",
-          "lineHeight": 1.399999976158142,
-          "fontFamily": "Inter",
-          "fontSize": 36,
-          "fontWeight": "normal"
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "tlPHu",
-      "x": 1909,
-      "y": -1665,
-      "name": "Step 2 Frame",
-      "theme": {
-        "Mode": "Dark"
-      },
-      "clip": true,
-      "width": 1440,
-      "layout": "vertical",
-      "children": [
-        {
-          "id": "XHg17",
-          "type": "ref",
-          "ref": "pPOgy",
-          "width": "fill_container",
-          "height": "fit_content",
-          "name": "table",
-          "children": [
-            {
-              "id": "RQ8PM",
-              "type": "ref",
-              "ref": "T73Cd",
-              "width": "fill_container",
-              "name": "headerRow",
-              "children": [
-                {
-                  "id": "NPyv3",
-                  "type": "ref",
-                  "ref": "tbrR4",
-                  "width": 160,
-                  "name": "statusHeader",
-                  "descendants": {
-                    "XGc4z": {
-                      "content": "Status"
-                    }
-                  }
-                },
-                {
-                  "id": "9TkWj",
-                  "type": "ref",
-                  "ref": "tbrR4",
-                  "width": 240,
-                  "name": "nameHeader",
-                  "descendants": {
-                    "XGc4z": {
-                      "content": "Name"
-                    }
-                  }
-                },
-                {
-                  "id": "Iv9hb",
-                  "type": "ref",
-                  "ref": "tbrR4",
-                  "width": "fill_container",
-                  "name": "descHeader",
-                  "descendants": {
-                    "XGc4z": {
-                      "content": "Description"
-                    }
-                  }
-                },
-                {
-                  "id": "zJ1us",
-                  "type": "ref",
-                  "ref": "tbrR4",
-                  "width": 240,
-                  "name": "dateHeader",
-                  "descendants": {
-                    "XGc4z": {
-                      "content": "Return date"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "id": "M873F",
-              "type": "ref",
-              "ref": "T73Cd",
-              "width": "fill_container",
-              "name": "row1",
-              "children": [
-                {
-                  "id": "Kk3Ys",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 160,
-                  "name": "cell1_1",
-                  "children": [
-                    {
-                      "id": "j3zHI",
-                      "type": "ref",
-                      "ref": "7KC5U",
-                      "name": "label1",
-                      "descendants": {
-                        "AWwyf": {
-                          "content": "New"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "id": "ahaRl",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 240,
-                  "name": "cell1_2",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "nfryI",
-                      "name": "text1_2",
-                      "fill": "$--foreground",
-                      "content": "Aurora Scout",
-                      "fontFamily": "$--font-secondary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "eVibu",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": "fill_container",
-                  "name": "cell1_3",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "XZh8s",
-                      "name": "text1_3",
-                      "fill": "$--foreground",
-                      "content": "Lightweight rover ideal for high-speed reconnaissance.",
-                      "fontFamily": "$--font-secondary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "KLn3j",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 240,
-                  "name": "cell1_4",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "Pl4HM",
-                      "name": "text1_4",
-                      "fill": "$--foreground",
-                      "content": "Sol 543",
-                      "fontFamily": "$--font-secondary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": "isAPY",
-              "type": "ref",
-              "ref": "T73Cd",
-              "width": "fill_container",
-              "name": "row2",
-              "children": [
-                {
-                  "id": "h0Kjy",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 160,
-                  "name": "cell2_1",
-                  "children": [
-                    {
-                      "id": "9vKOM",
-                      "type": "ref",
-                      "ref": "L8Rgv",
-                      "name": "label2",
-                      "descendants": {
-                        "glumS": {
-                          "content": "Active"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "id": "9KrrG",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 240,
-                  "name": "cell2_2",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "OkJXU",
-                      "name": "text2_2",
-                      "fill": "$--foreground",
-                      "content": "Curiosity-X",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "FeOeo",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": "fill_container",
-                  "name": "cell2_3",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "wZrIk",
-                      "name": "text2_3",
-                      "fill": "$--foreground",
-                      "content": "Reliable all-rounder for exploration and sample collection.",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "S2VcE",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 240,
-                  "name": "cell2_4",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "4i51H",
-                      "name": "text2_4",
-                      "fill": "$--foreground",
-                      "content": "Sol 527",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": "RCtI4",
-              "type": "ref",
-              "ref": "T73Cd",
-              "width": "fill_container",
-              "name": "row3",
-              "children": [
-                {
-                  "id": "sEsWm",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 160,
-                  "name": "cell3_1",
-                  "children": [
-                    {
-                      "id": "kF2XZ",
-                      "type": "ref",
-                      "ref": "L8Rgv",
-                      "name": "label3",
-                      "descendants": {
-                        "glumS": {
-                          "content": "Active"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "id": "T2Ej1",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 240,
-                  "name": "cell3_2",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "Sk19q",
-                      "name": "text3_2",
-                      "fill": "$--foreground",
-                      "content": "Pathfinder Neo",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "w8nnC",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": "fill_container",
-                  "name": "cell3_3",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "QTOr3",
-                      "name": "text3_3",
-                      "fill": "$--foreground",
-                      "content": "Compact model for short-range geological missions.",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "Gm45A",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 240,
-                  "name": "cell3_4",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "ORrwr",
-                      "name": "text3_4",
-                      "fill": "$--foreground",
-                      "content": "Sol 519",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": "SD5v5",
-              "type": "ref",
-              "ref": "T73Cd",
-              "width": "fill_container",
-              "name": "row4",
-              "children": [
-                {
-                  "id": "QBNsU",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 160,
-                  "name": "cell4_1",
-                  "children": [
-                    {
-                      "id": "Nm4Er",
-                      "type": "ref",
-                      "ref": "it00G",
-                      "name": "label4",
-                      "descendants": {
-                        "izLyj": {
-                          "content": "Maintenance"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "id": "PBllO",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 240,
-                  "name": "cell4_2",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "AJXcm",
-                      "name": "text4_2",
-                      "fill": "$--foreground",
-                      "content": "Spirit-9",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "aStAb",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": "fill_container",
-                  "name": "cell4_3",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "V8SMQ",
-                      "name": "text4_3",
-                      "fill": "$--foreground",
-                      "content": "Completed mapping of Sector D-12 successfully.",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "5MuoQ",
-                  "type": "ref",
-                  "ref": "uKYIj",
-                  "width": 240,
-                  "name": "cell4_4",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "Vz5jd",
-                      "name": "text4_4",
-                      "fill": "$--foreground",
-                      "content": "—",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "sbChi",
-      "x": 0,
-      "y": -35,
-      "name": "welcome ↓",
-      "clip": true,
-      "width": 1578,
-      "height": 1733,
-      "fill": "#141414ff",
-      "cornerRadius": 16,
-      "stroke": {
-        "align": "inside",
-        "thickness": 0.75
-      },
-      "layout": "none",
-      "children": [
-        {
-          "type": "text",
-          "id": "moD8f",
-          "x": 60,
-          "y": 546,
-          "name": "Look around and see what’s possible, or clear the canvas and start creating.",
-          "fill": "#ffffffff",
-          "textGrowth": "fixed-width",
-          "width": 630,
-          "content": "Look around and see what’s possible, or clear the canvas and start creating.",
-          "lineHeight": 1.4583333333333333,
-          "textAlignVertical": "bottom",
-          "fontFamily": "Rubik",
-          "fontSize": 48,
-          "fontWeight": "normal",
-          "letterSpacing": -1.44
-        },
-        {
-          "type": "text",
-          "id": "vZvTE",
-          "x": 60,
-          "y": 60,
-          "name": "Welcome to Pencil!",
-          "fill": "#ffffffff",
-          "textGrowth": "fixed-width",
-          "width": 630,
-          "content": "Welcome to Pencil!",
-          "lineHeight": 1.100000023841858,
-          "fontFamily": "Funnel Display",
-          "fontSize": 120,
-          "fontWeight": "500",
-          "letterSpacing": -3.5999999999999996
-        },
-        {
-          "type": "frame",
-          "id": "kjpSw",
-          "x": 1170,
-          "y": 81,
-          "name": "logotype",
-          "clip": true,
-          "width": 325.4095458984375,
-          "height": 64,
-          "stroke": {
-            "align": "inside",
-            "thickness": 0.5633822083473206
-          },
-          "layout": "none",
-          "children": [
-            {
-              "type": "path",
-              "id": "E95mx",
-              "x": 0.0004119873046875,
-              "y": 0,
-              "name": "type",
-              "geometry": "M135.58105 30.40039c8.35553 0.00001 15.51127 1.59981 21.4668 4.7998 6.04434 3.19999 10.66626 7.77792 13.86621 13.7334 3.19997 5.95552 4.79979 13.06641 4.79981 21.33301l0 7.4668-60.66602 0c0.88889 5.95543 3.15547 10.48852 6.79981 13.59961 3.64444 3.11111 8.44484 4.66699 14.40039 4.66699 4.71086-0.00005 8.44375-0.80048 11.19922-2.40039 2.75555-1.6 4.71164-4.04412 5.86718-7.33301l22.13282 0c-1.77778 8.53332-6.0882 15.24491-12.93262 20.13379-6.84445 4.8-15.55602 7.19922-26.13379 7.19922-8.62217-0.00002-16.13323-1.68865-22.5332-5.06641-6.39995-3.46665-11.33316-8.31103-14.79981-14.5332-3.46666-6.3111-5.20019-13.73328-5.20019-22.2666 0-8.53327 1.68868-15.86669 5.0664-22 3.37778-6.22222 8.17817-10.97771 14.40039-14.2666 6.3111-3.37775 13.73329-5.06641 22.2666-5.06641z m0.13282 17.46582c-5.42202 0.00007-9.86644 1.28948-13.33301 3.86719-3.37766 2.57773-5.64424 6.35542-6.79981 11.33301l38.9336 0c-0.71114-5.06655-2.66724-8.84416-5.86719-11.33301-3.2-2.57773-7.51143-3.86719-12.93359-3.86719z m194.6875-17.46582c10.57779 0 19.28933 2.66667 26.13379 8 6.84433 5.33332 11.15582 12.66675 12.93359 22l-22.2666 0c-1.15552-3.46651-3.15576-6.13335-6-8-2.84445-1.86667-6.44522-2.80078-10.80078-2.80078-5.95536 0.0001-10.75507 1.95618-14.39942 5.86719-3.55554 3.91111-5.333 9.4221-5.333 16.5332 0 7.11094 1.82156 12.62211 5.46582 16.5332 3.64434 3.91101 8.40014 5.86709 14.2666 5.86719 9.42206 0 15.15567-4.00028 17.20019-12l22.2666 0c-1.60003 9.77741-5.82186 17.4216-12.66601 22.93262-6.84445 5.51111-15.77857 8.2666-26.80078 8.2666-8.35538-0.00006-15.689-1.68869-22-5.06641-6.22202-3.46663-11.11054-8.31115-14.66602-14.5332-3.46667-6.22222-5.20019-13.55556-5.20019-22 0-8.44443 1.73352-15.77778 5.20019-22 3.46665-6.22212 8.35501-11.02264 14.66602-14.40039 6.311-3.4666 13.64462-5.19916 22-5.19922z m-279.06836-26.40039c12.17778 0 21.64484 3.06686 28.40039 9.2002 6.75546 6.13332 10.13281 14.5336 10.13281 25.20019-0.00008 10.57747-3.3775 18.97709-10.13281 25.19922-6.75555 6.13333-16.22261 9.2002-28.40039 9.2002l-28.79981 0 0 39.20019-22.5332 0 0-108 51.33301 0z m-28.79981 49.2002l27.4668-0.00001c5.6 0 9.86647-1.28941 12.7998-3.86718 2.93321-2.66659 4.40031-6.31061 4.40039-10.93262 0-4.71111-1.46706-8.35581-4.40038-10.93359-2.93333-2.57775-7.19983-3.86719-12.79981-3.86719l-27.4668 0 0 29.60058z m218.47168-22.667c11.11107 0 19.68897 3.06692 25.7334 9.2002 6.13333 6.04444 9.2002 14.17817 9.2002 24.40039l0 47.86621-22.13282 0 0-43.7334c-0.00001-5.68327-1.50181-10.03202-4.50488-13.0459l-0.5918-0.57422c-3.10269-2.9197-7.58195-4.37988-13.4375-4.37988-6.04425 0.00006-10.66627 1.55595-13.86621 4.66699-3.11103 3.02221-4.66697 7.46643-4.66699 13.33301l0 43.7334-22.13281 0-0.00098-63.5-10.60449 0 0-16.5 22.07227 0 0 13.06641 5.59961 0c3.11106-4.6221 7.02239-8.17716 11.73339-10.66602 4.71105-2.57774 10.57753-3.86715 17.59961-3.86719z m160.66114 81.4668l-22 0 0-79 22 0 0 79z m40.98925 0l-22.13379 0 0-112 22.13379 0 0 112z m-40.98925-95.5l-22 0 0-16.5 22 0 0 16.5z",
-              "fill": "#ffffffff",
-              "width": 249.3841094970703,
-              "height": 64
-            },
-            {
-              "type": "frame",
-              "id": "LtSu9",
-              "x": 274.93011474609375,
-              "y": 0,
-              "name": "mark-mono-v1",
-              "width": 50.47904586791992,
-              "height": 63.09880828857422,
-              "stroke": {
-                "align": "inside",
-                "thickness": 0.22535288333892822
-              },
-              "layout": "none",
-              "children": [
-                {
-                  "type": "path",
-                  "id": "g9jTd",
-                  "x": 12.61976146697998,
-                  "y": 50.3802375793457,
-                  "name": "graphite",
-                  "geometry": "M0 0l113.13708 0-56.56854 56.56854-56.56854-56.56854z",
-                  "fill": "#ffffffff",
-                  "width": 25.23952293395996,
-                  "height": 12.61976146697998,
-                  "stroke": {
-                    "align": "inside",
-                    "thickness": 0.22535288333892822
-                  }
-                },
-                {
-                  "type": "rectangle",
-                  "id": "zmJqu",
-                  "x": 0,
-                  "y": 0,
-                  "name": "wood",
-                  "fill": "#ffffffff",
-                  "width": 50.47904586791992,
-                  "height": 37.859283447265625,
-                  "stroke": {
-                    "align": "outside",
-                    "thickness": 0.22535288333892822
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "text",
-          "id": "vCuCj",
-          "x": 60,
-          "y": 1014,
-          "name": "Look around and see what’s possible, or clear the canvas and start creating.",
-          "fill": "#ffffffff",
-          "textGrowth": "fixed-width",
-          "width": 1469,
-          "content": "Pro tips:\n\n- Explore \"Design Kits and Style Guides\" on the top\n- Copy and paste from Figma (bitmaps are ommited)\n- In agent chat, ask to change \"selected frame\"\n- Variables let you define reusable primitives like colors\n- Components are in the top right corner\n- Slots let you define how to components are assembled together",
-          "lineHeight": 1.4583333333333333,
-          "textAlignVertical": "bottom",
-          "fontFamily": "Rubik",
-          "fontSize": 48,
-          "fontWeight": "normal",
-          "letterSpacing": -1.44
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "id": "moMxv",
-      "x": -50,
-      "y": -2841,
-      "fill": "#ff8303ff",
-      "content": "↓",
-      "fontFamily": "Inter",
-      "fontSize": 320,
-      "fontWeight": "normal"
-    },
-    {
-      "type": "text",
-      "id": "y1EI4",
-      "x": 4772,
-      "y": -1869,
-      "name": "Step 2",
-      "fill": "#ff8303ff",
-      "content": "←",
-      "lineHeight": 1.399999976158142,
-      "fontFamily": "Inter",
-      "fontSize": 100,
-      "fontWeight": "600"
-    },
-    {
-      "type": "text",
-      "id": "9184N",
-      "x": 6688,
-      "y": -1873,
-      "name": "Step 2",
-      "fill": "#ff8303ff",
-      "content": "←",
-      "lineHeight": 1.399999976158142,
-      "fontFamily": "Inter",
-      "fontSize": 100,
-      "fontWeight": "600"
-    },
-    {
-      "type": "frame",
-      "id": "h9w10",
+      "id": "bVVtO",
       "x": 0,
       "y": 0,
-      "name": "カウンセラー一覧",
+      "name": "カウンセリング一覧",
       "width": 1440,
+      "height": 900,
       "fill": "$--background",
       "children": [
         {
-          "id": "Ue8Bm",
+          "id": "oeLq8",
           "type": "ref",
           "ref": "d5ZTS",
           "height": "fill_container",
@@ -6635,7 +5497,7 @@
             "NvL81": {
               "children": [
                 {
-                  "id": "ApWMl",
+                  "id": "SZ95G",
                   "type": "ref",
                   "ref": "h12kK",
                   "name": "secTitle",
@@ -6646,7 +5508,7 @@
                   }
                 },
                 {
-                  "id": "n9Keq",
+                  "id": "uyk55",
                   "type": "ref",
                   "ref": "X6nwq",
                   "name": "navHome",
@@ -6660,24 +5522,24 @@
                   }
                 },
                 {
-                  "id": "KRJDQ",
+                  "id": "vProN",
                   "type": "ref",
                   "ref": "dOLzc",
-                  "name": "navCounselors",
+                  "name": "navCounsel",
                   "descendants": {
                     "xGT5g": {
                       "iconFontName": "person"
                     },
                     "TXca3": {
-                      "content": "カウンセラー"
+                      "content": "カウンセラー一覧"
                     }
                   }
                 },
                 {
-                  "id": "Ucs7U",
+                  "id": "IiBce",
                   "type": "ref",
                   "ref": "X6nwq",
-                  "name": "navBookings",
+                  "name": "navBooking",
                   "descendants": {
                     "xGT5g": {
                       "iconFontName": "calendar_today"
@@ -6688,10 +5550,24 @@
                   }
                 },
                 {
-                  "id": "THqlm",
+                  "id": "EJmHM",
                   "type": "ref",
                   "ref": "X6nwq",
-                  "name": "navSettings",
+                  "name": "navMsg",
+                  "descendants": {
+                    "xGT5g": {
+                      "iconFontName": "mail"
+                    },
+                    "TXca3": {
+                      "content": "メッセージ"
+                    }
+                  }
+                },
+                {
+                  "id": "4Otuf",
+                  "type": "ref",
+                  "ref": "X6nwq",
+                  "name": "navSetting",
                   "descendants": {
                     "xGT5g": {
                       "iconFontName": "settings"
@@ -6704,16 +5580,16 @@
               ]
             },
             "uiUgV": {
-              "content": "管理者 山田"
+              "content": "山田 太郎"
             },
             "eUcmA": {
-              "content": "admin@mentalcare.jp"
+              "content": "yamada@mentalcare.jp"
             }
           }
         },
         {
           "type": "frame",
-          "id": "jeRy5",
+          "id": "QODVG",
           "name": "MainContent",
           "width": "fill_container",
           "height": "fill_container",
@@ -6723,33 +5599,37 @@
           "children": [
             {
               "type": "frame",
-              "id": "4LS7j",
-              "name": "pageHeader",
+              "id": "Odvau",
+              "name": "PageHeader",
               "width": "fill_container",
               "justifyContent": "space_between",
               "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "Oggq9",
-                  "name": "titleGroup",
+                  "id": "3sTpR",
+                  "name": "TitleGroup",
                   "layout": "vertical",
                   "gap": 4,
                   "children": [
                     {
                       "type": "text",
-                      "id": "pavX9",
+                      "id": "zHaWY",
+                      "name": "titleText",
                       "fill": "$--foreground",
                       "content": "カウンセラー一覧",
+                      "lineHeight": 1.3,
                       "fontFamily": "$--font-primary",
-                      "fontSize": 24,
+                      "fontSize": 28,
                       "fontWeight": "700"
                     },
                     {
                       "type": "text",
-                      "id": "a0KpP",
+                      "id": "ODg0c",
+                      "name": "subtitleText",
                       "fill": "$--muted-foreground",
-                      "content": "登録済みのカウンセラーを管理します",
+                      "content": "専門のカウンセラーから選んで予約できます",
+                      "lineHeight": 1.5,
                       "fontFamily": "$--font-secondary",
                       "fontSize": 14,
                       "fontWeight": "normal"
@@ -6757,7 +5637,7 @@
                   ]
                 },
                 {
-                  "id": "iksc7",
+                  "id": "bIHWB",
                   "type": "ref",
                   "ref": "ZETEA",
                   "name": "addBtn",
@@ -6766,7 +5646,7 @@
                       "enabled": false
                     },
                     "q5Hn5": {
-                      "content": "カウンセラーを追加"
+                      "content": "新規予約"
                     }
                   }
                 }
@@ -6774,743 +5654,3009 @@
             },
             {
               "type": "frame",
-              "id": "CCqL3",
-              "name": "searchRow",
+              "id": "iJGeK",
+              "name": "MetricsRow",
               "width": "fill_container",
-              "gap": 12,
-              "alignItems": "center",
+              "gap": 16,
               "children": [
                 {
-                  "id": "3phnk",
+                  "id": "D6GJl",
                   "type": "ref",
-                  "ref": "T5yK2",
-                  "width": 320,
-                  "name": "searchBox"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "ApE8e",
-              "name": "CardGrid",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 20,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "OpoVM",
-                  "name": "row1",
+                  "ref": "ERkuB",
                   "width": "fill_container",
-                  "gap": 20,
-                  "children": [
-                    {
-                      "id": "a5gU9",
-                      "type": "ref",
-                      "ref": "ERkuB",
-                      "width": "fill_container",
-                      "name": "card1",
-                      "descendants": {
-                        "4zoFt": {
-                          "type": "frame",
-                          "id": "zCPkD",
-                          "name": "hdr1",
-                          "width": "fill_container",
-                          "gap": 12,
-                          "padding": 16,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "id": "u6jzU",
-                              "type": "ref",
-                              "ref": "90SQo",
-                              "width": 40,
-                              "height": 40,
-                              "name": "avatar1",
-                              "descendants": {
-                                "xr4rB": {
-                                  "content": "田"
-                                }
-                              }
-                            },
-                            {
-                              "type": "frame",
-                              "id": "cQmPV",
-                              "name": "info1",
-                              "width": "fill_container",
-                              "layout": "vertical",
-                              "gap": 2,
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "ylqqB",
-                                  "fill": "$--foreground",
-                                  "content": "田中 美穂",
-                                  "fontFamily": "$--font-primary",
-                                  "fontSize": 15,
-                                  "fontWeight": "600"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "6h33K",
-                                  "fill": "$--muted-foreground",
-                                  "content": "臨床心理士",
-                                  "fontFamily": "$--font-secondary",
-                                  "fontSize": 13,
-                                  "fontWeight": "normal"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        "QMHOm": {
-                          "children": [
-                            {
-                              "id": "KLvn6",
-                              "type": "ref",
-                              "ref": "7KC5U",
-                              "name": "spec1",
-                              "descendants": {
-                                "BFcCW": {
-                                  "enabled": false
-                                },
-                                "AWwyf": {
-                                  "content": "認知行動療法"
-                                }
-                              }
-                            },
-                            {
-                              "type": "text",
-                              "id": "GZwqK",
-                              "name": "exp1",
-                              "fill": "$--muted-foreground",
-                              "content": "経験 8年 ・ 対応件数 240件",
-                              "fontFamily": "$--font-secondary",
-                              "fontSize": 13,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        "tiojM": {
-                          "children": [
-                            {
-                              "id": "Bt16V",
-                              "type": "ref",
-                              "ref": "ZETEA",
-                              "name": "btn1",
-                              "descendants": {
-                                "mRGd3": {
-                                  "enabled": false
-                                },
-                                "q5Hn5": {
-                                  "content": "予約する"
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "id": "eGBKy",
-                      "type": "ref",
-                      "ref": "ERkuB",
-                      "width": "fill_container",
-                      "name": "card2",
-                      "descendants": {
-                        "4zoFt": {
-                          "type": "frame",
-                          "id": "EaKiv",
-                          "name": "hdr2",
-                          "width": "fill_container",
-                          "gap": 12,
-                          "padding": 16,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "id": "97f1m",
-                              "type": "ref",
-                              "ref": "90SQo",
-                              "width": 40,
-                              "height": 40,
-                              "name": "avatar2",
-                              "descendants": {
-                                "xr4rB": {
-                                  "content": "佐"
-                                }
-                              }
-                            },
-                            {
-                              "type": "frame",
-                              "id": "ynEjw",
-                              "name": "info2",
-                              "width": "fill_container",
-                              "layout": "vertical",
-                              "gap": 2,
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "84Ofs",
-                                  "fill": "$--foreground",
-                                  "content": "佐藤 健二",
-                                  "fontFamily": "$--font-primary",
-                                  "fontSize": 15,
-                                  "fontWeight": "600"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "weFuJ",
-                                  "fill": "$--muted-foreground",
-                                  "content": "精神科医",
-                                  "fontFamily": "$--font-secondary",
-                                  "fontSize": 13,
-                                  "fontWeight": "normal"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        "QMHOm": {
-                          "children": [
-                            {
-                              "id": "jfvMm",
-                              "type": "ref",
-                              "ref": "it00G",
-                              "name": "spec2",
-                              "descendants": {
-                                "ULBkt": {
-                                  "enabled": false
-                                },
-                                "izLyj": {
-                                  "content": "うつ病・不安症"
-                                }
-                              }
-                            },
-                            {
-                              "type": "text",
-                              "id": "ZBQYt",
-                              "name": "exp2",
-                              "fill": "$--muted-foreground",
-                              "content": "経験 12年 ・ 対応件数 380件",
-                              "fontFamily": "$--font-secondary",
-                              "fontSize": 13,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        "tiojM": {
-                          "children": [
-                            {
-                              "id": "s8q7C",
-                              "type": "ref",
-                              "ref": "ZETEA",
-                              "name": "btn2",
-                              "descendants": {
-                                "mRGd3": {
-                                  "enabled": false
-                                },
-                                "q5Hn5": {
-                                  "content": "予約する"
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "id": "ABnX8",
-                      "type": "ref",
-                      "ref": "ERkuB",
-                      "width": "fill_container",
-                      "name": "card3",
-                      "descendants": {
-                        "4zoFt": {
-                          "type": "frame",
-                          "id": "J9cH7",
-                          "name": "hdr3",
-                          "width": "fill_container",
-                          "gap": 12,
-                          "padding": 16,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "id": "s0nWA",
-                              "type": "ref",
-                              "ref": "90SQo",
-                              "width": 40,
-                              "height": 40,
-                              "name": "avatar3",
-                              "descendants": {
-                                "xr4rB": {
-                                  "content": "鈴"
-                                }
-                              }
-                            },
-                            {
-                              "type": "frame",
-                              "id": "cKpVS",
-                              "name": "info3",
-                              "width": "fill_container",
-                              "layout": "vertical",
-                              "gap": 2,
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "cG3mT",
-                                  "fill": "$--foreground",
-                                  "content": "鈴木 あかり",
-                                  "fontFamily": "$--font-primary",
-                                  "fontSize": 15,
-                                  "fontWeight": "600"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "aB8Zk",
-                                  "fill": "$--muted-foreground",
-                                  "content": "公認心理師",
-                                  "fontFamily": "$--font-secondary",
-                                  "fontSize": 13,
-                                  "fontWeight": "normal"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        "QMHOm": {
-                          "children": [
-                            {
-                              "id": "pXyMU",
-                              "type": "ref",
-                              "ref": "7KC5U",
-                              "name": "spec3",
-                              "descendants": {
-                                "BFcCW": {
-                                  "enabled": false
-                                },
-                                "AWwyf": {
-                                  "content": "ストレス管理"
-                                }
-                              }
-                            },
-                            {
-                              "type": "text",
-                              "id": "Jj7JU",
-                              "name": "exp3",
-                              "fill": "$--muted-foreground",
-                              "content": "経験 5年 ・ 対応件数 150件",
-                              "fontFamily": "$--font-secondary",
-                              "fontSize": 13,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        "tiojM": {
-                          "children": [
-                            {
-                              "id": "nWVnN",
-                              "type": "ref",
-                              "ref": "ZETEA",
-                              "name": "btn3",
-                              "descendants": {
-                                "mRGd3": {
-                                  "enabled": false
-                                },
-                                "q5Hn5": {
-                                  "content": "予約する"
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "t3YBt",
-                  "name": "row2",
-                  "width": "fill_container",
-                  "gap": 20,
-                  "children": [
-                    {
-                      "id": "MtwRY",
-                      "type": "ref",
-                      "ref": "ERkuB",
-                      "width": "fill_container",
-                      "name": "card4",
-                      "descendants": {
-                        "4zoFt": {
-                          "type": "frame",
-                          "id": "1hhaj",
-                          "name": "hdr4",
-                          "width": "fill_container",
-                          "gap": 12,
-                          "padding": 16,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "id": "pIZX7",
-                              "type": "ref",
-                              "ref": "90SQo",
-                              "width": 40,
-                              "height": 40,
-                              "name": "avatar4",
-                              "descendants": {
-                                "xr4rB": {
-                                  "content": "高"
-                                }
-                              }
-                            },
-                            {
-                              "type": "frame",
-                              "id": "r6Wx3",
-                              "name": "info4",
-                              "width": "fill_container",
-                              "layout": "vertical",
-                              "gap": 2,
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "fNLpn",
-                                  "fill": "$--foreground",
-                                  "content": "高橋 誠",
-                                  "fontFamily": "$--font-primary",
-                                  "fontSize": 15,
-                                  "fontWeight": "600"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "6cUmk",
-                                  "fill": "$--muted-foreground",
-                                  "content": "産業カウンセラー",
-                                  "fontFamily": "$--font-secondary",
-                                  "fontSize": 13,
-                                  "fontWeight": "normal"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        "QMHOm": {
-                          "children": [
-                            {
-                              "id": "16oy3",
-                              "type": "ref",
-                              "ref": "it00G",
-                              "name": "spec4",
-                              "descendants": {
-                                "ULBkt": {
-                                  "enabled": false
-                                },
-                                "izLyj": {
-                                  "content": "職場メンタル"
-                                }
-                              }
-                            },
-                            {
-                              "type": "text",
-                              "id": "QuNjI",
-                              "name": "exp4",
-                              "fill": "$--muted-foreground",
-                              "content": "経験 10年 ・ 対応件数 320件",
-                              "fontFamily": "$--font-secondary",
-                              "fontSize": 13,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        "tiojM": {
-                          "children": [
-                            {
-                              "id": "NEYm2",
-                              "type": "ref",
-                              "ref": "ZETEA",
-                              "name": "btn4",
-                              "descendants": {
-                                "mRGd3": {
-                                  "enabled": false
-                                },
-                                "q5Hn5": {
-                                  "content": "予約する"
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "id": "wMFir",
-                      "type": "ref",
-                      "ref": "ERkuB",
-                      "width": "fill_container",
-                      "name": "card5",
-                      "descendants": {
-                        "4zoFt": {
-                          "type": "frame",
-                          "id": "s1hl8",
-                          "name": "hdr5",
-                          "width": "fill_container",
-                          "gap": 12,
-                          "padding": 16,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "id": "s3DgF",
-                              "type": "ref",
-                              "ref": "90SQo",
-                              "width": 40,
-                              "height": 40,
-                              "name": "avatar5",
-                              "descendants": {
-                                "xr4rB": {
-                                  "content": "伊"
-                                }
-                              }
-                            },
-                            {
-                              "type": "frame",
-                              "id": "OwvpT",
-                              "name": "info5",
-                              "width": "fill_container",
-                              "layout": "vertical",
-                              "gap": 2,
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "rJRyB",
-                                  "fill": "$--foreground",
-                                  "content": "伊藤 さくら",
-                                  "fontFamily": "$--font-primary",
-                                  "fontSize": 15,
-                                  "fontWeight": "600"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "oTjzR",
-                                  "fill": "$--muted-foreground",
-                                  "content": "臨床心理士",
-                                  "fontFamily": "$--font-secondary",
-                                  "fontSize": 13,
-                                  "fontWeight": "normal"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        "QMHOm": {
-                          "children": [
-                            {
-                              "id": "eKmJk",
-                              "type": "ref",
-                              "ref": "7KC5U",
-                              "name": "spec5",
-                              "descendants": {
-                                "BFcCW": {
-                                  "enabled": false
-                                },
-                                "AWwyf": {
-                                  "content": "トラウマケア"
-                                }
-                              }
-                            },
-                            {
-                              "type": "text",
-                              "id": "j3W4u",
-                              "name": "exp5",
-                              "fill": "$--muted-foreground",
-                              "content": "経験 6年 ・ 対応件数 180件",
-                              "fontFamily": "$--font-secondary",
-                              "fontSize": 13,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        "tiojM": {
-                          "children": [
-                            {
-                              "id": "N27Ov",
-                              "type": "ref",
-                              "ref": "ZETEA",
-                              "name": "btn5",
-                              "descendants": {
-                                "mRGd3": {
-                                  "enabled": false
-                                },
-                                "q5Hn5": {
-                                  "content": "予約する"
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "id": "fffLg",
-                      "type": "ref",
-                      "ref": "ERkuB",
-                      "width": "fill_container",
-                      "name": "card6",
-                      "descendants": {
-                        "4zoFt": {
-                          "type": "frame",
-                          "id": "K2u0w",
-                          "name": "hdr6",
-                          "width": "fill_container",
-                          "gap": 12,
-                          "padding": 16,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "id": "lFqrS",
-                              "type": "ref",
-                              "ref": "90SQo",
-                              "width": 40,
-                              "height": 40,
-                              "name": "avatar6",
-                              "descendants": {
-                                "xr4rB": {
-                                  "content": "渡"
-                                }
-                              }
-                            },
-                            {
-                              "type": "frame",
-                              "id": "DboJw",
-                              "name": "info6",
-                              "width": "fill_container",
-                              "layout": "vertical",
-                              "gap": 2,
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "nC9Ge",
-                                  "fill": "$--foreground",
-                                  "content": "渡辺 拓也",
-                                  "fontFamily": "$--font-primary",
-                                  "fontSize": 15,
-                                  "fontWeight": "600"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "oRxVf",
-                                  "fill": "$--muted-foreground",
-                                  "content": "精神科医",
-                                  "fontFamily": "$--font-secondary",
-                                  "fontSize": 13,
-                                  "fontWeight": "normal"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        "QMHOm": {
-                          "children": [
-                            {
-                              "id": "qFP6a",
-                              "type": "ref",
-                              "ref": "it00G",
-                              "name": "spec6",
-                              "descendants": {
-                                "ULBkt": {
-                                  "enabled": false
-                                },
-                                "izLyj": {
-                                  "content": "依存症治療"
-                                }
-                              }
-                            },
-                            {
-                              "type": "text",
-                              "id": "BwzRS",
-                              "name": "exp6",
-                              "fill": "$--muted-foreground",
-                              "content": "経験 15年 ・ 対応件数 450件",
-                              "fontFamily": "$--font-secondary",
-                              "fontSize": 13,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        "tiojM": {
-                          "children": [
-                            {
-                              "id": "ZOYaV",
-                              "type": "ref",
-                              "ref": "ZETEA",
-                              "name": "btn6",
-                              "descendants": {
-                                "mRGd3": {
-                                  "enabled": false
-                                },
-                                "q5Hn5": {
-                                  "content": "予約する"
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "c771h",
-              "name": "pagRow",
-              "width": "fill_container",
-              "justifyContent": "end",
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "T41cO",
-                  "type": "ref",
-                  "ref": "9PVw5",
-                  "name": "pag",
+                  "name": "card1",
                   "descendants": {
-                    "IXD5J": {
+                    "4zoFt": {
+                      "type": "frame",
+                      "id": "jFOh4",
+                      "name": "m1header",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 20,
                       "children": [
                         {
-                          "id": "9dtZc",
+                          "type": "text",
+                          "id": "XuNSg",
+                          "fill": "$--muted-foreground",
+                          "content": "登録カウンセラー",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "IPvET",
+                          "fill": "$--foreground",
+                          "content": "24名",
+                          "fontFamily": "$--font-primary",
+                          "fontSize": 32,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "rdjuH",
+                          "fill": "$--color-success-foreground",
+                          "content": "今月 +3名",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    "QMHOm": {
+                      "enabled": false
+                    },
+                    "tiojM": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "Didy5",
+                  "type": "ref",
+                  "ref": "ERkuB",
+                  "width": "fill_container",
+                  "name": "card2",
+                  "descendants": {
+                    "4zoFt": {
+                      "type": "frame",
+                      "id": "VpVdq",
+                      "name": "m2header",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 20,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "jXife",
+                          "fill": "$--muted-foreground",
+                          "content": "今日対応可能",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ClX9y",
+                          "fill": "$--foreground",
+                          "content": "8名",
+                          "fontFamily": "$--font-primary",
+                          "fontSize": 32,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "jfECy",
+                          "fill": "$--muted-foreground",
+                          "content": "通常稼働中",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    "QMHOm": {
+                      "enabled": false
+                    },
+                    "tiojM": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "AU63B",
+                  "type": "ref",
+                  "ref": "ERkuB",
+                  "width": "fill_container",
+                  "name": "card3",
+                  "descendants": {
+                    "4zoFt": {
+                      "type": "frame",
+                      "id": "Ili4O",
+                      "name": "m3header",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 20,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Yedng",
+                          "fill": "$--muted-foreground",
+                          "content": "今月の予約数",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "L2ION",
+                          "fill": "$--foreground",
+                          "content": "142件",
+                          "fontFamily": "$--font-primary",
+                          "fontSize": 32,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "9UeAP",
+                          "fill": "$--color-success-foreground",
+                          "content": "先月比 +12%",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    "QMHOm": {
+                      "enabled": false
+                    },
+                    "tiojM": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "WUJLG",
+              "type": "ref",
+              "ref": "ERkuB",
+              "width": "fill_container",
+              "name": "TableCard",
+              "descendants": {
+                "4zoFt": {
+                  "type": "frame",
+                  "id": "ZfQtd",
+                  "name": "CardHeaderArea",
+                  "width": "fill_container",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": {
+                      "bottom": 1
+                    },
+                    "fill": "$--border"
+                  },
+                  "gap": 12,
+                  "padding": [
+                    16,
+                    20
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "YZzsA",
+                      "type": "ref",
+                      "ref": "T5yK2",
+                      "name": "searchBox"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zSqAE",
+                      "name": "FilterRow",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "id": "Prs2w",
                           "type": "ref",
-                          "ref": "oT0d2",
-                          "name": "pg1",
+                          "ref": "ZETEA",
+                          "name": "filterAll",
                           "descendants": {
-                            "y7IIq": {
-                              "content": "1"
+                            "mRGd3": {
+                              "enabled": false
+                            },
+                            "q5Hn5": {
+                              "content": "すべて"
                             }
                           }
                         },
                         {
-                          "id": "3n4al",
+                          "id": "7M7ie",
                           "type": "ref",
-                          "ref": "Doslm",
-                          "name": "pg2",
+                          "ref": "U83R7",
+                          "name": "filterStress",
                           "descendants": {
-                            "y7IIq": {
-                              "content": "2"
+                            "mM3qB": {
+                              "enabled": false
+                            },
+                            "M4KCH": {
+                              "content": "ストレス・不安"
                             }
                           }
                         },
                         {
-                          "id": "yeMU4",
+                          "id": "dxe4H",
                           "type": "ref",
-                          "ref": "Doslm",
-                          "name": "pg3",
+                          "ref": "U83R7",
+                          "name": "filterRelation",
                           "descendants": {
-                            "y7IIq": {
-                              "content": "3"
+                            "mM3qB": {
+                              "enabled": false
+                            },
+                            "M4KCH": {
+                              "content": "対人関係"
+                            }
+                          }
+                        },
+                        {
+                          "id": "Mgd2q",
+                          "type": "ref",
+                          "ref": "U83R7",
+                          "name": "filterWork",
+                          "descendants": {
+                            "mM3qB": {
+                              "enabled": false
+                            },
+                            "M4KCH": {
+                              "content": "職場・キャリア"
                             }
                           }
                         }
                       ]
                     }
+                  ]
+                },
+                "QMHOm": {
+                  "type": "frame",
+                  "id": "lXFbp",
+                  "name": "TableContent",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "id": "aBVD4",
+                      "type": "ref",
+                      "ref": "pPOgy",
+                      "width": "fill_container",
+                      "height": "fit_content",
+                      "name": "CounselorTable",
+                      "children": [
+                        {
+                          "id": "gH9QX",
+                          "type": "ref",
+                          "ref": "T73Cd",
+                          "width": "fill_container",
+                          "name": "HeaderRow",
+                          "children": [
+                            {
+                              "id": "QtbBC",
+                              "type": "ref",
+                              "ref": "tbrR4",
+                              "width": 220,
+                              "name": "hName",
+                              "descendants": {
+                                "XGc4z": {
+                                  "content": "カウンセラー名"
+                                }
+                              }
+                            },
+                            {
+                              "id": "j8NJ5",
+                              "type": "ref",
+                              "ref": "tbrR4",
+                              "width": "fill_container",
+                              "name": "hSpec",
+                              "descendants": {
+                                "XGc4z": {
+                                  "content": "専門分野"
+                                }
+                              }
+                            },
+                            {
+                              "id": "iUTcB",
+                              "type": "ref",
+                              "ref": "tbrR4",
+                              "width": 100,
+                              "name": "hExp",
+                              "descendants": {
+                                "XGc4z": {
+                                  "content": "経験年数"
+                                }
+                              }
+                            },
+                            {
+                              "id": "fZZuS",
+                              "type": "ref",
+                              "ref": "tbrR4",
+                              "width": 130,
+                              "name": "hFee",
+                              "descendants": {
+                                "XGc4z": {
+                                  "content": "料金/50分"
+                                }
+                              }
+                            },
+                            {
+                              "id": "ULa4o",
+                              "type": "ref",
+                              "ref": "tbrR4",
+                              "width": 130,
+                              "name": "hStatus",
+                              "descendants": {
+                                "XGc4z": {
+                                  "content": "ステータス"
+                                }
+                              }
+                            },
+                            {
+                              "id": "2ZLzj",
+                              "type": "ref",
+                              "ref": "tbrR4",
+                              "width": 100,
+                              "name": "hAction",
+                              "descendants": {
+                                "XGc4z": {
+                                  "content": "操作"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "Ojuu0",
+                          "type": "ref",
+                          "ref": "T73Cd",
+                          "width": "fill_container",
+                          "name": "row1",
+                          "children": [
+                            {
+                              "id": "ZICG2",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 220,
+                              "name": "r1c1",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "nBKdI",
+                                  "fill": "$--foreground",
+                                  "content": "田中 みか",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "xocE3",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": "fill_container",
+                              "name": "r1c2",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "qyTAk",
+                                  "fill": "$--foreground",
+                                  "content": "対人関係・人間関係",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "A28ob",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 100,
+                              "name": "r1c3",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "n55v3",
+                                  "fill": "$--foreground",
+                                  "content": "12年",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "NSMqo",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 130,
+                              "name": "r1c4",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "H5ym4",
+                                  "fill": "$--foreground",
+                                  "content": "¥6,000",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "9s7gt",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 130,
+                              "name": "r1c5",
+                              "children": [
+                                {
+                                  "id": "NlPjG",
+                                  "type": "ref",
+                                  "ref": "L8Rgv",
+                                  "descendants": {
+                                    "glumS": {
+                                      "content": "対応中"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "Dkbm9",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 100,
+                              "name": "r1c6",
+                              "children": [
+                                {
+                                  "id": "v71cL",
+                                  "type": "ref",
+                                  "ref": "ZETEA",
+                                  "descendants": {
+                                    "mRGd3": {
+                                      "enabled": false
+                                    },
+                                    "q5Hn5": {
+                                      "content": "予約"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "hjMgF",
+                          "type": "ref",
+                          "ref": "T73Cd",
+                          "width": "fill_container",
+                          "name": "row2",
+                          "children": [
+                            {
+                              "id": "RmgJZ",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 220,
+                              "name": "r2c1",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "qCvW5",
+                                  "fill": "$--foreground",
+                                  "content": "佐藤 健太",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "HJZFd",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": "fill_container",
+                              "name": "r2c2",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Ae5x5",
+                                  "fill": "$--foreground",
+                                  "content": "ストレス・不安",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "IpzdU",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 100,
+                              "name": "r2c3",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "pTiBu",
+                                  "fill": "$--foreground",
+                                  "content": "8年",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "Bo1AY",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 130,
+                              "name": "r2c4",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "mp8NP",
+                                  "fill": "$--foreground",
+                                  "content": "¥5,500",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "AxNtz",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 130,
+                              "name": "r2c5",
+                              "children": [
+                                {
+                                  "id": "gSjJJ",
+                                  "type": "ref",
+                                  "ref": "7KC5U",
+                                  "descendants": {
+                                    "AWwyf": {
+                                      "content": "予約可能"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "2kesx",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 100,
+                              "name": "r2c6",
+                              "children": [
+                                {
+                                  "id": "732cd",
+                                  "type": "ref",
+                                  "ref": "ZETEA",
+                                  "descendants": {
+                                    "mRGd3": {
+                                      "enabled": false
+                                    },
+                                    "q5Hn5": {
+                                      "content": "予約"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "gOWmN",
+                          "type": "ref",
+                          "ref": "T73Cd",
+                          "width": "fill_container",
+                          "name": "row3",
+                          "children": [
+                            {
+                              "id": "rmLb1",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 220,
+                              "name": "r3c1",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Bdiy4",
+                                  "fill": "$--foreground",
+                                  "content": "鈴木 あおい",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "z69sD",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": "fill_container",
+                              "name": "r3c2",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "JZZc5",
+                                  "fill": "$--foreground",
+                                  "content": "職場環境・キャリア",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "uJ8jC",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 100,
+                              "name": "r3c3",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "qlGY4",
+                                  "fill": "$--foreground",
+                                  "content": "15年",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "sEYYe",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 130,
+                              "name": "r3c4",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "JEupr",
+                                  "fill": "$--foreground",
+                                  "content": "¥7,000",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "LGOnM",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 130,
+                              "name": "r3c5",
+                              "children": [
+                                {
+                                  "id": "dvtHe",
+                                  "type": "ref",
+                                  "ref": "7KC5U",
+                                  "descendants": {
+                                    "AWwyf": {
+                                      "content": "予約可能"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "tymiH",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 100,
+                              "name": "r3c6",
+                              "children": [
+                                {
+                                  "id": "ZcmGe",
+                                  "type": "ref",
+                                  "ref": "ZETEA",
+                                  "descendants": {
+                                    "mRGd3": {
+                                      "enabled": false
+                                    },
+                                    "q5Hn5": {
+                                      "content": "予約"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "4Cxyc",
+                          "type": "ref",
+                          "ref": "T73Cd",
+                          "width": "fill_container",
+                          "name": "row4",
+                          "children": [
+                            {
+                              "id": "uBwfw",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 220,
+                              "name": "r4c1",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "u3w6y",
+                                  "fill": "$--foreground",
+                                  "content": "山本 拓也",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "59xRP",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": "fill_container",
+                              "name": "r4c2",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "6bRDz",
+                                  "fill": "$--foreground",
+                                  "content": "家族関係・育児",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "7oVHf",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 100,
+                              "name": "r4c3",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "YV48t",
+                                  "fill": "$--foreground",
+                                  "content": "6年",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "LhzWK",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 130,
+                              "name": "r4c4",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "g5Kjo",
+                                  "fill": "$--foreground",
+                                  "content": "¥5,000",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "D7Uy3",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 130,
+                              "name": "r4c5",
+                              "children": [
+                                {
+                                  "id": "tFqLx",
+                                  "type": "ref",
+                                  "ref": "it00G",
+                                  "descendants": {
+                                    "izLyj": {
+                                      "content": "オフライン"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "XTEak",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 100,
+                              "name": "r4c6",
+                              "children": [
+                                {
+                                  "id": "PvdSE",
+                                  "type": "ref",
+                                  "ref": "4x7RU",
+                                  "descendants": {
+                                    "r97g1": {
+                                      "enabled": false
+                                    },
+                                    "7ZVG7": {
+                                      "content": "詳細"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "ir2sk",
+                          "type": "ref",
+                          "ref": "T73Cd",
+                          "width": "fill_container",
+                          "name": "row5",
+                          "children": [
+                            {
+                              "id": "NTFcA",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 220,
+                              "name": "r5c1",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "jrj7l",
+                                  "fill": "$--foreground",
+                                  "content": "中村 さくら",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "9v6Fl",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": "fill_container",
+                              "name": "r5c2",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "PDnc0",
+                                  "fill": "$--foreground",
+                                  "content": "うつ・気分障害",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "45Qk9",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 100,
+                              "name": "r5c3",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "ulJa0",
+                                  "fill": "$--foreground",
+                                  "content": "10年",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "O6j9u",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 130,
+                              "name": "r5c4",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "HKSvO",
+                                  "fill": "$--foreground",
+                                  "content": "¥6,500",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1jcRA",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 130,
+                              "name": "r5c5",
+                              "children": [
+                                {
+                                  "id": "vfRhC",
+                                  "type": "ref",
+                                  "ref": "7KC5U",
+                                  "descendants": {
+                                    "AWwyf": {
+                                      "content": "予約可能"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "4gLzi",
+                              "type": "ref",
+                              "ref": "uKYIj",
+                              "width": 100,
+                              "name": "r5c6",
+                              "children": [
+                                {
+                                  "id": "zK3rW",
+                                  "type": "ref",
+                                  "ref": "ZETEA",
+                                  "descendants": {
+                                    "mRGd3": {
+                                      "enabled": false
+                                    },
+                                    "q5Hn5": {
+                                      "content": "予約"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fzYZp",
+                      "name": "PaginationRow",
+                      "width": "fill_container",
+                      "padding": [
+                        12,
+                        20
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "xyEvk",
+                          "name": "pageInfo",
+                          "fill": "$--muted-foreground",
+                          "content": "24件中 1〜5件を表示",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "id": "lcAqr",
+                          "type": "ref",
+                          "ref": "9PVw5",
+                          "name": "pagination",
+                          "descendants": {
+                            "IXD5J": {
+                              "children": [
+                                {
+                                  "id": "PiUaU",
+                                  "type": "ref",
+                                  "ref": "oT0d2",
+                                  "name": "page1",
+                                  "descendants": {
+                                    "y7IIq": {
+                                      "content": "1"
+                                    }
+                                  }
+                                },
+                                {
+                                  "id": "s7CEv",
+                                  "type": "ref",
+                                  "ref": "Doslm",
+                                  "name": "page2",
+                                  "descendants": {
+                                    "y7IIq": {
+                                      "content": "2"
+                                    }
+                                  }
+                                },
+                                {
+                                  "id": "qCMeD",
+                                  "type": "ref",
+                                  "ref": "Doslm",
+                                  "name": "page3",
+                                  "descendants": {
+                                    "y7IIq": {
+                                      "content": "3"
+                                    }
+                                  }
+                                },
+                                {
+                                  "id": "IsGeL",
+                                  "type": "ref",
+                                  "ref": "Irk3I",
+                                  "name": "ellipsis"
+                                },
+                                {
+                                  "id": "E15Gh",
+                                  "type": "ref",
+                                  "ref": "Doslm",
+                                  "name": "page5",
+                                  "descendants": {
+                                    "y7IIq": {
+                                      "content": "5"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "tiojM": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "17bD0",
+      "x": 0,
+      "y": 1000,
+      "name": "案2 バブルUI（患者向け）",
+      "width": 1440,
+      "height": 900,
+      "fill": "#FAFAF8",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "Perxn",
+          "name": "header",
+          "width": "fill_container",
+          "height": 68,
+          "fill": "#FFFFFF",
+          "stroke": {
+            "align": "inside",
+            "thickness": {
+              "bottom": 1
+            },
+            "fill": "$--border"
+          },
+          "padding": [
+            0,
+            40
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "FuO3O",
+              "name": "logoText",
+              "fill": "$--primary",
+              "content": "MentalCare",
+              "fontFamily": "$--font-primary",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "4e2yc",
+              "name": "navGroup",
+              "gap": 32,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "z3sNV",
+                  "name": "navActive",
+                  "fill": "$--primary",
+                  "content": "カウンセラーを探す",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "p8YuU",
+                  "name": "navOther",
+                  "fill": "$--muted-foreground",
+                  "content": "マイ予約",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "PzssE",
+              "name": "avatar",
+              "width": 40,
+              "height": 40,
+              "fill": "$--secondary",
+              "cornerRadius": 9999,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "guJrW",
+                  "fill": "$--secondary-foreground",
+                  "content": "山",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "V07sy",
+          "name": "introArea",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "YqIat",
+              "name": "introTitle",
+              "fill": "$--foreground",
+              "content": "今すぐ話せるカウンセラー",
+              "fontFamily": "$--font-primary",
+              "fontSize": 26,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "Dt8wi",
+              "name": "introSub",
+              "fill": "$--muted-foreground",
+              "content": "現在8名が対応可能です。バブルが大きいほど評価が高く、タップするとすぐに相談できます。",
+              "fontFamily": "$--font-secondary",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "Kd9H7",
+              "name": "LiveBadge",
+              "fill": "#E8F5E9",
+              "cornerRadius": 9999,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#A5D6A7"
+              },
+              "gap": 6,
+              "padding": [
+                5,
+                14
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "K5BvS",
+                  "width": 8,
+                  "height": 8,
+                  "fill": "#43A047",
+                  "cornerRadius": 999
+                },
+                {
+                  "type": "text",
+                  "id": "oBbjK",
+                  "fill": "#2E7D32",
+                  "content": "現在 8名が対応可能",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "uVgSi",
+              "name": "FilterRow",
+              "gap": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Ds4vB",
+                  "name": "fAll",
+                  "fill": "$--primary",
+                  "cornerRadius": 9999,
+                  "padding": [
+                    7,
+                    18
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "G6GiX",
+                      "fill": "$--primary-foreground",
+                      "content": "全て表示",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Y2LZ6",
+                  "name": "f1",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 9999,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "#B2DFDB"
+                  },
+                  "gap": 6,
+                  "padding": [
+                    7,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "4SzlO",
+                      "width": 8,
+                      "height": 8,
+                      "fill": "#B2DFDB",
+                      "cornerRadius": 999
+                    },
+                    {
+                      "type": "text",
+                      "id": "cHB8X",
+                      "fill": "$--foreground",
+                      "content": "職場・キャリア",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "eYo46",
+                  "name": "f2",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 9999,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "#FFCCBC"
+                  },
+                  "gap": 6,
+                  "padding": [
+                    7,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "bHMXq",
+                      "width": 8,
+                      "height": 8,
+                      "fill": "#FFCCBC",
+                      "cornerRadius": 999
+                    },
+                    {
+                      "type": "text",
+                      "id": "z3uHZ",
+                      "fill": "$--foreground",
+                      "content": "対人関係",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "di15M",
+                  "name": "f3",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 9999,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "#D1C4E9"
+                  },
+                  "gap": 6,
+                  "padding": [
+                    7,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Img4W",
+                      "width": 8,
+                      "height": 8,
+                      "fill": "#D1C4E9",
+                      "cornerRadius": 999
+                    },
+                    {
+                      "type": "text",
+                      "id": "3e4e8",
+                      "fill": "$--foreground",
+                      "content": "うつ・気分障害",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Tey9k",
+                  "name": "f4",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 9999,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "#B2EBF2"
+                  },
+                  "gap": 6,
+                  "padding": [
+                    7,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "2kNBq",
+                      "width": 8,
+                      "height": 8,
+                      "fill": "#B2EBF2",
+                      "cornerRadius": 999
+                    },
+                    {
+                      "type": "text",
+                      "id": "DB9oC",
+                      "fill": "$--foreground",
+                      "content": "ストレス・不安",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xjhBn",
+                  "name": "f5",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 9999,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "#FFF9C4"
+                  },
+                  "gap": 6,
+                  "padding": [
+                    7,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "eZbR4",
+                      "width": 8,
+                      "height": 8,
+                      "fill": "#FFF9C4",
+                      "cornerRadius": 999
+                    },
+                    {
+                      "type": "text",
+                      "id": "Jz4P8",
+                      "fill": "$--foreground",
+                      "content": "家族・育児",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FYetX",
+                  "name": "f6",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 9999,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "#F8BBD9"
+                  },
+                  "gap": 6,
+                  "padding": [
+                    7,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TdF2d",
+                      "width": 8,
+                      "height": 8,
+                      "fill": "#F8BBD9",
+                      "cornerRadius": 999
+                    },
+                    {
+                      "type": "text",
+                      "id": "bRadv",
+                      "fill": "$--foreground",
+                      "content": "トラウマ",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "eVEFX",
+                  "name": "f7",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 9999,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "#DCEDC8"
+                  },
+                  "gap": 6,
+                  "padding": [
+                    7,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "w83Es",
+                      "width": 8,
+                      "height": 8,
+                      "fill": "#DCEDC8",
+                      "cornerRadius": 999
+                    },
+                    {
+                      "type": "text",
+                      "id": "GrFrP",
+                      "fill": "$--foreground",
+                      "content": "依存・嗜癖",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "DA1FR",
+          "name": "BubbleArea",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "none",
+          "children": [
+            {
+              "type": "frame",
+              "id": "v589m",
+              "x": 625,
+              "y": 155,
+              "name": "bubble_suzuki",
+              "clip": true,
+              "width": 220,
+              "height": 220,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1771844406884.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 9999,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "SXIPz",
+                  "x": 0,
+                  "y": 156,
+                  "name": "o1",
+                  "width": 220,
+                  "height": 64,
+                  "fill": "#000000BB",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "uhoGu",
+                      "fill": "#FFFFFF",
+                      "content": "鈴木 あおい",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "BAFIi",
+                      "fill": "#69F0AE",
+                      "content": "● 今すぐ可",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "JPcQo",
+              "x": 430,
+              "y": 152,
+              "name": "bubble_tanaka",
+              "clip": true,
+              "width": 192,
+              "height": 192,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1771844414458.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 9999,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qvkK9",
+                  "x": 0,
+                  "y": 136,
+                  "name": "o2",
+                  "width": 192,
+                  "height": 56,
+                  "fill": "#000000BB",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "RyACp",
+                      "fill": "#FFFFFF",
+                      "content": "田中 みか",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "7MpNG",
+                      "fill": "#69F0AE",
+                      "content": "● 今すぐ可",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "7itaw",
+              "x": 848,
+              "y": 128,
+              "name": "bubble_nakamura",
+              "clip": true,
+              "width": 175,
+              "height": 175,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1771844420927.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 9999,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bNnvU",
+                  "x": 0,
+                  "y": 123,
+                  "name": "o3",
+                  "width": 175,
+                  "height": 52,
+                  "fill": "#000000BB",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "63Tj9",
+                      "fill": "#FFFFFF",
+                      "content": "中村 さくら",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "kP6en",
+                      "fill": "#FFB300",
+                      "content": "◎ 15分後〜",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "434PZ",
+              "x": 418,
+              "y": 368,
+              "name": "bubble_sato",
+              "clip": true,
+              "width": 155,
+              "height": 155,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1771844427574.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 9999,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "kimSn",
+                  "x": 0,
+                  "y": 109,
+                  "name": "o4",
+                  "width": 155,
+                  "height": 46,
+                  "fill": "#000000BB",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "PibMc",
+                      "fill": "#FFFFFF",
+                      "content": "佐藤 健太",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "1lM5G",
+                      "fill": "#69F0AE",
+                      "content": "● 今すぐ可",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tLxmp",
+              "x": 820,
+              "y": 305,
+              "name": "bubble_yamamoto",
+              "clip": true,
+              "width": 145,
+              "height": 145,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1771844434234.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 9999,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "XC0p5",
+                  "x": 0,
+                  "y": 101,
+                  "name": "o5",
+                  "width": 145,
+                  "height": 44,
+                  "fill": "#000000BB",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    5,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Fpp8a",
+                      "fill": "#FFFFFF",
+                      "content": "山本 拓也",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "6SgeN",
+                      "fill": "#FFB300",
+                      "content": "◎ 30分後〜",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "FUXrz",
+              "x": 285,
+              "y": 258,
+              "name": "bubble_kimura",
+              "clip": true,
+              "width": 120,
+              "height": 120,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1771844441113.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 9999,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "o6fII",
+                  "x": 0,
+                  "y": 84,
+                  "name": "o6",
+                  "width": 120,
+                  "height": 36,
+                  "fill": "#000000BB",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "padding": [
+                    4,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "j3QrC",
+                      "fill": "#FFFFFF",
+                      "content": "木村 誠",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 10,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "7qN7O",
+                      "fill": "#69F0AE",
+                      "content": "● 今すぐ可",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 9,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WDIUQ",
+              "x": 1035,
+              "y": 250,
+              "name": "bubble_kato",
+              "clip": true,
+              "width": 110,
+              "height": 110,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1771844448059.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 9999,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "gDpfp",
+                  "x": 0,
+                  "y": 78,
+                  "name": "o7",
+                  "width": 110,
+                  "height": 32,
+                  "fill": "#000000BB",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "padding": [
+                    4,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "encPp",
+                      "fill": "#FFFFFF",
+                      "content": "加藤 理恵",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 10,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "gzM7M",
+                      "fill": "#69F0AE",
+                      "content": "● 今すぐ可",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 9,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "XPeu0",
+      "x": 0,
+      "y": 2100,
+      "name": "案3_ダイアログ確認",
+      "width": 1440,
+      "height": 900,
+      "fill": "#ECEFF1",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "bwTBr",
+          "x": 455,
+          "y": 400,
+          "name": "bgHint",
+          "fill": "#B0BEC5",
+          "content": "（今すぐ話せるカウンセラー一覧）",
+          "fontFamily": "$--font-secondary",
+          "fontSize": 22,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "eqR52",
+          "x": 0,
+          "y": 0,
+          "name": "Overlay",
+          "width": 1440,
+          "height": 900,
+          "fill": "#000000A0"
+        },
+        {
+          "type": "frame",
+          "id": "uMzma",
+          "x": 520,
+          "y": 140,
+          "name": "DialogCard",
+          "width": 400,
+          "fill": "#FFFFFF",
+          "cornerRadius": 16,
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            56,
+            48,
+            48,
+            48
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "pB7Ba",
+              "name": "CounselorPhoto",
+              "clip": true,
+              "width": 96,
+              "height": 96,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1771849581522.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 9999
+            },
+            {
+              "type": "frame",
+              "id": "nfC5v",
+              "name": "StatusBadge",
+              "fill": "#DCFCE7",
+              "cornerRadius": 999,
+              "gap": 4,
+              "padding": [
+                4,
+                12
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Yt9qc",
+                  "fill": "#16A34A",
+                  "content": "● 今すぐ可",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "wzyoa",
+              "name": "dlgName",
+              "fill": "#111827",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "鈴木 あおい",
+              "textAlign": "center",
+              "fontFamily": "$--font-primary",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "AA1DS",
+              "name": "dlgRating",
+              "fill": "#9CA3AF",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "★ 4.9　｜　継続相談 12名",
+              "textAlign": "center",
+              "fontFamily": "$--font-secondary",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "FGKck",
+              "name": "dlgDesc",
+              "fill": "#374151",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "鈴木あおいさんに相談を始めますか？\n音声での対話になります。",
+              "textAlign": "center",
+              "fontFamily": "$--font-secondary",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "8wPEx",
+              "name": "Divider",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "#F3F4F6"
+            },
+            {
+              "type": "frame",
+              "id": "6Zl0e",
+              "name": "ButtonRow",
+              "width": "fill_container",
+              "gap": 12,
+              "children": [
+                {
+                  "id": "FBSsP",
+                  "type": "ref",
+                  "ref": "4x7RU",
+                  "width": "fill_container",
+                  "name": "dlgCancel",
+                  "descendants": {
+                    "r97g1": {
+                      "enabled": false
+                    },
+                    "7ZVG7": {
+                      "content": "キャンセル"
+                    }
                   }
+                },
+                {
+                  "id": "2lgki",
+                  "type": "ref",
+                  "ref": "ZETEA",
+                  "width": "fill_container",
+                  "name": "dlgStart",
+                  "descendants": {
+                    "mRGd3": {
+                      "enabled": false
+                    },
+                    "q5Hn5": {
+                      "content": "相談を始める"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "9tw9F",
+      "x": 1500,
+      "y": 2100,
+      "name": "案4_待機画面",
+      "width": 1440,
+      "height": 900,
+      "fill": "#FAFAFA",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "oFnrI",
+          "name": "Header",
+          "width": "fill_container",
+          "height": 64,
+          "fill": "#FFFFFF",
+          "stroke": {
+            "align": "inside",
+            "thickness": 1,
+            "fill": "#E5E7EB"
+          },
+          "padding": [
+            0,
+            40
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "l6WgB",
+              "name": "hdrLogo4",
+              "fill": "#5B6CF6",
+              "content": "MentalCare",
+              "fontFamily": "$--font-primary",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "id": "RmFQZ",
+              "type": "ref",
+              "ref": "4AN1p",
+              "name": "hdrAvt4"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "px3h6",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            40,
+            0,
+            0,
+            0
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Q1gM4",
+              "name": "SpinnerBox",
+              "layout": "vertical",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Ngsu4",
+                  "name": "Spinner",
+                  "width": 56,
+                  "height": 56,
+                  "fill": "#EEF2FF",
+                  "cornerRadius": 9999,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "w97CT",
+                      "width": 0,
+                      "height": 0,
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#5B6CF6"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "5V75j",
+                  "name": "spinTitle",
+                  "fill": "#111827",
+                  "content": "接続を待っています...",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "RikV9",
+                  "name": "spinSub",
+                  "fill": "#6B7280",
+                  "content": "カウンセラーが準備をしています。もう少しお待ちください。",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "iHoLc",
+              "name": "CounselorCard",
+              "fill": "#F9FAFB",
+              "cornerRadius": 12,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#E5E7EB"
+              },
+              "gap": 14,
+              "padding": [
+                14,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "3Zv9M",
+                  "name": "Photo",
+                  "clip": true,
+                  "width": 52,
+                  "height": 52,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "./images/generated-1771849612089.png",
+                    "mode": "fill"
+                  },
+                  "cornerRadius": 9999
+                },
+                {
+                  "type": "frame",
+                  "id": "kvngb",
+                  "name": "cText4",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "CVKfV",
+                      "name": "cName4",
+                      "fill": "#111827",
+                      "content": "田中 みな",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "eUyX3",
+                      "name": "cTime4",
+                      "fill": "#F59E0B",
+                      "content": "◎ 約15分後に開始予定",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "0Ipmm",
+              "name": "Countdown",
+              "layout": "vertical",
+              "gap": 4,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "04kfu",
+                  "name": "cNum4",
+                  "fill": "#5B6CF6",
+                  "content": "14:32",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 48,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "Kl6Xv",
+                  "name": "cLab4",
+                  "fill": "#9CA3AF",
+                  "content": "残り待機時間",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "H2mXA",
+              "name": "MessageSection",
+              "width": 460,
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "JuyTZ",
+                  "name": "msgLab4",
+                  "fill": "#374151",
+                  "content": "事前に相談内容をお伝えください（任意）",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "aw6gA",
+                  "name": "Textarea",
+                  "width": "fill_container",
+                  "height": 80,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#E5E7EB"
+                  },
+                  "padding": [
+                    10,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "xEayG",
+                      "name": "msgPH4",
+                      "fill": "#9CA3AF",
+                      "content": "例：仕事のストレスや人間関係について相談したいです...",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "ugctc",
+                  "type": "ref",
+                  "ref": "ZETEA",
+                  "width": "fill_container",
+                  "name": "sendBtn4",
+                  "descendants": {
+                    "mRGd3": {
+                      "enabled": false
+                    },
+                    "q5Hn5": {
+                      "content": "送信する"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "TEk7v",
+              "name": "cancelTxt4",
+              "fill": "#9CA3AF",
+              "content": "キャンセル",
+              "textAlign": "center",
+              "fontFamily": "$--font-secondary",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "UEZYY",
+      "x": 3000,
+      "y": 2100,
+      "name": "案5_通話画面",
+      "width": 1440,
+      "height": 900,
+      "fill": "#111827",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "gjmGm",
+          "x": 0,
+          "y": 0,
+          "name": "Header",
+          "width": 1440,
+          "height": 64,
+          "fill": "#1F2937",
+          "padding": [
+            0,
+            40
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "aMfZr",
+              "name": "hdrLogo5",
+              "fill": "#818CF8",
+              "content": "MentalCare",
+              "fontFamily": "$--font-primary",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "9bTlY",
+              "name": "hdrTimer5",
+              "fill": "#9CA3AF",
+              "content": "00:05:23",
+              "fontFamily": "$--font-secondary",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "eSpc3",
+          "x": 520,
+          "y": 110,
+          "name": "CenterContent",
+          "width": 400,
+          "layout": "vertical",
+          "gap": 16,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "GPVJ6",
+              "name": "Photo",
+              "clip": true,
+              "width": 160,
+              "height": 160,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1771849638058.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 9999
+            },
+            {
+              "type": "text",
+              "id": "98Q2U",
+              "name": "callName5",
+              "fill": "#F9FAFB",
+              "content": "鈴木 あおい",
+              "textAlign": "center",
+              "fontFamily": "$--font-primary",
+              "fontSize": 22,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "kA5xP",
+              "name": "CallBadge",
+              "fill": "#064E3B",
+              "cornerRadius": 999,
+              "gap": 6,
+              "padding": [
+                6,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "2SZAG",
+                  "fill": "#6EE7B7",
+                  "content": "● 通話中",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "TTS6l",
+              "name": "Waveform",
+              "width": 360,
+              "height": 40,
+              "fill": "#1F2937",
+              "cornerRadius": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "JPnO2",
+                  "fill": "#6EE7B7",
+                  "content": "▁▂▄▆▄▂▁▃▅▇▅▃▁▂▄▆",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QCX7T",
+          "x": 430,
+          "y": 720,
+          "name": "Controls",
+          "width": 580,
+          "gap": 24,
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "fAnPW",
+              "name": "Mute",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "l8wpp",
+                  "name": "muteCircle",
+                  "width": 64,
+                  "height": 64,
+                  "fill": "#374151",
+                  "cornerRadius": 9999,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "F1yTK",
+                      "width": 0,
+                      "height": 0,
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Uor6L",
+                  "name": "muteLab",
+                  "fill": "#9CA3AF",
+                  "content": "ミュート",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tKXfm",
+              "name": "EndCall",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "NKA1T",
+                  "name": "endCircle",
+                  "width": 80,
+                  "height": 80,
+                  "fill": "#DC2626",
+                  "cornerRadius": 9999,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "utye6",
+                      "width": 0,
+                      "height": 0,
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "U3Lf3",
+                  "name": "endLab",
+                  "fill": "#F87171",
+                  "content": "通話終了",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "dKlyv",
+              "name": "Speaker",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "5v1jO",
+                  "name": "spkCircle",
+                  "width": 64,
+                  "height": 64,
+                  "fill": "#374151",
+                  "cornerRadius": 9999,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "CBENC",
+                      "width": 0,
+                      "height": 0,
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "kwaQY",
+                  "name": "spkLab",
+                  "fill": "#9CA3AF",
+                  "content": "スピーカー",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "VcF65",
+              "name": "Chat",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "CK6rW",
+                  "name": "chatCircle",
+                  "width": 64,
+                  "height": 64,
+                  "fill": "#374151",
+                  "cornerRadius": 9999,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "OuUTp",
+                      "width": 0,
+                      "height": 0,
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "8TMhv",
+                  "name": "chatLab",
+                  "fill": "#9CA3AF",
+                  "content": "チャット",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "MLzOV",
+      "x": 4500,
+      "y": 2100,
+      "name": "案6_通話終了・評価",
+      "width": 1440,
+      "height": 900,
+      "fill": "#FAFAFA",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "0OcQb",
+          "name": "Header",
+          "width": "fill_container",
+          "height": 64,
+          "fill": "#FFFFFF",
+          "stroke": {
+            "align": "inside",
+            "thickness": 1,
+            "fill": "#E5E7EB"
+          },
+          "padding": [
+            0,
+            40
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "1WCOM",
+              "name": "hdrLogo6",
+              "fill": "#5B6CF6",
+              "content": "MentalCare",
+              "fontFamily": "$--font-primary",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "id": "vM6Mv",
+              "type": "ref",
+              "ref": "4AN1p",
+              "name": "hdrAvt6"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "LR2I5",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            56,
+            0,
+            0,
+            0
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "7vdJJ",
+              "name": "EndIcon",
+              "width": 64,
+              "height": 64,
+              "fill": "#F0FDF4",
+              "cornerRadius": 9999,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "FefaU",
+                  "width": 32,
+                  "height": 32,
+                  "iconFontFamily": "Material Symbols Rounded",
+                  "fill": "#16A34A"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "0XE2n",
+              "name": "endTitle",
+              "fill": "#111827",
+              "content": "お疲れさまでした",
+              "textAlign": "center",
+              "fontFamily": "$--font-primary",
+              "fontSize": 24,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "5wMJc",
+              "name": "SummaryCard",
+              "fill": "#F9FAFB",
+              "cornerRadius": 12,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#E5E7EB"
+              },
+              "gap": 14,
+              "padding": [
+                16,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "0T12Q",
+                  "name": "Photo",
+                  "clip": true,
+                  "width": 48,
+                  "height": 48,
+                  "fill": "#E5E7EB",
+                  "cornerRadius": 9999
+                },
+                {
+                  "type": "frame",
+                  "id": "KuehI",
+                  "name": "sumText",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "iFTRr",
+                      "name": "sumName",
+                      "fill": "#111827",
+                      "content": "鈴木 あおい",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "LbWyJ",
+                      "name": "sumDuration",
+                      "fill": "#6B7280",
+                      "content": "通話時間　00:24:13",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xvzwy",
+              "name": "RatingBox",
+              "width": 480,
+              "layout": "vertical",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "menpl",
+                  "name": "ratingTitle",
+                  "fill": "#374151",
+                  "content": "今回の相談はいかがでしたか？",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "69Yie",
+                  "name": "Stars",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "zmg4Z",
+                      "name": "s1",
+                      "fill": "#FBBF24",
+                      "content": "★",
+                      "fontFamily": "Inter",
+                      "fontSize": 44,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Wyhyr",
+                      "name": "s2",
+                      "fill": "#FBBF24",
+                      "content": "★",
+                      "fontFamily": "Inter",
+                      "fontSize": 44,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qUZxf",
+                      "name": "s3",
+                      "fill": "#FBBF24",
+                      "content": "★",
+                      "fontFamily": "Inter",
+                      "fontSize": 44,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "imOm9",
+                      "name": "s4",
+                      "fill": "#FBBF24",
+                      "content": "★",
+                      "fontFamily": "Inter",
+                      "fontSize": 44,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "2Fxoo",
+                      "name": "s5",
+                      "fill": "#D1D5DB",
+                      "content": "☆",
+                      "fontFamily": "Inter",
+                      "fontSize": 44,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DNZyc",
+                  "name": "ButtonRow",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "qKbIt",
+                      "type": "ref",
+                      "ref": "4x7RU",
+                      "width": "fill_container",
+                      "name": "skipBtn",
+                      "descendants": {
+                        "r97g1": {
+                          "enabled": false
+                        },
+                        "7ZVG7": {
+                          "content": "スキップ"
+                        }
+                      }
+                    },
+                    {
+                      "id": "n5ksU",
+                      "type": "ref",
+                      "ref": "ZETEA",
+                      "width": "fill_container",
+                      "name": "submitBtn",
+                      "descendants": {
+                        "mRGd3": {
+                          "enabled": false
+                        },
+                        "q5Hn5": {
+                          "content": "送信する"
+                        }
+                      }
+                    }
+                  ]
                 }
               ]
             }

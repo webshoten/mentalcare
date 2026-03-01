@@ -45,7 +45,7 @@
   }
 
   type Query {
-    # バブル画面用：OPEN の Appointment（OFFLINE 除く）
+    # バブル画面用：ENDED 以外の全 Appointment（表示制御はフロント側）
     openAppointments: [Appointment!]!
     # カウンセラーの現在のアポイントメント（OPEN / WAITING / ACTIVE）
     counselorAppointment(counselorId: ID!): Appointment
@@ -61,8 +61,6 @@
   type Mutation {
     # カウンセラーが枠を作成 → OPEN
     createAppointment(counselorId: ID!, scheduledStart: String!, scheduledEnd: String!): Appointment!
-    # 相談者が予約 → WAITING（楽観的排他制御）
-    bookAppointment(appointmentId: ID!): Appointment!
     # 入室（OPEN→WAITING / WAITING→ACTIVE）
     joinAppointment(appointmentId: ID!): Appointment!
     # 通話終了 → ENDED（TTL セット）

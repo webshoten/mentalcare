@@ -1,18 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchSession } from "../../graphql/session";
+import { fetchAppointment } from "../../graphql/appointment";
 import { QueryProvider } from "../QueryProvider";
 
 type Props = {
-  sessionId: string;
+  appointmentId: string;
 };
 
-function SessionEndInner({ sessionId }: Props) {
+function SessionEndInner({ appointmentId }: Props) {
   const { data } = useQuery({
-    queryKey: ["session", sessionId],
-    queryFn: () => fetchSession(sessionId),
+    queryKey: ["appointment", appointmentId],
+    queryFn: () => fetchAppointment(appointmentId),
   });
 
-  const counselor = data?.session?.counselor;
+  const counselor = data?.appointment?.counselor;
   const counselorName = counselor?.name ?? "カウンセラー";
   const photoUrl = counselor?.photoUrl;
 
@@ -65,10 +65,10 @@ function SessionEndInner({ sessionId }: Props) {
   );
 }
 
-export function SessionEnd({ sessionId }: Props) {
+export function SessionEnd({ appointmentId }: Props) {
   return (
     <QueryProvider>
-      <SessionEndInner sessionId={sessionId} />
+      <SessionEndInner appointmentId={appointmentId} />
     </QueryProvider>
   );
 }

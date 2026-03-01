@@ -41,9 +41,11 @@ function WaitingView() {
 // ──────────────────────────────
 function ConnectedView({
   appointmentId,
+  counselorId,
   elapsedSec,
 }: {
   appointmentId: string;
+  counselorId: string;
   elapsedSec: number;
 }) {
   const [muted, setMuted] = useState(false);
@@ -52,7 +54,7 @@ function ConnectedView({
   const { mutate: end } = useMutation({
     mutationFn: () => endAppointment(appointmentId),
     onSuccess: () => {
-      window.location.href = `/counselor/dashboard`;
+      window.location.href = `/counselor/dashboard/${counselorId}`;
     },
   });
 
@@ -188,14 +190,16 @@ function CounselorAppointmentViewInner({ appointmentId }: Props) {
     );
   }
 
+  const counselorId = data?.appointment?.counselorId ?? "";
+
   return (
     <div className="min-h-screen bg-gray-900">
-      <ConnectedView appointmentId={appointmentId} elapsedSec={elapsedSec} />
+      <ConnectedView appointmentId={appointmentId} counselorId={counselorId} elapsedSec={elapsedSec} />
     </div>
   );
 }
 
-export function CounselorSessionView({ appointmentId }: Props) {
+export function CounselorAppointmentView({ appointmentId }: Props) {
   return (
     <QueryProvider>
       <div id="counselor-appointment-wrapper" className="min-h-screen">

@@ -7,7 +7,7 @@ import { CounselorRepository } from "@mentalcare/core/counselor";
 
 export const appointmentResolvers = {
   Query: {
-    openAppointments: () => AppointmentRepository.findOpen(),
+    openAppointments: () => AppointmentRepository.findForBubble(),
     appointments: () => AppointmentRepository.findAll(),
     appointment: (_: unknown, { id }: { id: string }) =>
       AppointmentRepository.findById(id),
@@ -39,9 +39,6 @@ export const appointmentResolvers = {
         createdAt: new Date().toISOString(),
       });
     },
-
-    bookAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
-      AppointmentRepository.book(appointmentId),
 
     joinAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
       AppointmentRepository.join(appointmentId),

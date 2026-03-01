@@ -7,252 +7,224 @@
 ## アーキテクチャ
 
 ### モノレポ構成（SST v3）
-packages/ 以下を core / functions / types / web に分割。
-SST v3 により Lambda・API Gateway・DynamoDB を単一リポジトリで管理する。
-→ インフラとアプリを同一リポジトリで一貫して扱えるため。
+packages/ 以下を core / functions / web に分割。
+SST v3 により Lambda・API Gateway・DynamoDB・S3 を単一リポジトリで管理。
 
 ### API は GraphQL（graphql-yoga）
-REST ではなく GraphQL を採用。gql.tada でスキーマから型を自動生成。
-→ フロントエンドが必要なフィールドだけ取得でき、型安全性も担保できるため。
+gql.tada でスキーマから型を自動生成。フロントエンドは必要なフィールドだけ取得でき型安全。
 
 ### フロントエンド: Astro + React Islands
-静的部分は Astro、インタラクティブな部分（カウンセラー一覧・セッション画面など）のみ React。
-→ 不要な JS を削減しつつ、必要な箇所だけ React の柔軟性を使える。
+静的部分は Astro、インタラクティブな部分のみ React（`client:load`）。
 
 ### リアルタイム同期: ポーリング（TanStack Query）
-カウンセラーの在席状態は 20 秒ごとのポーリングで取得。
-→ MVP では WebSocket の複雑さを避ける。十分な体験が得られるならポーリングで済ませる。WebSocket は MVP 後に検討。
+| 箇所 | 間隔 |
+|------|------|
+| バブルUI（openAppointments） | 20秒 |
+| セッション画面（appointment） | 5秒 |
+| カウンセラー待機画面（appointment） | 3秒 |
+| カウンセラーダッシュボード（counselorAppointment） | 5秒 |
 
-### 音声通話: Amazon Chime SDK（WebRTC）
-→ AWS エコシステム内で完結でき、1対1音声の料金も安い（30分 $0.10 程度）。
+MVP では WebSocket 不使用。WebSocket は MVP 後に検討。
+
+### 音声通話: Amazon Chime SDK（WebRTC）予定
+現時点では通話UIのみ実装済み。Chime SDK との接続は未実装。
 
 ---
 
-## データモデル
+## データモデル（2026-03-01 時点）
 
-### テーブル構成（2026-03-01 時点）
+### CounselorTable
 
-#### CounselorTable
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
 | `id` | String (PK) | カウンセラーID |
 | `name` | String | 氏名 |
-| `photoKey` | String | S3キー（PresignedURL で返す） |
-| `rating` | Float | 平均評価 |
-| `specialty` | String | 専門分野 |
-| `experienceYears` | Number | 経験年数 |
+| `photoKey` | String? | S3キー（`avatars/counselor-1.jpg`）。リゾルバでPresignedURLに変換して返す |
+| `rating` | Float? | 平均評価 |
+| `specialty` | String? | 専門分野 |
+| `experienceYears` | Int? | 経験年数 |
 | `updatedAt` | String | 更新日時（ISO8601） |
 
-※ `scheduledStart` / `scheduledEnd` / `availability` は **AppointmentTable に移行予定**。
-
-#### AppointmentTable（設計中・実装予定）
-カウンセラーが予約枠を作成し、相談者がそれを予約する。予約枠がそのままセッションになる。
+### AppointmentTable
 
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
 | `id` | String (PK) | アポイントメントID |
-| `counselorId` | String (GSI) | カウンセラーID |
+| `counselorId` | String (GSI) | カウンセラーID（`byCounselor` インデックス） |
 | `status` | Enum | OPEN / WAITING / ACTIVE / ENDED |
 | `scheduledStart` | String | 開始時刻（HH:MM・JST） |
 | `scheduledEnd` | String | 終了時刻（HH:MM・JST） |
 | `createdAt` | String | 作成日時（ISO8601） |
 | `endedAt` | String? | 終了日時（ENDED 時にセット） |
-| `ttl` | Number? | Unix秒（endedAt + 1時間、DynamoDB TTL） |
+| `ttl` | Number? | Unix秒（endedAt + 60秒、DynamoDB TTL で自動削除）※テスト用、本番は要変更 |
 
-**ステータス遷移:**
+※ 旧 SessionTable は廃止済み。AppointmentTable に統合。
+
+---
+
+## ドメイン設計
+
+### Appointment ステータス遷移
+
 ```
-カウンセラーが枠作成           → OPEN
-どちらか一方が入室（先着問わず） → WAITING
-両方が揃った（2人目が入室）     → ACTIVE
-通話終了                      → ENDED（ttl セット → 1時間後に自動削除）
+OPEN    → カウンセラーがダッシュボードで枠を作成
+WAITING → カウンセラーが「待機する」を押して入室
+ACTIVE  → 相談者がバブルから選んで入室（両者揃った）
+ENDED   → どちらかが「通話終了」を押した
 ```
 
-- 相談者が先に予約 → WAITING、その後カウンセラーが入室 → ACTIVE
-- カウンセラーが先に待機画面へ → WAITING、その後相談者が予約 → ACTIVE
-- `joinAppointment` mutation 1本で両方のパターンを処理（OPEN→WAITING / WAITING→ACTIVE）
+- `joinAppointment(appointmentId)` 1本で両パターンを処理
+  - status が OPEN → WAITING に更新（カウンセラーが先に入室）
+  - status が WAITING → ACTIVE に更新（相談者が入室）
+- 楽観的排他制御（DynamoDB ConditionalExpression）で二重入室を防止
 
-**旧 SessionTable は AppointmentTable に統合・廃止予定。**
+### CounselorAvailability（時間ベースの算出値）
 
----
+`calculateAvailability(scheduledStart, scheduledEnd)` で動的に算出。AppointmentStatus とは独立。
 
-### カウンセラーの状態: 4段階 enum
-AVAILABLE（今すぐ） / SOON（15分後〜） / LATER（30分後〜） / OFFLINE（非表示）
-→ Appointment の `scheduledStart/scheduledEnd` から動的に算出。OFFLINE はバブル画面に表示しない。
-
----
-
-## UX・プロダクト
-
-### マッチング方式: 指名 + 即時接続の2通り
-カウンセラーを自分で選ぶ「指名選択」と、空いている人に自動接続する「今すぐ話す」を併設。
-→ 「誰でもいいからとにかく話したい」と「この人に話したい」の両ニーズに対応するため。
-
-### セッションロック: 楽観的排他制御
-「相談を始める」押下時に DB でカウンセラーをロック。先着1名のみ成功、後続はエラー。
-ロック済みカウンセラーは他の相談者のバブルから削除（グレーアウトではなく非表示）。
-→ 二重予約を防ぎつつ、使えないバブルをUIに残してストレスを与えない。
-
-### バブルUI: Canvas + Web Worker + D3 force simulation
-カウンセラー一覧をバブル（円）で表示。D3 force simulation で自然な動き。
-描画・物理演算は OffscreenCanvas + Web Worker 内で完結。
-→ メインスレッドをブロックせず、アニメーションがスムーズに動くため。
-
----
-
-## カウンセラー一覧画面（2026-02-28）
-
-### スタイリング: Tailwind CSS v4（@tailwindcss/vite）
-Astro + React のプロジェクトに Tailwind v4 を導入。`@tailwindcss/vite` プラグイン経由で設定。
-→ デザインとの親和性が高く、細かい調整がしやすいため。
-
-### カウンセラー写真: S3（パブリック公開バケット）
-`sst.aws.Bucket` で `access: "public"` のバケットを作成。seed 時に randomuser.me から取得した画像をアップロードし、DynamoDB の `photoUrl` に S3 URL を保存。
-→ 外部URLに依存せず、本番と同じ構成でローカル開発できるため。
-
-### Counselor 型に追加したフィールド
-`specialty`（専門分野）、`experienceYears`（経験年数）、`feePerSession`（料金/50分）を GraphQL スキーマと DynamoDB に追加。
-→ カウンセラー一覧のテーブル表示に必要な情報として追加。
-
-### 追加した GraphQL クエリ
-- `counselors` — 全カウンセラー取得（一覧画面用）
-- `counselorStats` — 統計（total, availableToday）→ 既存の `availableCounselors` は OFFLINE 除外のバブル画面用として維持。
-
-### ステータス表示の対応
-- AVAILABLE → 「対応中」（オレンジ）
-- SOON / LATER → 「予約可能」（グリーン）
-- OFFLINE → 「オフライン」（グレー）
-
-### ページ構成: サイドバー + メインコンテンツ
-`counselors.astro` にサイドバーを組み込み、`CounselorList.tsx` を React Island として `client:load` でマウント。
-→ サイドバーは静的なので Astro で描画、インタラクティブな一覧部分のみ React にすることで JS を最小化。
-
----
-
-## セッション機能（2026-03-01）
-
-### MVP は音声のみ（チャットなし）
-チャット機能は MVP スコープ外。通話のみに絞る。
-→ シンプルに動くものを先に出す。チャットは MVP 後に検討。
-
-### セッション画面: 単一ページでの状態切り替え
-`/talk/session/[id]` 内でコンポーネントを切り替える（waiting → connected）。別ルートへの遷移なし。
-→ 画面遷移よりも自然な体験になるため。
-
-### 接続モック: 3秒タイマー
-Chime SDK 未実装のため、セッション開始から3秒後に自動で「通話中」状態に切り替えるモックを実装。
-→ UI を先に完成させ、SDK は後から差し込む。
-
-### カウンセラー可用性: スケジュール自動算出
-手動のオンライン切替ではなく、`scheduledStart` / `scheduledEnd`（HH:MM形式・UTC）を DynamoDB に保存し、`calculateAvailability()` でリクエスト時に動的に算出。
-- AVAILABLE: 現在が開始〜終了時刻の間
-- SOON: 開始まで30分以内
-- LATER: 開始まで60分以内
-- OFFLINE: それ以外
-
-### タイムゾーン統一: UTC
-seed スクリプト（`hhmm()`）と `calculateAvailability()` の両方で UTC を使用。Lambda が UTC で動作するため。
+| 値 | 条件 |
+|----|------|
+| AVAILABLE | 現在が scheduledStart〜scheduledEnd の間 |
+| SOON | 開始まで30分以内 |
+| LATER | 開始まで60分以内 |
+| OFFLINE | それ以外 |
 
 ### S3 写真: PresignedURL 方式
-バケットを非公開に変更。DynamoDB には S3 キー（`photoKey`）のみ保存。
-GraphQL リゾルバ（`Counselor.photoUrl`）でリクエスト時に PresignedURL（有効期限1時間）を発行して返す。
 
-### GraphQL スキーマ追加（セッション関連）
-| 追加 | 種別 | 用途 |
-|------|------|------|
-| `Session` 型 | Type | id / counselorId / status / createdAt / endedAt |
-| `SessionStatus` | Enum | WAITING / ACTIVE / ENDED |
-| `startSession(counselorId)` | Mutation | セッション開始 |
-| `endSession(sessionId)` | Mutation | 通話終了 |
-| `session(id)` | Query | セッション取得 |
-| `sessions` | Query | 全セッション取得（デバッグ用） |
-| `pendingSession(counselorId)` | Query | カウンセラー待機中セッション取得 |
-| `setSchedule(counselorId, start, end)` | Mutation | 勤務スケジュール設定 |
-| `counselor(id)` | Query | カウンセラー単体取得 |
-
-### DynamoDB テーブル追加
-- `SessionTable`: hashKey=id、GSI `byCounselor`（hashKey=counselorId）でカウンセラー別セッション検索に対応
+バケット非公開。DynamoDB には `photoKey`（S3キー）のみ保存。
+`Counselor.photoUrl` フィールドリゾルバでリクエスト時に PresignedURL（有効期限1時間）を生成して返す。
 
 ---
 
-## カウンセラー向け画面（2026-03-01）
+## 画面・コンポーネント構成（2026-03-01 時点）
 
-### ダッシュボード: `/counselor/dashboard/[id]`
-- 「本日の予定」カード: 開始・終了時刻の入力フォーム（`setSchedule` mutation）
-- 「確定した予定」カード: 現在のスケジュールと availability 表示 + 待機する/接続するボタン
-- カウンセラー ID は URL パラメータで渡す（MVP: 認証なし）
-- 相談者が WAITING セッションを持っている場合「接続する」ボタンに変化（`pendingSession` 5秒ポーリング）
+### ページ一覧
 
-### カウンセラー側セッション画面: `/counselor/session/[id]`
-- 相談者を匿名（「相談者」アイコン）で表示
-- 待機状態: `session` クエリを3秒ポーリングし、ACTIVE になったら通話中に切り替え
-- 通話中: クライアント側と同じコントロール（ミュート・通話終了・スピーカー）
-- 通話終了 → `/counselor/dashboard` に戻る
+| URL | ファイル | 説明 |
+|-----|---------|------|
+| `/` | `pages/index.astro` | `/debug` へリダイレクト |
+| `/debug` | `pages/debug.astro` | 開発用デバッグ画面 |
+| `/talk/home` | `pages/talk/home.astro` | バブルUI |
+| `/talk/appointment/[id]` | `pages/talk/appointment/[id].astro` | 相談者セッション画面 |
+| `/talk/appointment/[id]/end` | `pages/talk/appointment/[id]/end.astro` | セッション終了画面 |
+| `/counselor/dashboard/[id]` | `pages/counselor/dashboard/[id].astro` | カウンセラーダッシュボード |
+| `/counselor/appointment/[id]` | `pages/counselor/appointment/[id].astro` | カウンセラーセッション画面 |
+| `/counselor/list` | `pages/counselor/list.astro` | カウンセラー一覧（管理用） |
+
+### バブルUI 表示ルール（BubbleCanvas.tsx）
+
+| AppointmentStatus | CounselorAvailability | 表示 | クリック |
+|-------------------|-----------------------|------|---------|
+| WAITING | — | ● 待機中（緑） | ✅ |
+| OPEN | AVAILABLE / SOON / LATER | ● 今すぐ可 / ◎ 15分後〜 / ◎ 30分後〜 | ✅ |
+| ACTIVE | — | ● 通話中（グレーアウト） | ❌ |
+| OPEN | OFFLINE | ● オフライン（グレーアウト） | ❌ |
+| ENDED | — | 非表示 | — |
+
+### カウンセラーダッシュボード 状態マトリクス（CounselorDashboard.tsx）
+
+| AppointmentStatus | 相談者の状態テキスト | ボタン | ボタン動作 |
+|-------------------|---------------------|--------|-----------|
+| なし / OPEN | まだ接続していません | 待機する（indigo） | joinAppointment → /counselor/appointment/[id] |
+| WAITING | 相談者が待機中です | 接続する（緑） | joinAppointment → /counselor/appointment/[id] |
+| ACTIVE | 相談中です | 通話に戻る（緑） | /counselor/appointment/[id] へ直接遷移 |
 
 ---
 
-## 開発体験（2026-03-01）
+## GraphQL スキーマ（現在）
+
+### Query
+| 名前 | 用途 |
+|------|------|
+| `openAppointments` | バブルUI用（ENDED 以外を全件返す） |
+| `appointment(id)` | セッション画面でポーリング |
+| `appointments` | デバッグ用全件取得 |
+| `counselorAppointment(counselorId)` | カウンセラーダッシュボード用 |
+| `counselors` | カウンセラー一覧・管理用 |
+| `counselor(id)` | カウンセラー単体取得 |
+| `counselorStats` | 統計（total のみ） |
+
+### Mutation
+| 名前 | 用途 |
+|------|------|
+| `createAppointment` | カウンセラーが予定枠を作成・更新 |
+| `joinAppointment` | 入室（OPEN→WAITING / WAITING→ACTIVE） |
+| `endAppointment` | 通話終了（ENDED + TTL セット） |
+| `seedDatabase` | テストデータ投入（開発用） |
+
+---
+
+## 開発環境
 
 ### デバッグページ: `/debug`
-開発用のデバッグ画面。`/` ルートがリダイレクト先になっている。
-- **左サイドバー**: 実 URL ナビゲーション（相談者向け・カウンセラー向け）。counselor-1〜7 の実リンクと availability バッジ。WAITING/ACTIVE セッションへのリンクも自動表示。
-- **右メイン（上から順）**:
-  1. アクション（Seed 実行コマンドのコピー）
-  2. CounselorTable の全データ（id / name / availability / scheduledStart / scheduledEnd / rating / sessionCount / specialty）
-  3. SessionTable の全データ（id / counselorId / status / createdAt / endedAt）
 
-### ワークフロールール（CLAUDE.md に記載）
-実装前に必ず「計画 → Pencil デザイン → 計画再確認 → 実装」の順を守る。
+- 全カウンセラーの状態確認
+- 全アポイントメントの状態確認
+- Seed ボタン（テストデータ投入）
+- 各画面へのクイックリンク（counselor-1〜7）
 
 ---
 
-## Chime実装前の作業リスト（未対応）
+## MVP スコープ外（理由）
 
-### 1. URLバグ修正（必須）
-
-| ファイル | 行 | 問題 | 修正内容 |
-|---------|-----|------|---------|
-| `packages/web/src/components/talk/BubbleCanvas.tsx` | 97 | `/talk/session/${id}` | `/talk/appointment/${id}` に変更 |
-| `packages/web/src/components/talk/AppointmentView.tsx` | 81 | `/talk/session/${id}/end` | `/talk/appointment/${id}/end` に変更 |
-
-### 2. `joinAppointment` mutation 追加（必須）
-
-OPEN→WAITING / WAITING→ACTIVE の2段階遷移を1つの mutation で処理。
-- 呼び出し時に status が OPEN → WAITING に更新
-- 呼び出し時に status が WAITING → ACTIVE に更新
-- 相談者・カウンセラーどちらが先に呼んでも成立する
-
-追加が必要なファイル:
-- `packages/functions/src/typedefs.ts` — `joinAppointment(appointmentId: ID!): Appointment!` を Mutation に追加
-- `packages/core/src/appointment/index.ts` — `join()` メソッドを追加（条件付き更新）
-- `packages/functions/src/appointment/resolver.ts` — `joinAppointment` リゾルバを追加
-- `packages/web/src/graphql/appointment.ts` — `JoinAppointmentMutation` と `joinAppointment` helper を追加
-
-### 3. AppointmentView のモック削除（必須）
-
-`packages/web/src/components/talk/AppointmentView.tsx` の「3秒後に自動でconnected」モック（194-198行）を削除し、
-`status === "ACTIVE"` をポーリングで検知する方式に変更（CounselorAppointmentView と同じ方式）。
-
-### 4. CounselorAppointmentView の「接続済みにする」ボタンを `startAppointment` に接続（必須）
-
-`packages/web/src/components/counselor/CounselorAppointmentView.tsx` の `onConnect` が
-ローカルのStateを変えるだけでDBを更新していない。
-`startAppointment` mutation を呼んでから `callState` を変える。
-
-### 5. 旧sessionファイルの削除（推奨）
-
-以下のファイルは不要（AppointmentTable に統合済み）:
-- `packages/core/src/session/`
-- `packages/functions/src/session/`
-- `packages/web/src/graphql/session.ts`
+| 機能 | 理由 |
+|------|------|
+| 評価システム | セッション数が少ないうちはデータが意味を持たない |
+| カウンセラー審査 | まず動くものを出してから品質管理を考える |
+| 緊急時フロー | 専門知識が必要。MVP後に設計 |
+| 料金・決済 | まず使われるかを確認してから有料化 |
+| ビデオ通話 | 音声で十分か検証してから追加 |
+| フィルター検索 | カウンセラー数が少ないうちは不要 |
+| チャット | 音声のみで先行リリース |
+| 認証 | MVP は URL パラメータで counselorId を渡す |
 
 ---
 
-## MVP スコープの境界
+## 機能レビュー記録
 
-### MVP に含めないもの（理由）
-- 評価システム → セッション数が少ないうちはデータが意味を持たない
-- カウンセラー審査 → まず動くものを出してから品質管理を考える
-- 緊急時フロー（自殺念慮など） → 専門知識が必要。MVP後に設計する
-- 料金・決済 → まず使われるかを確認してから有料化を検討
-- ビデオ通話 → 音声で十分か検証してから追加する
-- フィルター検索 → カウンセラー数が少ないうちは不要
+### 相談者側 ① `/talk/home` — バブルUI
+
+**ファイル**
+- `packages/web/src/pages/talk/home.astro` — ページ（ヘッダー静的部分）
+- `packages/web/src/components/talk/BubbleCanvas.tsx` — バブル部分（React Island）
+
+**動作**
+1. ページを開くと `openAppointments` クエリを20秒ごとにポーリング
+2. アポイントメントを持つカウンセラーがバブルとして表示される
+3. バブルのサイズは `rating`（評価）に比例、ドラッグで移動可能
+4. クリックすると確認ダイアログ表示
+5. 「相談を始める」→ `joinAppointment` mutation → `/talk/appointment/[id]` へ遷移
+
+**AppointmentStatus の定義（バブル表示との対応）**
+
+| status | 意味 | 表示 | クリック |
+|--------|------|------|---------|
+| `OPEN` | カウンセラーが枠を作成済み・未入室 | 時刻ベースのラベル（下記） | 時刻による |
+| `WAITING` | カウンセラーが「待機する」を押して入室済み | ● 待機中（緑） | ✅ |
+| `ACTIVE` | 相談者も入室、通話中 | ● 通話中（グレー） | ❌ |
+| `ENDED` | 通話終了 | 非表示 | — |
+
+**OPEN の時刻ベースラベル（CounselorAvailability）**
+
+| 条件 | ラベル | クリック |
+|------|--------|---------|
+| 現在時刻が scheduledStart〜scheduledEnd の間 | ● 今すぐ可（緑） | ✅ |
+| 開始まで30分以内 | ◎ 15分後〜（黄） | ✅ |
+| 開始まで60分以内 | ◎ 30分後〜（黄） | ✅ |
+| それ以外 | ● オフライン（グレー） | ❌ |
+
+---
+
+## レビュー中の未確認事項
+
+### ① `counselorStats` の将来計画
+現在は `{ total: Int! }` のみ返す。「本日対応可能数」など追加するか未確認。
+
+### ② Chime SDK 実装
+通話UIは完成。Amazon Chime SDK との接続が未実装。実装タイミング未定。
+
+### ③ TTL の本番値
+現在 `endedAt + 60秒`（テスト用）。本番では何時間にするか未確認。
+
+### ④ 認証
+MVP は認証なし。counselorId を URL パラメータで渡している。本番前に要検討。

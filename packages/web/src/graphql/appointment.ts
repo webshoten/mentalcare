@@ -82,16 +82,6 @@ export const CreateAppointmentMutation = graphql(`
   }
 `);
 
-export const BookAppointmentMutation = graphql(`
-  mutation BookAppointment($appointmentId: ID!) {
-    bookAppointment(appointmentId: $appointmentId) {
-      id
-      status
-      counselorId
-    }
-  }
-`);
-
 export const JoinAppointmentMutation = graphql(`
   mutation JoinAppointment($appointmentId: ID!) {
     joinAppointment(appointmentId: $appointmentId) {
@@ -121,8 +111,6 @@ export const createAppointment = (
   scheduledStart: string,
   scheduledEnd: string,
 ) => executeGraphQL(CreateAppointmentMutation, { counselorId, scheduledStart, scheduledEnd });
-export const bookAppointment = (appointmentId: string) =>
-  executeGraphQL(BookAppointmentMutation, { appointmentId });
 export const joinAppointment = (appointmentId: string) =>
   executeGraphQL(JoinAppointmentMutation, { appointmentId });
 export const endAppointment = (appointmentId: string) =>

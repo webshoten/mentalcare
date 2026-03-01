@@ -97,14 +97,10 @@ export const AppointmentRepository = {
     return items.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   },
 
-  // バブルUI用：OPEN かつ OFFLINE 以外
-  async findOpen(): Promise<Appointment[]> {
+  // バブルUI用：ENDED 以外を全件返す（表示制御はフロント側で行う）
+  async findForBubble(): Promise<Appointment[]> {
     const all = await AppointmentRepository.findAll();
-    return all.filter((a) => {
-      if (a.status !== "OPEN") return false;
-      const { availability } = calculateAvailability(a.scheduledStart, a.scheduledEnd);
-      return availability !== "OFFLINE";
-    });
+    return all.filter((a) => a.status !== "ENDED");
   },
 
   // カウンセラーの現在の OPEN / WAITING / ACTIVE アポイントメント

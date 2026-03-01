@@ -59,13 +59,17 @@ function DashboardInner({ counselorId }: Props) {
   const counselor = counselorData?.counselor;
   const appointment = appointmentData?.counselorAppointment;
   const isWaiting = appointment?.status === "WAITING";
+  const isActive = appointment?.status === "ACTIVE";
 
   const isValid = startTime.length === 5 && endTime.length === 5 && startTime < endTime;
 
   const handleGoToSession = () => {
-    if (appointment?.id) {
-      join(appointment.id);
+    if (!appointment?.id) return;
+    if (isActive) {
+      window.location.href = `/counselor/appointment/${appointment.id}`;
+      return;
     }
+    join(appointment.id);
   };
 
   return (
@@ -153,12 +157,21 @@ function DashboardInner({ counselorId }: Props) {
             <div className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3">
               <div className="flex flex-col gap-0.5">
                 <span className="text-sm font-semibold text-gray-700">相談者の状態</span>
-                <span className={`text-xs font-medium ${isWaiting ? "text-emerald-600" : "text-gray-400"}`}>
-                  {isWaiting ? "相談者が待機中です" : "まだ接続していません"}
+                <span className={`text-xs font-medium ${isActive || isWaiting ? "text-emerald-600" : "text-gray-400"}`}>
+                  {isActive ? "相談中です" : isWaiting ? "相談者が待機中です" : "まだ接続していません"}
                 </span>
               </div>
 
-              {isWaiting ? (
+              {isActive ? (
+                <button
+                  type="button"
+                  onClick={handleGoToSession}
+                  className="flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition-colors"
+                >
+                  <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                  通話に戻る
+                </button>
+              ) : isWaiting ? (
                 <button
                   type="button"
                   onClick={handleGoToSession}

@@ -15,6 +15,7 @@ type AppointmentCounselor = {
 type Appointment = {
   id: string;
   counselorId: string;
+  status: string;
   availability: string;
   counselor?: AppointmentCounselor | null;
 };
@@ -25,16 +26,22 @@ type Position = {
   topPct: number;
 };
 
-function statusInfo(availability: string) {
+function statusInfo(availability: string, status?: string) {
+  if (status === "ACTIVE") {
+    return { label: "● 通話中", color: "#9CA3AF", dotColor: "#9CA3AF", bg: "#F3F4F6", border: "#E5E7EB", disabled: true };
+  }
+  if (status === "WAITING") {
+    return { label: "● 待機中", color: "#16A34A", dotColor: "#16A34A", bg: "#DCFCE7", border: "#86EFAC", disabled: false };
+  }
   switch (availability) {
     case "AVAILABLE":
-      return { label: "● 今すぐ可", color: "#16A34A", dotColor: "#16A34A", bg: "#DCFCE7", border: "#86EFAC" };
+      return { label: "● 今すぐ可", color: "#16A34A", dotColor: "#16A34A", bg: "#DCFCE7", border: "#86EFAC", disabled: false };
     case "SOON":
-      return { label: "◎ 15分後〜", color: "#B45309", dotColor: "#F59E0B", bg: "#FEF3C7", border: "#FCD34D" };
+      return { label: "◎ 15分後〜", color: "#B45309", dotColor: "#F59E0B", bg: "#FEF3C7", border: "#FCD34D", disabled: false };
     case "LATER":
-      return { label: "◎ 30分後〜", color: "#B45309", dotColor: "#F59E0B", bg: "#FEF3C7", border: "#FCD34D" };
+      return { label: "◎ 30分後〜", color: "#B45309", dotColor: "#F59E0B", bg: "#FEF3C7", border: "#FCD34D", disabled: false };
     default:
-      return { label: "—", color: "#6B7280", dotColor: "#9CA3AF", bg: "#F3F4F6", border: "#E5E7EB" };
+      return { label: "● オフライン", color: "#9CA3AF", dotColor: "#9CA3AF", bg: "#F3F4F6", border: "#E5E7EB", disabled: true };
   }
 }
 
@@ -123,6 +130,8 @@ function BubbleCanvasInner() {
 
   const handleMouseDown = (e: React.MouseEvent, i: number) => {
     e.preventDefault();
+    const a = appointments[i];
+    if (!a || statusInfo(a.availability, a.status).disabled) return;
     dragMoved.current = false;
     const container = containerRef.current?.getBoundingClientRect();
     if (!container) return;
@@ -161,7 +170,10 @@ function BubbleCanvasInner() {
 
   const handleMouseUp = (i: number) => {
     if (!dragMoved.current) {
-      setSelected(appointments[i]);
+      const a = appointments[i];
+      if (a && !statusInfo(a.availability, a.status).disabled) {
+        setSelected(a);
+      }
     }
     dragState.current = null;
     setDraggingIdx(null);
@@ -215,7 +227,7 @@ function BubbleCanvasInner() {
           </div>
 
           {(() => {
-            const s = statusInfo(selected.availability);
+            const s = statusInfo(selected.availability, selected.status);
             return (
               <div
                 className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
@@ -287,6 +299,7 @@ function BubbleCanvasInner() {
           const animIdx = (i % 3) + 1;
           const animDuration = 4 + sr(i * 7 + 3) * 3;
           const name = a.counselor?.name ?? "—";
+          const si = statusInfo(a.availability, a.status);
 
           return (
             <div
@@ -297,11 +310,12 @@ function BubbleCanvasInner() {
                 height: p.size,
                 left: `calc(${p.leftPct}% - ${p.size / 2}px)`,
                 top: `calc(${p.topPct}% - ${p.size / 2}px)`,
-                cursor: isDragging ? "grabbing" : "grab",
+                cursor: si.disabled ? "default" : isDragging ? "grabbing" : "grab",
                 zIndex: isDragging ? 10 : 1,
                 boxShadow: isDragging ? "0 8px 24px rgba(0,0,0,0.18)" : "0 2px 8px rgba(0,0,0,0.10)",
                 transition: isDragging ? "none" : "box-shadow 0.2s",
                 animation: isDragging ? "none" : `bubbleFloat${animIdx} ${animDuration}s ease-in-out infinite`,
+                filter: si.disabled ? "grayscale(0.8) opacity(0.55)" : undefined,
               }}
               onMouseDown={(e) => handleMouseDown(e, i)}
               onMouseUp={() => handleMouseUp(i)}
@@ -331,10 +345,10 @@ function BubbleCanvasInner() {
                   className="font-semibold leading-tight"
                   style={{
                     fontSize: statusFs,
-                    color: statusInfo(a.availability).color === "#16A34A" ? "#69F0AE" : "#FFB300",
+                    color: si.disabled ? "#D1D5DB" : si.color === "#16A34A" ? "#69F0AE" : "#FFB300",
                   }}
                 >
-                  {statusInfo(a.availability).label}
+                  {si.label}
                 </span>
               </div>
             </div>

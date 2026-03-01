@@ -104,15 +104,22 @@ packages/
 ### Appointment ステータス遷移
 ```
 OPEN    → カウンセラーが枠を作成
-WAITING → どちらか一方が入室（先着問わず）
-ACTIVE  → 両方が揃った（2人目が入室したとき）
+WAITING → カウンセラーが待機画面へ入室
+ACTIVE  → 相談者が入室（両者揃った）
 ENDED   → 通話終了
 ```
-- 相談者が先に予約 → WAITING、カウンセラーが入室 → ACTIVE
-- カウンセラーが先に待機画面へ → WAITING、相談者が予約 → ACTIVE
-- `joinAppointment(appointmentId)` mutation 1本で両パターンを処理
+- カウンセラーが先に待機画面へ → WAITING、相談者がバブルから選ぶ → ACTIVE
+- `joinAppointment(appointmentId)` mutation 1本で処理
   - status が OPEN → WAITING に更新
   - status が WAITING → ACTIVE に更新
+
+### カウンセラーダッシュボード（`/counselor/dashboard/[id]`）の状態マトリクス
+
+| AppointmentStatus | 相談者の状態テキスト | ボタン | ボタン動作 |
+|-------------------|---------------------|--------|-----------|
+| OPEN | まだ接続していません | 待機する（indigo） | joinAppointment → /counselor/appointment/[id] |
+| WAITING | 相談者が待機中です | 接続する（緑） | joinAppointment → /counselor/appointment/[id] |
+| ACTIVE | 相談中です | 通話に戻る（緑） | /counselor/appointment/[id] へ直接遷移 |
 
 ### カウンセラーの可用性（CounselorAvailability）
 `AVAILABLE`（今すぐ）/ `SOON`（15分後〜）/ `LATER`（30分後〜）/ `OFFLINE`（バブル非表示）

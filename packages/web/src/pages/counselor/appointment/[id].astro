@@ -1,0 +1,10 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { CounselorSessionView as CounselorAppointmentView } from "../../../components/counselor/CounselorAppointmentView";
+
+const { id } = Astro.params;
+---
+
+<Layout title="セッション | MentalCare">
+  <CounselorAppointmentView appointmentId={id!} client:load />
+</Layout>

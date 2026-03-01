@@ -6,6 +6,14 @@
 
 declare module "sst" {
   export interface Resource {
+    "AppointmentTable": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
+    "CounselorPhotoBucket": {
+      "name": string
+      "type": "sst.aws.Bucket"
+    }
     "CounselorTable": {
       "name": string
       "type": "sst.aws.Dynamo"

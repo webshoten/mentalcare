@@ -1,18 +1,47 @@
 import { executeGraphQL, graphql } from "./client";
 
-export const AvailableCounselorsQuery = graphql(`
-  query AvailableCounselors {
-    availableCounselors {
+export const CounselorsQuery = graphql(`
+  query Counselors {
+    counselors {
       id
       name
       photoUrl
-      availability
-      availableAt
       rating
-      sessionCount
+      specialty
+      experienceYears
+    }
+    counselorStats {
+      total
     }
   }
 `);
 
-export const fetchAvailableCounselors = () =>
-  executeGraphQL(AvailableCounselorsQuery);
+export const CounselorQuery = graphql(`
+  query Counselor($id: ID!) {
+    counselor(id: $id) {
+      id
+      name
+      photoUrl
+      rating
+      specialty
+      experienceYears
+    }
+  }
+`);
+
+export const SeedDatabaseMutation = graphql(`
+  mutation SeedDatabase {
+    seedDatabase {
+      seeded
+    }
+  }
+`);
+
+export const fetchCounselors = () =>
+  executeGraphQL(CounselorsQuery);
+
+export const fetchCounselor = (id: string) =>
+  executeGraphQL(CounselorQuery, { id });
+
+export const seedDatabase = () =>
+  executeGraphQL(SeedDatabaseMutation);

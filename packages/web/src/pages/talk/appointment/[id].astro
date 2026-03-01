@@ -1,0 +1,10 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { SessionView as AppointmentView } from "../../../components/talk/AppointmentView";
+
+const { id } = Astro.params;
+---
+
+<Layout title="セッション | MentalCare">
+  <AppointmentView appointmentId={id!} client:load />
+</Layout>

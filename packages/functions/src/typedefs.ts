@@ -1,25 +1,71 @@
 export const typeDefs = /* GraphQL */ `
 
-  # カウンセラーの対応可能状態
   enum CounselorAvailability {
     AVAILABLE   # 今すぐ可
     SOON        # 15分後〜
     LATER       # 30分後〜
-    OFFLINE     # オフライン（バブル非表示）
+    OFFLINE     # オフライン
   }
 
   type Counselor {
     id: ID!
     name: String!
     photoUrl: String
+    rating: Float
+    specialty: String
+    experienceYears: Int
+  }
+
+  type CounselorStats {
+    total: Int!
+  }
+
+  enum AppointmentStatus {
+    OPEN     # カウンセラーが枠作成・相談者募集中
+    WAITING  # 相談者がマッチング済み・通話待ち
+    ACTIVE   # 通話中
+    ENDED    # 終了
+  }
+
+  type Appointment {
+    id: ID!
+    counselorId: String!
+    status: AppointmentStatus!
+    scheduledStart: String!   # HH:MM (JST)
+    scheduledEnd: String!     # HH:MM (JST)
     availability: CounselorAvailability!
-    availableAt: String   # SOON / LATER の場合、対応開始予定時刻（ISO8601）
-    rating: Float         # 平均評価
-    sessionCount: Int!    # 累計セッション数
+    availableAt: String       # SOON / LATER のとき対応開始予定時刻（ISO8601）
+    createdAt: String!
+    endedAt: String
+    counselor: Counselor
+  }
+
+  type SeedResult {
+    seeded: Int!
   }
 
   type Query {
-    # バブル画面用：AVAILABLE / SOON / LATER のカウンセラー一覧
-    availableCounselors: [Counselor!]!
+    # バブル画面用：OPEN の Appointment（OFFLINE 除く）
+    openAppointments: [Appointment!]!
+    # カウンセラーの現在のアポイントメント（OPEN / WAITING / ACTIVE）
+    counselorAppointment(counselorId: ID!): Appointment
+    # デバッグ用
+    appointments: [Appointment!]!
+    appointment(id: ID!): Appointment
+    # カウンセラー情報
+    counselors: [Counselor!]!
+    counselor(id: ID!): Counselor
+    counselorStats: CounselorStats!
+  }
+
+  type Mutation {
+    # カウンセラーが枠を作成 → OPEN
+    createAppointment(counselorId: ID!, scheduledStart: String!, scheduledEnd: String!): Appointment!
+    # 相談者が予約 → WAITING（楽観的排他制御）
+    bookAppointment(appointmentId: ID!): Appointment!
+    # 通話終了 → ENDED（TTL セット）
+    endAppointment(appointmentId: ID!): Appointment!
+    # デバッグ用：カウンセラーデータのシード
+    seedDatabase: SeedResult!
   }
 `;

@@ -15,15 +15,26 @@ export default $config({
       primaryIndex: { hashKey: "id" },
     });
 
+    const counselorPhotoBucket = new sst.aws.Bucket("CounselorPhotoBucket");
+
+    const appointmentTable = new sst.aws.Dynamo("AppointmentTable", {
+      fields: { id: "string", counselorId: "string" },
+      primaryIndex: { hashKey: "id" },
+      globalIndexes: {
+        byCounselor: { hashKey: "counselorId" },
+      },
+      ttl: "ttl",
+    });
+
     const api = new sst.aws.ApiGatewayV2("MyApi");
 
     api.route("POST /graphql", {
       handler: "packages/functions/src/api.handler",
-      link: [counselorTable],
+      link: [counselorTable, counselorPhotoBucket, appointmentTable],
     });
     api.route("GET /graphql", {
       handler: "packages/functions/src/api.handler",
-      link: [counselorTable],
+      link: [counselorTable, counselorPhotoBucket, appointmentTable],
     });
 
     if ($dev) {

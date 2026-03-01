@@ -51,8 +51,8 @@ packages/
 | URL | 画面 |
 |-----|------|
 | `/talk/home` | バブルUI — 今すぐ話せるカウンセラー一覧 |
-| `/talk/session/[id]` | セッション画面（チャット or 音声） |
-| `/talk/session/[id]/end` | セッション終了・評価 |
+| `/talk/appointment/[id]` | セッション画面（音声） |
+| `/talk/appointment/[id]/end` | セッション終了・評価 |
 
 ### カウンセラーコンテキスト（`/counselor/`）
 カウンセリングを提供するユーザー。待機状態を管理し、セッションを受ける。
@@ -61,7 +61,7 @@ packages/
 |-----|------|
 | `/counselor/dashboard` | 待機画面（オンライン切替・実績） |
 | `/counselor/profile` | プロフィール設定 |
-| `/counselor/session/[id]` | セッション画面 |
+| `/counselor/appointment/[id]` | セッション画面 |
 
 ---
 
@@ -101,8 +101,22 @@ packages/
 ### セッションコンテキスト（共通）
 セッションロックは楽観的排他制御。先着1名のみ成功、ロック済みカウンセラーはバブルから非表示。
 
-### カウンセラーの状態
+### Appointment ステータス遷移
+```
+OPEN    → カウンセラーが枠を作成
+WAITING → どちらか一方が入室（先着問わず）
+ACTIVE  → 両方が揃った（2人目が入室したとき）
+ENDED   → 通話終了
+```
+- 相談者が先に予約 → WAITING、カウンセラーが入室 → ACTIVE
+- カウンセラーが先に待機画面へ → WAITING、相談者が予約 → ACTIVE
+- `joinAppointment(appointmentId)` mutation 1本で両パターンを処理
+  - status が OPEN → WAITING に更新
+  - status が WAITING → ACTIVE に更新
+
+### カウンセラーの可用性（CounselorAvailability）
 `AVAILABLE`（今すぐ）/ `SOON`（15分後〜）/ `LATER`（30分後〜）/ `OFFLINE`（バブル非表示）
+※ Appointment の scheduledStart/scheduledEnd から動的に算出。AppointmentStatus とは別物。
 
 ---
 

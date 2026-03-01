@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { createAppointment, fetchCounselorAppointment } from "../../graphql/appointment";
+import { createAppointment, fetchCounselorAppointment, joinAppointment } from "../../graphql/appointment";
 import { fetchCounselor } from "../../graphql/counselor";
 import { QueryProvider } from "../QueryProvider";
 
@@ -49,6 +49,13 @@ function DashboardInner({ counselorId }: Props) {
     },
   });
 
+  const { mutate: join, isPending: isJoining } = useMutation({
+    mutationFn: (appointmentId: string) => joinAppointment(appointmentId),
+    onSuccess: (data) => {
+      window.location.href = `/counselor/appointment/${data.joinAppointment.id}`;
+    },
+  });
+
   const counselor = counselorData?.counselor;
   const appointment = appointmentData?.counselorAppointment;
   const isWaiting = appointment?.status === "WAITING";
@@ -57,7 +64,7 @@ function DashboardInner({ counselorId }: Props) {
 
   const handleGoToSession = () => {
     if (appointment?.id) {
-      window.location.href = `/counselor/appointment/${appointment.id}`;
+      join(appointment.id);
     }
   };
 
@@ -155,18 +162,20 @@ function DashboardInner({ counselorId }: Props) {
                 <button
                   type="button"
                   onClick={handleGoToSession}
-                  className="flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition-colors"
+                  disabled={isJoining}
+                  className="flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white text-sm font-bold px-4 py-2 rounded-xl transition-colors"
                 >
                   <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                  接続する
+                  {isJoining ? "接続中..." : "接続する"}
                 </button>
               ) : (
                 <button
                   type="button"
-                  onClick={() => window.location.href = `/counselor/appointment/waiting-${counselorId}`}
-                  className="flex items-center gap-1.5 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition-colors"
+                  onClick={handleGoToSession}
+                  disabled={isJoining}
+                  className="flex items-center gap-1.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white text-sm font-bold px-4 py-2 rounded-xl transition-colors"
                 >
-                  待機する
+                  {isJoining ? "入室中..." : "待機する"}
                 </button>
               )}
             </div>

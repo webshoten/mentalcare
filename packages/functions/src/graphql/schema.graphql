@@ -63,6 +63,8 @@
     createAppointment(counselorId: ID!, scheduledStart: String!, scheduledEnd: String!): Appointment!
     # 相談者が予約 → WAITING（楽観的排他制御）
     bookAppointment(appointmentId: ID!): Appointment!
+    # 入室（OPEN→WAITING / WAITING→ACTIVE）
+    joinAppointment(appointmentId: ID!): Appointment!
     # 通話終了 → ENDED（TTL セット）
     endAppointment(appointmentId: ID!): Appointment!
     # デバッグ用：カウンセラーデータのシード

@@ -78,7 +78,7 @@ function ConnectedView({
   const { mutate: end } = useMutation({
     mutationFn: () => endAppointment(appointmentId),
     onSuccess: () => {
-      window.location.href = `/talk/session/${appointmentId}/end`;
+      window.location.href = `/talk/appointment/${appointmentId}/end`;
     },
   });
 
@@ -190,13 +190,13 @@ function SessionViewInner({ appointmentId }: Props) {
     refetchInterval: 5_000,
   });
 
-  // モック: 3秒後に waiting → connected に切り替え
+  // ACTIVE になったら connected へ
   useEffect(() => {
-    const t = setTimeout(() => {
+    const status = data?.appointment?.status;
+    if (status === "ACTIVE" && callState === "waiting") {
       setCallState("connected");
-    }, 3000);
-    return () => clearTimeout(t);
-  }, []);
+    }
+  }, [data?.appointment?.status]);
 
   // 通話時間カウンター
   useEffect(() => {

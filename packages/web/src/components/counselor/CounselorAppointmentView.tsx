@@ -12,7 +12,7 @@ type CallState = "waiting" | "connected";
 // ──────────────────────────────
 // 待機中 UI（カウンセラー視点）
 // ──────────────────────────────
-function WaitingView({ onConnect }: { onConnect: () => void }) {
+function WaitingView() {
   return (
     <div className="flex flex-col items-center gap-8 pt-24">
       <div className="flex flex-col items-center gap-3">
@@ -32,14 +32,6 @@ function WaitingView({ onConnect }: { onConnect: () => void }) {
           <span className="text-gray-400 text-xs">接続待ち</span>
         </div>
       </div>
-
-      <button
-        type="button"
-        onClick={onConnect}
-        className="text-xs text-gray-300 hover:text-gray-400 transition-colors underline"
-      >
-        （テスト用）接続済みにする
-      </button>
     </div>
   );
 }
@@ -157,7 +149,7 @@ function ConnectedView({
 // ──────────────────────────────
 // メインコンポーネント
 // ──────────────────────────────
-function CounselorSessionViewInner({ appointmentId }: Props) {
+function CounselorAppointmentViewInner({ appointmentId }: Props) {
   const [callState, setCallState] = useState<CallState>("waiting");
   const [elapsedSec, setElapsedSec] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -168,7 +160,7 @@ function CounselorSessionViewInner({ appointmentId }: Props) {
     refetchInterval: 3_000,
   });
 
-  // ACTIVE になったら connected へ
+  // ACTIVE になったら connected へ（ページリロード時も含む）
   useEffect(() => {
     if (data?.appointment?.status === "ACTIVE" && callState === "waiting") {
       setCallState("connected");
@@ -191,7 +183,7 @@ function CounselorSessionViewInner({ appointmentId }: Props) {
   if (callState === "waiting") {
     return (
       <div className="min-h-screen bg-white">
-        <WaitingView onConnect={() => setCallState("connected")} />
+        <WaitingView />
       </div>
     );
   }
@@ -206,8 +198,8 @@ function CounselorSessionViewInner({ appointmentId }: Props) {
 export function CounselorSessionView({ appointmentId }: Props) {
   return (
     <QueryProvider>
-      <div id="counselor-session-wrapper" className="min-h-screen">
-        <CounselorSessionViewInner appointmentId={appointmentId} />
+      <div id="counselor-appointment-wrapper" className="min-h-screen">
+        <CounselorAppointmentViewInner appointmentId={appointmentId} />
       </div>
     </QueryProvider>
   );

@@ -43,6 +43,9 @@ export const appointmentResolvers = {
     bookAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
       AppointmentRepository.book(appointmentId),
 
+    joinAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
+      AppointmentRepository.join(appointmentId),
+
     endAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
       AppointmentRepository.updateStatus(appointmentId, "ENDED", {
         endedAt: new Date().toISOString(),

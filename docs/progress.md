@@ -61,11 +61,15 @@ REST ではなく GraphQL を採用。gql.tada でスキーマから型を自動
 
 **ステータス遷移:**
 ```
-カウンセラーが枠作成 → OPEN
-相談者が予約        → WAITING
-通話開始            → ACTIVE
-通話終了            → ENDED（ttl セット → 1時間後に自動削除）
+カウンセラーが枠作成           → OPEN
+どちらか一方が入室（先着問わず） → WAITING
+両方が揃った（2人目が入室）     → ACTIVE
+通話終了                      → ENDED（ttl セット → 1時間後に自動削除）
 ```
+
+- 相談者が先に予約 → WAITING、その後カウンセラーが入室 → ACTIVE
+- カウンセラーが先に待機画面へ → WAITING、その後相談者が予約 → ACTIVE
+- `joinAppointment` mutation 1本で両方のパターンを処理（OPEN→WAITING / WAITING→ACTIVE）
 
 **旧 SessionTable は AppointmentTable に統合・廃止予定。**
 
@@ -198,6 +202,48 @@ GraphQL リゾルバ（`Counselor.photoUrl`）でリクエスト時に Presigned
 
 ### ワークフロールール（CLAUDE.md に記載）
 実装前に必ず「計画 → Pencil デザイン → 計画再確認 → 実装」の順を守る。
+
+---
+
+## Chime実装前の作業リスト（未対応）
+
+### 1. URLバグ修正（必須）
+
+| ファイル | 行 | 問題 | 修正内容 |
+|---------|-----|------|---------|
+| `packages/web/src/components/talk/BubbleCanvas.tsx` | 97 | `/talk/session/${id}` | `/talk/appointment/${id}` に変更 |
+| `packages/web/src/components/talk/AppointmentView.tsx` | 81 | `/talk/session/${id}/end` | `/talk/appointment/${id}/end` に変更 |
+
+### 2. `joinAppointment` mutation 追加（必須）
+
+OPEN→WAITING / WAITING→ACTIVE の2段階遷移を1つの mutation で処理。
+- 呼び出し時に status が OPEN → WAITING に更新
+- 呼び出し時に status が WAITING → ACTIVE に更新
+- 相談者・カウンセラーどちらが先に呼んでも成立する
+
+追加が必要なファイル:
+- `packages/functions/src/typedefs.ts` — `joinAppointment(appointmentId: ID!): Appointment!` を Mutation に追加
+- `packages/core/src/appointment/index.ts` — `join()` メソッドを追加（条件付き更新）
+- `packages/functions/src/appointment/resolver.ts` — `joinAppointment` リゾルバを追加
+- `packages/web/src/graphql/appointment.ts` — `JoinAppointmentMutation` と `joinAppointment` helper を追加
+
+### 3. AppointmentView のモック削除（必須）
+
+`packages/web/src/components/talk/AppointmentView.tsx` の「3秒後に自動でconnected」モック（194-198行）を削除し、
+`status === "ACTIVE"` をポーリングで検知する方式に変更（CounselorAppointmentView と同じ方式）。
+
+### 4. CounselorAppointmentView の「接続済みにする」ボタンを `startAppointment` に接続（必須）
+
+`packages/web/src/components/counselor/CounselorAppointmentView.tsx` の `onConnect` が
+ローカルのStateを変えるだけでDBを更新していない。
+`startAppointment` mutation を呼んでから `callState` を変える。
+
+### 5. 旧sessionファイルの削除（推奨）
+
+以下のファイルは不要（AppointmentTable に統合済み）:
+- `packages/core/src/session/`
+- `packages/functions/src/session/`
+- `packages/web/src/graphql/session.ts`
 
 ---
 

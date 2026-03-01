@@ -125,6 +125,47 @@ export const AppointmentRepository = {
     );
   },
 
+  // 入室（OPEN→WAITING / WAITING→ACTIVE）
+  async join(id: string): Promise<Appointment> {
+    // まず WAITING→ACTIVE を試みる（2人目の入室）
+    try {
+      const result = await client.send(
+        new UpdateCommand({
+          TableName: Resource.AppointmentTable.name,
+          Key: { id },
+          UpdateExpression: "SET #status = :active",
+          ConditionExpression: "#status = :waiting",
+          ExpressionAttributeNames: { "#status": "status" },
+          ExpressionAttributeValues: { ":active": "ACTIVE", ":waiting": "WAITING" },
+          ReturnValues: "ALL_NEW",
+        }),
+      );
+      return result.Attributes as Appointment;
+    } catch (e: unknown) {
+      if ((e as { name?: string }).name !== "ConditionalCheckFailedException") throw e;
+    }
+    // 次に OPEN→WAITING を試みる（1人目の入室）
+    try {
+      const result = await client.send(
+        new UpdateCommand({
+          TableName: Resource.AppointmentTable.name,
+          Key: { id },
+          UpdateExpression: "SET #status = :waiting",
+          ConditionExpression: "#status = :open",
+          ExpressionAttributeNames: { "#status": "status" },
+          ExpressionAttributeValues: { ":waiting": "WAITING", ":open": "OPEN" },
+          ReturnValues: "ALL_NEW",
+        }),
+      );
+      return result.Attributes as Appointment;
+    } catch (e: unknown) {
+      if ((e as { name?: string }).name === "ConditionalCheckFailedException") {
+        throw new Error("このアポイントメントへの参加に失敗しました");
+      }
+      throw e;
+    }
+  },
+
   // 相談者が予約（楽観的排他制御：OPEN のみ成功）
   async book(id: string): Promise<Appointment> {
     try {

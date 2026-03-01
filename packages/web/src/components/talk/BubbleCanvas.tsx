@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { bookAppointment, fetchOpenAppointments } from "../../graphql/appointment";
+import { joinAppointment, fetchOpenAppointments } from "../../graphql/appointment";
 import { QueryProvider } from "../QueryProvider";
 
 type AppointmentCounselor = {
@@ -92,9 +92,9 @@ function BubbleCanvasInner() {
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
 
   const { mutate: beginSession, isPending: isStarting } = useMutation({
-    mutationFn: (appointmentId: string) => bookAppointment(appointmentId),
+    mutationFn: (appointmentId: string) => joinAppointment(appointmentId),
     onSuccess: (data) => {
-      window.location.href = `/talk/session/${data.bookAppointment.id}`;
+      window.location.href = `/talk/appointment/${data.joinAppointment.id}`;
     },
   });
 

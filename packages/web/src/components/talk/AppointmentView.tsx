@@ -1,13 +1,16 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
-import { endAppointment, fetchAppointment } from "../../graphql/appointment";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { endAppointment } from "../../graphql/appointment";
+import { useAppointment } from "../../hooks/useAppointment";
+import { useCallState } from "../../hooks/useCallState";
+import { useElapsedSeconds } from "../../hooks/useElapsedSeconds";
+import { useEndOnUnload } from "../../hooks/useEndOnUnload";
+import { useRedirectOnEnded } from "../../hooks/useRedirectOnEnded";
 import { QueryProvider } from "../QueryProvider";
 
 type Props = {
   appointmentId: string;
 };
-
-type CallState = "waiting" | "connected";
 
 // ──────────────────────────────
 // 待機中 UI
@@ -25,14 +28,38 @@ function WaitingView({
 }) {
   return (
     <div className="flex flex-col items-center gap-8 pt-24">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-12 h-12 rounded-full border-4 border-indigo-200 border-t-indigo-500 animate-spin" />
-        <p className="text-gray-900 text-xl font-bold">接続を待っています...</p>
-        <p className="text-gray-500 text-sm">カウンセラーが準備をしています。もう少しお待ちください。</p>
-      </div>
+      <style>{`
+        @keyframes runBounce {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-14px); }
+        }
+        @keyframes speedLine {
+          0% { opacity: 0.6; width: var(--w); }
+          100% { opacity: 0; width: calc(var(--w) * 0.2); }
+        }
+      `}</style>
 
-      <div className="flex items-center gap-4 bg-gray-50 border border-gray-200 rounded-xl px-6 py-4">
-        <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 bg-orange-100">
+      {/* 走ってくるアニメーション */}
+      <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-2 items-end">
+          {([48, 28, 40, 20] as const).map((w, i) => (
+            <div
+              key={i}
+              className="h-0.5 rounded-full bg-indigo-300"
+              style={{
+                width: w,
+                // @ts-ignore
+                "--w": `${w}px`,
+                animation: `speedLine 0.55s ${i * 0.07}s ease-in-out infinite alternate`,
+              }}
+            />
+          ))}
+        </div>
+
+        <div
+          className="w-20 h-20 rounded-full overflow-hidden border-4 border-indigo-200 bg-orange-100 shrink-0"
+          style={{ animation: "runBounce 0.45s ease-in-out infinite" }}
+        >
           {photoUrl ? (
             <img src={photoUrl} alt={counselorName} className="w-full h-full object-cover" />
           ) : (
@@ -41,10 +68,12 @@ function WaitingView({
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-0.5">
-          <span className="text-gray-900 font-semibold text-base">{counselorName}</span>
-          {specialty && <span className="text-gray-400 text-xs">{specialty}</span>}
-        </div>
+      </div>
+
+      <div className="flex flex-col items-center gap-1">
+        <p className="text-gray-900 text-xl font-bold">{counselorName} が向かっています</p>
+        {specialty && <p className="text-gray-400 text-sm">{specialty}</p>}
+        <p className="text-gray-400 text-xs mt-1">もう少しお待ちください</p>
       </div>
 
       <button
@@ -180,37 +209,12 @@ function ConnectedView({
 // メインコンポーネント
 // ──────────────────────────────
 function SessionViewInner({ appointmentId }: Props) {
-  const [callState, setCallState] = useState<CallState>("waiting");
-  const [elapsedSec, setElapsedSec] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const { data } = useQuery({
-    queryKey: ["appointment", appointmentId],
-    queryFn: () => fetchAppointment(appointmentId),
-    refetchInterval: 5_000,
-  });
-
-  // ACTIVE になったら connected へ
-  useEffect(() => {
-    const status = data?.appointment?.status;
-    if (status === "ACTIVE" && callState === "waiting") {
-      setCallState("connected");
-    }
-  }, [data?.appointment?.status]);
-
-  // 通話時間カウンター
-  useEffect(() => {
-    if (callState === "connected") {
-      timerRef.current = setInterval(() => {
-        setElapsedSec((s) => s + 1);
-      }, 1000);
-    } else {
-      if (timerRef.current) clearInterval(timerRef.current);
-    }
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [callState]);
+  const { data } = useAppointment(appointmentId, 5_000);
+  const status = data?.appointment?.status;
+  const callState = useCallState(status);
+  const elapsedSec = useElapsedSeconds(callState === "connected");
+  useEndOnUnload(appointmentId, status);
+  useRedirectOnEnded(status, `/talk/appointment/${appointmentId}/end`);
 
   const counselor = data?.appointment?.counselor;
   const counselorName = counselor?.name ?? "カウンセラー";

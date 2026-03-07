@@ -65,6 +65,8 @@ export const typeDefs = /* GraphQL */ `
     joinAppointment(appointmentId: ID!): Appointment!
     # 通話終了 → ENDED（TTL セット）
     endAppointment(appointmentId: ID!): Appointment!
+    # 待機中離脱 → OPEN（相談者が接続待ちのまま離れたときに枠を解放）
+    leaveAppointment(appointmentId: ID!): Appointment!
     # デバッグ用：カウンセラーデータのシード
     seedDatabase: SeedResult!
   }

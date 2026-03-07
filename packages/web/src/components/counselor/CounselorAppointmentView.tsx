@@ -1,13 +1,16 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
-import { endAppointment, fetchAppointment } from "../../graphql/appointment";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { endAppointment } from "../../graphql/appointment";
+import { useAppointment } from "../../hooks/useAppointment";
+import { useCallState } from "../../hooks/useCallState";
+import { useElapsedSeconds } from "../../hooks/useElapsedSeconds";
+import { useEndOnUnload } from "../../hooks/useEndOnUnload";
+import { useRedirectOnEnded } from "../../hooks/useRedirectOnEnded";
 import { QueryProvider } from "../QueryProvider";
 
 type Props = {
   appointmentId: string;
 };
-
-type CallState = "waiting" | "connected";
 
 // ──────────────────────────────
 // 待機中 UI（カウンセラー視点）
@@ -152,35 +155,13 @@ function ConnectedView({
 // メインコンポーネント
 // ──────────────────────────────
 function CounselorAppointmentViewInner({ appointmentId }: Props) {
-  const [callState, setCallState] = useState<CallState>("waiting");
-  const [elapsedSec, setElapsedSec] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const { data } = useQuery({
-    queryKey: ["appointment", appointmentId],
-    queryFn: () => fetchAppointment(appointmentId),
-    refetchInterval: 3_000,
-  });
-
-  // ACTIVE になったら connected へ（ページリロード時も含む）
-  useEffect(() => {
-    if (data?.appointment?.status === "ACTIVE" && callState === "waiting") {
-      setCallState("connected");
-    }
-  }, [data?.appointment?.status]);
-
-  useEffect(() => {
-    if (callState === "connected") {
-      timerRef.current = setInterval(() => {
-        setElapsedSec((s) => s + 1);
-      }, 1000);
-    } else {
-      if (timerRef.current) clearInterval(timerRef.current);
-    }
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [callState]);
+  const { data } = useAppointment(appointmentId, 3_000);
+  const status = data?.appointment?.status;
+  const counselorId = data?.appointment?.counselorId ?? null;
+  const callState = useCallState(status);
+  const elapsedSec = useElapsedSeconds(callState === "connected");
+  useEndOnUnload(appointmentId, status);
+  useRedirectOnEnded(status, counselorId ? `/counselor/dashboard/${counselorId}` : null);
 
   if (callState === "waiting") {
     return (
@@ -190,11 +171,9 @@ function CounselorAppointmentViewInner({ appointmentId }: Props) {
     );
   }
 
-  const counselorId = data?.appointment?.counselorId ?? "";
-
   return (
     <div className="min-h-screen bg-gray-900">
-      <ConnectedView appointmentId={appointmentId} counselorId={counselorId} elapsedSec={elapsedSec} />
+      <ConnectedView appointmentId={appointmentId} counselorId={counselorId ?? ""} elapsedSec={elapsedSec} />
     </div>
   );
 }

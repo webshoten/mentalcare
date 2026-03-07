@@ -47,6 +47,9 @@ export const appointmentResolvers = {
       AppointmentRepository.updateStatus(appointmentId, "ENDED", {
         endedAt: new Date().toISOString(),
       }),
+
+    leaveAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
+      AppointmentRepository.leave(appointmentId),
   },
 
   Appointment: {

@@ -24,7 +24,7 @@ export type Appointment = {
   counselorId: string;
   status: AppointmentStatus;
   scheduledStart: string; // HH:MM (JST)
-  scheduledEnd: string;   // HH:MM (JST)
+  scheduledEnd: string; // HH:MM (JST)
   createdAt: string;
   endedAt?: string;
   ttl?: number;
@@ -62,13 +62,22 @@ export function calculateAvailability(
 
 export const AppointmentRepository = {
   async create(appointment: Omit<Appointment, "ttl">): Promise<Appointment> {
+    // scheduledEnd (HH:MM JST) を基に初期 TTL を設定する
+    // → endAppointment が呼ばれなかった場合でも scheduledEnd + 1時間後に自動削除
+    const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
+    const createdJst = new Date(new Date(appointment.createdAt).getTime() + JST_OFFSET_MS);
+    const todayJST = createdJst.toISOString().slice(0, 10); // "YYYY-MM-DD"
+    const endISO = `${todayJST}T${appointment.scheduledEnd}:00+09:00`;
+    const ttl = Math.floor(new Date(endISO).getTime() / 1000) + 60 * 60; // +1時間バッファ
+
+    const item = { ...appointment, ttl };
     await client.send(
       new PutCommand({
         TableName: Resource.AppointmentTable.name,
-        Item: appointment,
+        Item: item,
       }),
     );
-    return appointment;
+    return item;
   },
 
   async findById(id: string): Promise<Appointment | null> {
@@ -103,8 +112,10 @@ export const AppointmentRepository = {
     return all.filter((a) => a.status !== "ENDED");
   },
 
-  // カウンセラーの現在の OPEN / WAITING / ACTIVE アポイントメント
-  async findActiveByCounselorId(counselorId: string): Promise<Appointment | null> {
+  // カウンセラーの現在の OPEN / WAITING / ACTIVE アポイントメント(ENDED は除く)
+  async findActiveByCounselorId(
+    counselorId: string,
+  ): Promise<Appointment | null> {
     const result = await client.send(
       new QueryCommand({
         TableName: Resource.AppointmentTable.name,
@@ -116,9 +127,27 @@ export const AppointmentRepository = {
     const items = (result.Items ?? []) as Appointment[];
     return (
       items.find(
-        (a) => a.status === "OPEN" || a.status === "WAITING" || a.status === "ACTIVE",
+        (a) =>
+          a.status === "OPEN" || a.status === "WAITING" ||
+          a.status === "ACTIVE",
       ) ?? null
     );
+  },
+
+  // 離脱（WAITING→OPEN）：相談者が待機中に離脱したときに枠を解放する
+  async leave(id: string): Promise<Appointment> {
+    const result = await client.send(
+      new UpdateCommand({
+        TableName: Resource.AppointmentTable.name,
+        Key: { id },
+        UpdateExpression: "SET #status = :open",
+        ConditionExpression: "#status = :waiting",
+        ExpressionAttributeNames: { "#status": "status" },
+        ExpressionAttributeValues: { ":open": "OPEN", ":waiting": "WAITING" },
+        ReturnValues: "ALL_NEW",
+      }),
+    );
+    return result.Attributes as Appointment;
   },
 
   // 入室（OPEN→WAITING / WAITING→ACTIVE）
@@ -132,13 +161,18 @@ export const AppointmentRepository = {
           UpdateExpression: "SET #status = :active",
           ConditionExpression: "#status = :waiting",
           ExpressionAttributeNames: { "#status": "status" },
-          ExpressionAttributeValues: { ":active": "ACTIVE", ":waiting": "WAITING" },
+          ExpressionAttributeValues: {
+            ":active": "ACTIVE",
+            ":waiting": "WAITING",
+          },
           ReturnValues: "ALL_NEW",
         }),
       );
       return result.Attributes as Appointment;
     } catch (e: unknown) {
-      if ((e as { name?: string }).name !== "ConditionalCheckFailedException") throw e;
+      if ((e as { name?: string }).name !== "ConditionalCheckFailedException") {
+        throw e;
+      }
     }
     // 次に OPEN→WAITING を試みる（1人目の入室）
     try {
@@ -191,17 +225,24 @@ export const AppointmentRepository = {
     scheduledStart: string,
     scheduledEnd: string,
   ): Promise<Appointment> {
+    const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
+    const nowJst = new Date(Date.now() + JST_OFFSET_MS);
+    const todayJST = nowJst.toISOString().slice(0, 10);
+    const endISO = `${todayJST}T${scheduledEnd}:00+09:00`;
+    const ttl = Math.floor(new Date(endISO).getTime() / 1000) + 60 * 60;
+
     const result = await client.send(
       new UpdateCommand({
         TableName: Resource.AppointmentTable.name,
         Key: { id },
-        UpdateExpression: "SET scheduledStart = :start, scheduledEnd = :end",
+        UpdateExpression: "SET scheduledStart = :start, scheduledEnd = :end, #ttl = :ttl",
         ConditionExpression: "#status = :open",
-        ExpressionAttributeNames: { "#status": "status" },
+        ExpressionAttributeNames: { "#status": "status", "#ttl": "ttl" },
         ExpressionAttributeValues: {
           ":start": scheduledStart,
           ":end": scheduledEnd,
           ":open": "OPEN",
+          ":ttl": ttl,
         },
         ReturnValues: "ALL_NEW",
       }),
@@ -217,13 +258,18 @@ export const AppointmentRepository = {
     const updates: Record<string, unknown> = { status, ...extra };
     if (status === "ENDED" && extra?.endedAt) {
       const TTL_SECONDS = 60; // 1分（テスト用）
-      updates.ttl = Math.floor(new Date(extra.endedAt).getTime() / 1000) + TTL_SECONDS;
+      updates.ttl = Math.floor(new Date(extra.endedAt).getTime() / 1000) +
+        TTL_SECONDS;
     }
     const setExpr = Object.keys(updates)
       .map((k) => `#${k} = :${k}`)
       .join(", ");
-    const names = Object.fromEntries(Object.keys(updates).map((k) => [`#${k}`, k]));
-    const values = Object.fromEntries(Object.keys(updates).map((k) => [`:${k}`, updates[k]]));
+    const names = Object.fromEntries(
+      Object.keys(updates).map((k) => [`#${k}`, k]),
+    );
+    const values = Object.fromEntries(
+      Object.keys(updates).map((k) => [`:${k}`, updates[k]]),
+    );
 
     const result = await client.send(
       new UpdateCommand({

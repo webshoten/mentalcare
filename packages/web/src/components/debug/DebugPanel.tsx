@@ -1,7 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { fetchAppointments } from "../../graphql/appointment";
 import { fetchCounselors, seedDatabase } from "../../graphql/counselor";
 import { QueryProvider } from "../QueryProvider";
+
+type Tab = "tables" | "chime";
 
 const STATUS_STYLE: Record<string, string> = {
   WAITING: "bg-yellow-100 text-yellow-700",
@@ -20,7 +23,43 @@ function Badge({ text, className }: { text: string; className: string }) {
 // ──────────────────────────────
 // DebugPanel 本体
 // ──────────────────────────────
+function TabBar({ activeTab, onTabChange }: { activeTab: Tab; onTabChange: (t: Tab) => void }) {
+  const tabs: { id: Tab; label: string }[] = [
+    { id: "tables", label: "テーブル" },
+    { id: "chime", label: "Amazon Chime" },
+  ];
+  return (
+    <div className="flex border-b border-[#1E293B] px-6 shrink-0">
+      {tabs.map((tab) => (
+        <button
+          key={tab.id}
+          type="button"
+          onClick={() => onTabChange(tab.id)}
+          className={`px-4 py-3 text-xs font-semibold border-b-2 transition-colors ${
+            activeTab === tab.id
+              ? "border-orange-400 text-orange-400"
+              : "border-transparent text-gray-500 hover:text-gray-300"
+          }`}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ChimePlaceholder() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 py-24 text-gray-600">
+      <span className="text-4xl">📡</span>
+      <p className="text-sm">Amazon Chime — 準備中</p>
+    </div>
+  );
+}
+
 function DebugPanelInner() {
+  const [activeTab, setActiveTab] = useState<Tab>("tables");
+
   const { data: counselorData, isLoading: loadingCounselors, refetch: refetchCounselors } = useQuery({
     queryKey: ["debug-counselors"],
     queryFn: fetchCounselors,
@@ -120,7 +159,13 @@ function DebugPanelInner() {
         </aside>
 
         {/* メインコンテンツ */}
-        <main className="flex-1 overflow-y-auto p-6 flex flex-col gap-8">
+        <main className="flex-1 overflow-y-auto flex flex-col">
+
+          {/* タブ */}
+          <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+
+          <div className="p-6 flex flex-col gap-8">
+          {activeTab === "tables" && <>
 
           {/* アクション */}
           <section>
@@ -228,6 +273,11 @@ function DebugPanelInner() {
               </table>
             </div>
           </section>
+
+          </>}
+
+          {activeTab === "chime" && <ChimePlaceholder />}
+          </div>
 
         </main>
       </div>

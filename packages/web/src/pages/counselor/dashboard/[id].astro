@@ -1,26 +1,10 @@
 ---
-import Layout from "../../../layouts/Layout.astro";
+import CounselorLayout from "../../../layouts/CounselorLayout.astro";
 import { CounselorDashboard } from "../../../components/counselor/CounselorDashboard";
 
 const { id } = Astro.params;
 ---
 
-<Layout title="ダッシュボード | MentalCare">
-  <div class="min-h-screen bg-[#FAFAF8]">
-
-    <!-- ヘッダー -->
-    <header class="flex items-center justify-between h-[68px] px-10 bg-white border-b border-gray-200">
-      <span class="text-xl font-bold text-orange-500">MentalCare</span>
-      <nav class="flex items-center gap-8">
-        <span class="text-sm font-semibold text-orange-500">ダッシュボード</span>
-        <a href={`/counselor/profile`} class="text-sm text-gray-400 hover:text-gray-600">プロフィール</a>
-      </nav>
-      <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 text-sm font-semibold">
-        C
-      </div>
-    </header>
-
-    <CounselorDashboard counselorId={id!} client:load />
-
-  </div>
-</Layout>
+<CounselorLayout title="ダッシュボード | MentalCare" currentPage="dashboard">
+  <CounselorDashboard counselorId={id!} client:load />
+</CounselorLayout>

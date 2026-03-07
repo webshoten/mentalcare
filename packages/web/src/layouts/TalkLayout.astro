@@ -1,0 +1,39 @@
+---
+import Layout from "./Layout.astro";
+
+interface Props {
+  title: string;
+  currentPage?: "home" | "bookings";
+}
+
+const { title, currentPage } = Astro.props;
+---
+
+<Layout title={title}>
+  <div class="flex flex-col h-screen bg-[#FAFAF8]">
+    <header class="flex items-center justify-between h-[68px] px-10 bg-white border-b border-gray-200 shrink-0">
+      <span class="text-xl font-bold text-orange-500">MentalCare</span>
+
+      <nav class="flex items-center gap-8">
+        <a
+          href="/talk/home"
+          class={`text-sm font-semibold ${currentPage === "home" ? "text-orange-500" : "text-gray-400 hover:text-gray-600"}`}
+        >
+          カウンセラーを探す
+        </a>
+        <a
+          href="#"
+          class={`text-sm font-semibold ${currentPage === "bookings" ? "text-orange-500" : "text-gray-400 hover:text-gray-600"}`}
+        >
+          マイ予約
+        </a>
+      </nav>
+
+      <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm font-semibold">
+        山
+      </div>
+    </header>
+
+    <slot />
+  </div>
+</Layout>

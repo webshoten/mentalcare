@@ -57,7 +57,7 @@ function ConnectedView({
   const { mutate: end } = useMutation({
     mutationFn: () => endAppointment(appointmentId),
     onSuccess: () => {
-      window.location.href = `/counselor/dashboard/${counselorId}`;
+      window.location.href = `/counselor/appointment/${appointmentId}/end?reason=self&counselorId=${counselorId}`;
     },
   });
 
@@ -161,7 +161,7 @@ function CounselorAppointmentViewInner({ appointmentId }: Props) {
   const callState = useCallState(status);
   const elapsedSec = useElapsedSeconds(callState === "connected");
   useEndOnUnload(appointmentId, status);
-  useRedirectOnEnded(status, counselorId ? `/counselor/dashboard/${counselorId}` : null);
+  useRedirectOnEnded(status, counselorId ? `/counselor/appointment/${appointmentId}/end?reason=remote&counselorId=${counselorId}` : null);
 
   if (callState === "waiting") {
     return (

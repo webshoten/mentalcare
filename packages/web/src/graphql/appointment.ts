@@ -124,6 +124,7 @@ export const JoinAppointmentMutation = graphql(`
     joinAppointment(appointmentId: $appointmentId) {
       id
       status
+      chimeMeetingId
     }
   }
 `);

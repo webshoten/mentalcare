@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import {
-  createChimeAttendee,
-  createChimeMeeting,
+  createAppointment,
   fetchAppointments,
   fetchChimeStatus,
+  joinAppointment,
+  joinChimeMeeting,
 } from "../../graphql/appointment";
 import { fetchCounselors, seedDatabase } from "../../graphql/counselor";
 import { QueryProvider } from "../QueryProvider";
@@ -67,6 +68,7 @@ type Appointment = {
   scheduledEnd: string;
   createdAt: string;
   endedAt: string | null;
+  chimeMeetingId?: string | null;
 };
 type Counselor = {
   id: string;
@@ -290,7 +292,7 @@ function ChimeStatusTab() {
 }
 
 // ──────────────────────────────
-// Chime 双方向テスト
+// Chime 双方向テスト（Appointment 連携版）
 // ──────────────────────────────
 type StepState = "idle" | "pending" | "done" | "error";
 type LogEntry = { time: string; color: string; message: string };
@@ -412,66 +414,153 @@ function StepBtn({
   );
 }
 
+// Appointment セットアップ
+function AppointmentSetup({
+  selectedId,
+  appointments,
+  onSelect,
+  onClear,
+  onCreated,
+}: {
+  selectedId: string | null;
+  appointments: Appointment[];
+  onSelect: (id: string) => void;
+  onClear: () => void;
+  onCreated: (id: string) => void;
+}) {
+  const { data: counselorData } = useQuery({
+    queryKey: ["debug-counselors"],
+    queryFn: fetchCounselors,
+  });
+  const counselors = counselorData?.counselors ?? [];
+
+  const { mutate: doCreate, isPending: creating } = useMutation({
+    mutationFn: () => {
+      const counselorId = counselors[0]?.id ?? "test-counselor";
+      const now = new Date();
+      const end = new Date(now.getTime() + 60 * 60 * 1000);
+      return createAppointment(counselorId, now.toISOString(), end.toISOString());
+    },
+    onSuccess: (data) => {
+      if (data.createAppointment) {
+        onCreated(data.createAppointment.id);
+      }
+    },
+  });
+
+  const openAppointments = appointments.filter(
+    (a) => a.status === "OPEN" || a.status === "WAITING",
+  );
+  const selected = appointments.find((a) => a.id === selectedId);
+
+  return (
+    <div className="rounded-lg border border-blue-500/30 bg-blue-950/20 p-4 flex flex-col gap-3">
+      <div className="flex items-center gap-2">
+        <span className="w-2 h-2 rounded-full bg-blue-400" />
+        <span className="text-blue-300 text-xs font-bold">Appointment セットアップ</span>
+        <span className="text-[#475569] text-[10px] ml-1">
+          双方向テストに使う Appointment を選択または作成
+        </span>
+      </div>
+      <div className="flex items-center gap-3">
+        <select
+          value={selectedId ?? ""}
+          onChange={(e) => e.target.value && onSelect(e.target.value)}
+          className="flex-1 bg-[#0F172A] border border-[#334155] text-gray-200 text-xs rounded px-3 py-1.5 focus:outline-none focus:border-blue-500"
+        >
+          <option value="">— OPEN / WAITING の Appointment を選択 —</option>
+          {openAppointments.map((a) => (
+            <option key={a.id} value={a.id}>
+              [{a.status}] {a.counselorId} — {a.id.slice(0, 8)}…
+            </option>
+          ))}
+        </select>
+        <span className="text-gray-600 text-[10px] shrink-0">または</span>
+        <button
+          type="button"
+          onClick={() => doCreate()}
+          disabled={creating || counselors.length === 0}
+          className="shrink-0 text-xs font-bold px-3 py-1.5 rounded bg-blue-700 hover:bg-blue-600 disabled:bg-blue-900 disabled:cursor-not-allowed text-white transition-colors whitespace-nowrap"
+        >
+          {creating ? "作成中…" : "＋ テスト用 Appointment 作成"}
+        </button>
+      </div>
+      {selected && (
+        <div className="flex items-center gap-3 px-3 py-2 rounded bg-[#0F172A] border border-[#334155]">
+          <span className="text-gray-400 text-[10px] font-mono truncate">{selected.id}</span>
+          <Badge
+            text={selected.status}
+            className={STATUS_STYLE[selected.status] ?? STATUS_STYLE.ENDED}
+          />
+          <span className="text-gray-500 text-[10px] shrink-0">
+            counselor: {selected.counselorId.slice(0, 8)}…
+          </span>
+          {selected.chimeMeetingId && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-900/50 text-green-400 shrink-0">
+              Chime Meeting あり
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={onClear}
+            className="ml-auto text-[10px] text-gray-500 hover:text-red-400 transition-colors shrink-0"
+          >
+            解除
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Chime パネル（Appointment 連携版）
 function ChimePanel({
   side,
-  externalMeetingInfo,
-  onMeetingCreated,
+  appointmentId,
+  chimeMeetingId,
+  onJoinedAppointment,
 }: {
   side: "counselor" | "client";
-  externalMeetingInfo: MeetingInfo | null;
-  onMeetingCreated?: (info: MeetingInfo) => void;
+  appointmentId: string | null;
+  chimeMeetingId: string | null;
+  onJoinedAppointment?: () => void;
 }) {
   const isCounselor = side === "counselor";
   const accent = isCounselor ? "text-orange-400" : "text-indigo-400";
   const dotColor = isCounselor ? "bg-orange-400" : "bg-indigo-400";
 
-  const [ownMeeting, setOwnMeeting] = useState<MeetingInfo | null>(null);
-  const meetingInfo = isCounselor ? ownMeeting : externalMeetingInfo;
-
-  const [meetingStep, setMeetingStep] = useState<StepState>("idle");
-  const [attendee, setAttendee] = useState<AttendeeInfo | null>(null);
-  const [attendeeStep, setAttendeeStep] = useState<StepState>("idle");
+  const [joinStep, setJoinStep] = useState<StepState>("idle");
   const [connectStep, setConnectStep] = useState<StepState>("idle");
-
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [copied, setCopied] = useState(false);
 
   const addLog = (message: string, color: string) =>
     setLogs((prev) => [...prev, { time: timestamp(), color, message }]);
 
-  const handleCreateMeeting = async () => {
-    setMeetingStep("pending");
+  // Counselor Step 1: joinAppointment → OPEN→WAITING + Chime Meeting auto-created
+  const handleJoinAppointment = async () => {
+    if (!appointmentId) return;
+    setJoinStep("pending");
     try {
-      const data = await createChimeMeeting();
-      setOwnMeeting(data.createChimeMeeting);
-      onMeetingCreated?.(data.createChimeMeeting);
-      setMeetingStep("done");
-      addLog("CreateMeeting — 成功", "#22C55E");
+      const data = await joinAppointment(appointmentId);
+      setJoinStep("done");
+      addLog(`joinAppointment → ${data.joinAppointment.status}`, "#22C55E");
+      onJoinedAppointment?.();
     } catch (e) {
-      setMeetingStep("error");
-      addLog("CreateMeeting — 失敗: " + (e instanceof Error ? e.message : "エラー"), "#EF4444");
+      setJoinStep("error");
+      addLog("joinAppointment 失敗: " + (e instanceof Error ? e.message : "エラー"), "#EF4444");
     }
   };
 
-  const handleCreateAttendee = async () => {
-    if (!meetingInfo) return;
-    setAttendeeStep("pending");
-    try {
-      const data = await createChimeAttendee(meetingInfo.meetingId);
-      setAttendee(data.createChimeAttendee);
-      setAttendeeStep("done");
-      addLog("CreateAttendee — 成功", "#22C55E");
-    } catch (e) {
-      setAttendeeStep("error");
-      addLog("CreateAttendee — 失敗: " + (e instanceof Error ? e.message : "エラー"), "#EF4444");
-    }
-  };
-
+  // Step: joinChimeMeeting → SDK 接続
   const handleConnect = async () => {
-    if (!meetingInfo || !attendee) return;
+    if (!appointmentId) return;
     setConnectStep("pending");
     try {
-      const session = await buildSession(meetingInfo, attendee);
+      const data = await joinChimeMeeting(appointmentId);
+      const { meeting, attendee } = data.joinChimeMeeting;
+      addLog("joinChimeMeeting — Attendee 取得成功", "#22C55E");
+
+      const session = await buildSession(meeting, attendee);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (session.audioVideo as any).addObserver({
@@ -486,7 +575,7 @@ function ChimePanel({
         (atId, present, externalUserId) => {
           if (atId !== attendee.attendeeId) {
             addLog(
-              `attendeeIdPresenceDidChange — ${externalUserId ?? atId} ${present ? "が入室" : "が退室"}`,
+              `attendeePresence — ${externalUserId ?? atId} ${present ? "入室" : "退室"}`,
               present ? "#A5B4FC" : "#94A3B8",
             );
           }
@@ -495,20 +584,17 @@ function ChimePanel({
 
       session.audioVideo.start();
       setConnectStep("done");
+      addLog("audioVideo.start() 実行", "#60A5FA");
     } catch (e) {
       setConnectStep("error");
       addLog("接続失敗: " + (e instanceof Error ? e.message : "エラー"), "#EF4444");
     }
   };
 
-  const handleCopy = () => {
-    if (!ownMeeting) return;
-    navigator.clipboard.writeText(ownMeeting.meetingId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
-
-  const attendeeReady = isCounselor ? meetingStep === "done" : !!externalMeetingInfo;
+  const noAppointment = !appointmentId;
+  const canConnect = isCounselor
+    ? joinStep === "done" && !!chimeMeetingId
+    : !!chimeMeetingId;
 
   return (
     <div className="flex flex-col gap-4 h-full">
@@ -521,15 +607,15 @@ function ChimePanel({
       </div>
       <p className="text-[#64748B] text-[11px] -mt-2">
         {isCounselor
-          ? "Meeting を作成して Attendee として参加します"
-          : "左の Meeting ID を使って別 Attendee として参加します"}
+          ? "joinAppointment で待機状態にして Chime Meeting を自動作成し、接続します"
+          : "カウンセラーが入室後、joinChimeMeeting で同じ Meeting に接続します"}
       </p>
 
-      {/* Step: Create Meeting (counselor only) */}
+      {/* Counselor Step 1: joinAppointment */}
       {isCounselor && (
         <div
           className={`flex flex-col gap-2 rounded-lg p-3 border ${
-            meetingStep === "done"
+            joinStep === "done"
               ? "bg-[#1E293B] border-indigo-500/40"
               : "bg-[#131E2E] border-[#1E293B]"
           }`}
@@ -537,98 +623,62 @@ function ChimePanel({
           <div className="flex items-center gap-2">
             <span
               className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
-                meetingStep === "done" ? "bg-indigo-600 text-white" : "bg-[#1E293B] text-gray-500"
+                joinStep === "done"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-[#1E293B] text-gray-500"
               }`}
             >
               1
             </span>
             <span
-              className={`text-xs font-bold ${meetingStep === "done" ? "text-gray-100" : "text-gray-500"}`}
+              className={`text-xs font-bold ${noAppointment ? "text-gray-600" : "text-gray-200"}`}
             >
-              CreateMeeting
+              joinAppointment
             </span>
-            {meetingStep === "done" && <span className="ml-auto text-green-400 text-xs">✓</span>}
+            {joinStep === "done" && <span className="ml-auto text-green-400 text-xs">✓</span>}
           </div>
+          <p className={`text-[10px] ${noAppointment ? "text-gray-600" : "text-gray-400"}`}>
+            OPEN → WAITING に遷移、Chime Meeting を自動作成
+          </p>
           <StepBtn
-            label="▶ Meeting 作成"
-            state={meetingStep}
-            disabled={meetingStep === "done"}
-            onClick={handleCreateMeeting}
+            label="▶ カウンセラーとして待機する"
+            state={joinStep}
+            disabled={noAppointment || joinStep === "done"}
+            onClick={handleJoinAppointment}
           />
         </div>
       )}
 
-      {/* Meeting ID display */}
-      {isCounselor ? (
-        ownMeeting && (
-          <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-[#0F2A1A] border border-[#166534]">
-            <span className="text-green-400 text-[10px] font-bold shrink-0">Meeting ID</span>
-            <span className="text-green-300 text-[10px] font-mono truncate flex-1">
-              {ownMeeting.meetingId}
-            </span>
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="shrink-0 text-[9px] font-bold px-2 py-0.5 rounded bg-[#166534] text-green-400 hover:bg-green-800 transition-colors"
-            >
-              {copied ? "✓" : "コピー"}
-            </button>
-          </div>
-        )
-      ) : (
-        <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-[#1E293B] border border-[#334155]">
-          <span className="text-[#94A3B8] text-[10px] font-bold shrink-0">Meeting ID</span>
-          <span className="text-[#CBD5E1] text-[10px] font-mono truncate flex-1">
-            {externalMeetingInfo ? externalMeetingInfo.meetingId : "（左パネルで Meeting 作成後に自動入力）"}
-          </span>
-          {externalMeetingInfo && (
-            <span className="shrink-0 text-[9px] font-bold px-2 py-0.5 rounded bg-[#1E3A5F] text-blue-400">
-              自動入力
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* Step: Create Attendee */}
+      {/* chimeMeetingId display */}
       <div
-        className={`flex flex-col gap-2 rounded-lg p-3 border ${
-          attendeeReady
-            ? attendeeStep === "done"
-              ? "bg-[#1E293B] border-indigo-500/40"
-              : "bg-[#1E293B] border-[#334155]"
-            : "bg-[#131E2E] border-[#1E293B]"
+        className={`flex items-center gap-2 px-3 py-2 rounded-md border ${
+          chimeMeetingId ? "bg-[#0F2A1A] border-[#166534]" : "bg-[#1E293B] border-[#334155]"
         }`}
       >
-        <div className="flex items-center gap-2">
-          <span
-            className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
-              attendeeReady ? "bg-indigo-600 text-white" : "bg-[#1E293B] text-gray-500"
-            }`}
-          >
-            {isCounselor ? "2" : "1"}
+        <span
+          className={`text-[10px] font-bold shrink-0 ${chimeMeetingId ? "text-green-400" : "text-[#94A3B8]"}`}
+        >
+          Meeting ID
+        </span>
+        <span
+          className={`text-[10px] font-mono truncate flex-1 ${chimeMeetingId ? "text-green-300" : "text-[#475569]"}`}
+        >
+          {chimeMeetingId ??
+            (isCounselor
+              ? "（joinAppointment 後に自動設定）"
+              : "（カウンセラー入室後に自動表示）")}
+        </span>
+        {chimeMeetingId && (
+          <span className="shrink-0 text-[9px] font-bold px-2 py-0.5 rounded bg-[#166534] text-green-400">
+            自動入力
           </span>
-          <span
-            className={`text-xs font-bold ${attendeeReady ? "text-gray-100" : "text-gray-500"}`}
-          >
-            CreateAttendee
-          </span>
-          {attendeeStep === "done" && <span className="ml-auto text-green-400 text-xs">✓</span>}
-        </div>
-        <p className={`text-[10px] ${attendeeReady ? "text-gray-400" : "text-gray-600"}`}>
-          {isCounselor ? "Meeting に Attendee を追加。JoinToken 取得" : "同じ Meeting に 2人目の Attendee を追加"}
-        </p>
-        <StepBtn
-          label="▶ Attendee 作成"
-          state={attendeeStep}
-          disabled={!attendeeReady || attendeeStep === "done"}
-          onClick={handleCreateAttendee}
-        />
+        )}
       </div>
 
-      {/* Step: Connect */}
+      {/* Step: SDK 初期化 → 接続 */}
       <div
         className={`flex flex-col gap-2 rounded-lg p-3 border ${
-          attendeeStep === "done"
+          canConnect
             ? connectStep === "done"
               ? "bg-[#1E293B] border-green-500/40"
               : "bg-[#1E293B] border-[#334155]"
@@ -638,25 +688,25 @@ function ChimePanel({
         <div className="flex items-center gap-2">
           <span
             className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
-              attendeeStep === "done" ? "bg-indigo-600 text-white" : "bg-[#1E293B] text-gray-500"
+              canConnect ? "bg-indigo-600 text-white" : "bg-[#1E293B] text-gray-500"
             }`}
           >
-            {isCounselor ? "3" : "2"}
+            {isCounselor ? "2" : "1"}
           </span>
-          <span
-            className={`text-xs font-bold ${attendeeStep === "done" ? "text-gray-100" : "text-gray-500"}`}
-          >
+          <span className={`text-xs font-bold ${canConnect ? "text-gray-100" : "text-gray-500"}`}>
             SDK 初期化 → 接続
           </span>
-          {connectStep === "done" && <span className="ml-auto text-green-400 text-xs">✓ 接続中</span>}
+          {connectStep === "done" && (
+            <span className="ml-auto text-green-400 text-xs">✓ 接続中</span>
+          )}
         </div>
-        <p className={`text-[10px] ${attendeeStep === "done" ? "text-gray-400" : "text-gray-600"}`}>
-          MeetingSession を構築し audioVideo.start()
+        <p className={`text-[10px] ${canConnect ? "text-gray-400" : "text-gray-600"}`}>
+          joinChimeMeeting で Attendee 取得 → audioVideo.start()
         </p>
         <StepBtn
           label="▶ 初期化 → 接続"
           state={connectStep}
-          disabled={attendeeStep !== "done" || connectStep === "done"}
+          disabled={!canConnect || connectStep === "done"}
           onClick={handleConnect}
         />
       </div>
@@ -668,19 +718,50 @@ function ChimePanel({
 }
 
 function ChimeTab() {
-  const [sharedMeetingInfo, setSharedMeetingInfo] = useState<MeetingInfo | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const { data: appointmentData, refetch: refetchAppointments } = useQuery({
+    queryKey: ["chime-tab-appointments"],
+    queryFn: fetchAppointments,
+    refetchInterval: 5_000,
+  });
+
+  const appointments = (appointmentData?.appointments ?? []) as Appointment[];
+  const selectedAppointment = appointments.find((a) => a.id === selectedId) ?? null;
+  const chimeMeetingId = selectedAppointment?.chimeMeetingId ?? null;
 
   return (
-    <div className="flex h-full divide-x divide-[#1E293B]">
-      <div className="flex-1 p-6 overflow-y-auto">
-        <ChimePanel
-          side="counselor"
-          externalMeetingInfo={null}
-          onMeetingCreated={setSharedMeetingInfo}
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="p-6 pb-4 shrink-0">
+        <AppointmentSetup
+          selectedId={selectedId}
+          appointments={appointments}
+          onSelect={setSelectedId}
+          onClear={() => setSelectedId(null)}
+          onCreated={(id) => {
+            setSelectedId(id);
+            refetchAppointments();
+          }}
         />
       </div>
-      <div className="flex-1 p-6 overflow-y-auto">
-        <ChimePanel side="client" externalMeetingInfo={sharedMeetingInfo} />
+      <div className="flex-1 overflow-hidden flex divide-x divide-[#1E293B]">
+        <div className="flex-1 p-6 overflow-y-auto">
+          <ChimePanel
+            key={selectedId ?? "none"}
+            side="counselor"
+            appointmentId={selectedId}
+            chimeMeetingId={chimeMeetingId}
+            onJoinedAppointment={() => refetchAppointments()}
+          />
+        </div>
+        <div className="flex-1 p-6 overflow-y-auto">
+          <ChimePanel
+            key={`client-${selectedId ?? "none"}`}
+            side="client"
+            appointmentId={selectedId}
+            chimeMeetingId={chimeMeetingId}
+          />
+        </div>
       </div>
     </div>
   );

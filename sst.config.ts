@@ -32,9 +32,11 @@ export default $config({
       {
         actions: [
           "chime:CreateMeeting",
+          "chime:GetMeeting",
           "chime:DeleteMeeting",
           "chime:CreateAttendee",
           "chime:DeleteAttendee",
+          "chime:ListAttendees",
         ],
         resources: ["*"],
       },

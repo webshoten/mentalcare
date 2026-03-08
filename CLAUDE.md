@@ -59,7 +59,7 @@ packages/
 
 | URL | 画面 |
 |-----|------|
-| `/counselor/dashboard` | 待機画面（オンライン切替・実績） |
+| `/counselor/[id]/appointment` | 予約管理（待機枠の作成・待機開始） |
 | `/counselor/profile` | プロフィール設定 |
 | `/counselor/appointment/[id]` | セッション画面 |
 
@@ -113,7 +113,7 @@ ENDED   → 通話終了
   - status が OPEN → WAITING に更新
   - status が WAITING → ACTIVE に更新
 
-### カウンセラーダッシュボード（`/counselor/dashboard/[id]`）の状態マトリクス
+### カウンセラー予約管理（`/counselor/[id]/appointment`）の状態マトリクス
 
 | AppointmentStatus | 相談者の状態テキスト | ボタン | ボタン動作 |
 |-------------------|---------------------|--------|-----------|

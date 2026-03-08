@@ -24,7 +24,7 @@ function AvailabilityBadge({ availability }: { availability: string }) {
   );
 }
 
-function DashboardInner({ counselorId }: Props) {
+function AppointmentManagerInner({ counselorId }: Props) {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [saved, setSaved] = useState(false);
@@ -200,10 +200,10 @@ function DashboardInner({ counselorId }: Props) {
   );
 }
 
-export function CounselorDashboard({ counselorId }: Props) {
+export function CounselorAppointmentManager({ counselorId }: Props) {
   return (
     <QueryProvider>
-      <DashboardInner counselorId={counselorId} />
+      <AppointmentManagerInner counselorId={counselorId} />
     </QueryProvider>
   );
 }

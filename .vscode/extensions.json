@@ -2,7 +2,8 @@
     "recommendations": [
         "biomejs.biome",
         "ms-vscode.vscode-typescript-next",
-        "astro-build.astro-vscode"
+        "astro-build.astro-vscode",
+        "hediet.vscode-drawio"
     ],
     "unwantedRecommendations": [
         "dbaeumer.vscode-eslint"

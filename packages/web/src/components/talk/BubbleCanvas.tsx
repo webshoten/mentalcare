@@ -246,8 +246,8 @@ function BubbleCanvasInner() {
     wake();
     setPositions(bodiesRef.current.map((b) => ({
       size: b.size,
-      leftPct: (b.cx / ASSUMED_W) * 100,
-      topPct: (b.cy / ASSUMED_H) * 100,
+      cx: b.cx,
+      cy: b.cy,
     })));
   };
 

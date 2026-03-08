@@ -1,10 +1,10 @@
 ---
 import CounselorLayout from "../../../../layouts/CounselorLayout.astro";
-import { CounselorDashboard } from "../../../../components/counselor/CounselorDashboard";
+import { CounselorAppointmentManager } from "../../../../components/counselor/CounselorAppointmentManager";
 
 const { id } = Astro.params;
 ---
 
 <CounselorLayout title="予約管理 | MentalCare" currentPage="appointment">
-  <CounselorDashboard counselorId={id!} client:load />
+  <CounselorAppointmentManager counselorId={id!} client:load />
 </CounselorLayout>

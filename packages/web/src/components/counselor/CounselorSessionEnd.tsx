@@ -38,7 +38,7 @@ export function CounselorSessionEnd({ counselorId, reason }: Props) {
           <p className="text-gray-500 text-sm leading-relaxed">
             {isSelf
               ? "お疲れさまでした。\n本日も相談者に寄り添っていただきありがとうございます。"
-              : "お疲れさまでした。\nダッシュボードに戻り、次の相談を受け付けましょう。"}
+              : "お疲れさまでした。\n予約管理に戻り、次の相談を受け付けましょう。"}
           </p>
         </div>
 

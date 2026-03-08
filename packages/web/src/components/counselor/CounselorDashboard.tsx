@@ -52,7 +52,7 @@ function DashboardInner({ counselorId }: Props) {
   const { mutate: join, isPending: isJoining } = useMutation({
     mutationFn: (appointmentId: string) => joinAppointment(appointmentId),
     onSuccess: (data) => {
-      window.location.href = `/counselor/appointment/${data.joinAppointment.id}`;
+      window.location.href = `/counselor/${counselorId}/appointment/${data.joinAppointment.id}`;
     },
   });
 
@@ -66,7 +66,7 @@ function DashboardInner({ counselorId }: Props) {
   const handleGoToSession = () => {
     if (!appointment?.id) return;
     if (isActive) {
-      window.location.href = `/counselor/appointment/${appointment.id}`;
+      window.location.href = `/counselor/${counselorId}/appointment/${appointment.id}`;
       return;
     }
     join(appointment.id);

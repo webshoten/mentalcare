@@ -137,12 +137,12 @@ function LinksTab({
         {counselors.map((c) => (
           <a
             key={c.id}
-            href={`/counselor/dashboard/${c.id}`}
+            href={`/counselor/${c.id}/appointment`}
             className="flex items-center justify-between px-3 py-2 rounded bg-[#1E293B] border border-[#334155] hover:border-orange-500/50 transition-colors group"
           >
             <div className="flex items-center gap-3 min-w-0">
               <span className="text-orange-200 font-mono text-xs font-bold group-hover:text-orange-100 truncate">
-                /counselor/dashboard/{c.id}
+                /counselor/{c.id}/appointment
               </span>
               <span className="text-gray-500 text-xs shrink-0">{c.name}</span>
             </div>

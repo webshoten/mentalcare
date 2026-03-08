@@ -44,10 +44,10 @@ export function CounselorSessionEnd({ counselorId, reason }: Props) {
 
         {/* ボタン */}
         <a
-          href={`/counselor/dashboard/${counselorId}`}
+          href={`/counselor/${counselorId}/appointment`}
           className="w-72 h-11 rounded-full bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold flex items-center justify-center transition-colors mt-2"
         >
-          ダッシュボードに戻る
+          予約管理に戻る
         </a>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   createAppointment,
+  deleteAppointment,
   fetchAppointments,
   fetchChimeStatus,
   joinAppointment,
@@ -172,6 +173,11 @@ function ChimeStatusTab() {
     refetchInterval: 20_000,
   });
 
+  const { mutate: doDelete, variables: deletingId } = useMutation({
+    mutationFn: (appointmentId: string) => deleteAppointment(appointmentId),
+    onSuccess: () => refetch(),
+  });
+
   const rows = (data?.chimeStatus ?? []) as ChimeAppointmentStatus[];
   const activeMeetings = rows.filter((r) => r.chimeMeetingId && (r.attendees?.length ?? 0) > 0).length;
   const totalAttendees = rows.reduce((sum, r) => sum + (r.attendees?.length ?? 0), 0);
@@ -218,7 +224,7 @@ function ChimeStatusTab() {
           <table className="w-full text-xs">
             <thead>
               <tr className="bg-[#1E293B] text-[#64748B]">
-                {["appointmentId", "status", "chimeMeetingId", "接続中 / 登録", "Attendee 状態"].map((col) => (
+                {["appointmentId", "status", "chimeMeetingId", "接続中 / 登録", "Attendee 状態", "操作"].map((col) => (
                   <th key={col} className="text-left px-3 py-2 font-semibold whitespace-nowrap">{col}</th>
                 ))}
               </tr>
@@ -227,7 +233,7 @@ function ChimeStatusTab() {
               {isLoading ? (
                 <tr><td colSpan={5} className="px-3 py-6 text-gray-500 text-center">読み込み中...</td></tr>
               ) : rows.length === 0 ? (
-                <tr><td colSpan={5} className="px-3 py-6 text-gray-500 text-center">Appointment なし</td></tr>
+                <tr><td colSpan={6} className="px-3 py-6 text-gray-500 text-center">Appointment なし</td></tr>
               ) : (
                 rows.map((row, i) => {
                   const count = row.attendees?.length ?? 0;
@@ -278,6 +284,16 @@ function ChimeStatusTab() {
                             ))}
                           </div>
                         )}
+                      </td>
+                      <td className="px-3 py-3">
+                        <button
+                          type="button"
+                          onClick={() => doDelete(row.appointmentId)}
+                          disabled={deletingId === row.appointmentId}
+                          className="text-[10px] font-bold px-2.5 py-1 rounded border border-red-900 bg-red-950/60 text-red-400 hover:bg-red-900/60 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        >
+                          {deletingId === row.appointmentId ? "削除中…" : "削除"}
+                        </button>
                       </td>
                     </tr>
                   );

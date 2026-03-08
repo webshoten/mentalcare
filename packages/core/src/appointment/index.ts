@@ -1,5 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
+  DeleteCommand,
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
@@ -249,6 +250,15 @@ export const AppointmentRepository = {
       }),
     );
     return result.Attributes as Appointment;
+  },
+
+  async delete(id: string): Promise<void> {
+    await client.send(
+      new DeleteCommand({
+        TableName: Resource.AppointmentTable.name,
+        Key: { id },
+      }),
+    );
   },
 
   async setChimeMeetingId(id: string, chimeMeetingId: string): Promise<Appointment> {

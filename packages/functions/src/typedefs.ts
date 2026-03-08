@@ -114,5 +114,7 @@ export const typeDefs = /* GraphQL */ `
     createChimeAttendee(meetingId: String!): ChimeAttendee!
     # Appointment に紐づく Chime Meeting に Attendee として参加（再接続にも使用）
     joinChimeMeeting(appointmentId: ID!): JoinChimeMeetingResult!
+    # デバッグ用：Appointment と紐づく Chime Meeting を削除
+    deleteAppointment(appointmentId: ID!): Boolean!
   }
 `;

@@ -7,6 +7,7 @@ import { CounselorRepository } from "@mentalcare/core/counselor";
 import {
   ChimeSDKMeetingsClient,
   CreateMeetingCommand,
+  DeleteMeetingCommand,
 } from "@aws-sdk/client-chime-sdk-meetings";
 
 const chime = new ChimeSDKMeetingsClient({ region: "us-east-1" });
@@ -72,6 +73,20 @@ export const appointmentResolvers = {
 
     leaveAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
       AppointmentRepository.leave(appointmentId),
+
+    deleteAppointment: async (_: unknown, { appointmentId }: { appointmentId: string }) => {
+      const appointment = await AppointmentRepository.findById(appointmentId);
+      if (!appointment) return false;
+      if (appointment.chimeMeetingId) {
+        try {
+          await chime.send(new DeleteMeetingCommand({ MeetingId: appointment.chimeMeetingId }));
+        } catch {
+          // Meeting が既に期限切れでも削除を続行
+        }
+      }
+      await AppointmentRepository.delete(appointmentId);
+      return true;
+    },
   },
 
   Appointment: {

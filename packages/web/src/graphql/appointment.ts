@@ -164,6 +164,15 @@ export const CreateChimeAttendeeMutation = graphql(`
   }
 `);
 
+export const DeleteAppointmentMutation = graphql(`
+  mutation DeleteAppointment($appointmentId: ID!) {
+    deleteAppointment(appointmentId: $appointmentId)
+  }
+`);
+
+export const deleteAppointment = (appointmentId: string) =>
+  executeGraphQL(DeleteAppointmentMutation, { appointmentId });
+
 export const createChimeMeeting = () => executeGraphQL(CreateChimeMeetingMutation);
 export const createChimeAttendee = (meetingId: string) =>
   executeGraphQL(CreateChimeAttendeeMutation, { meetingId });

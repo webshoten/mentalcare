@@ -3,7 +3,7 @@ import Layout from "./Layout.astro";
 
 interface Props {
   title: string;
-  currentPage?: "dashboard" | "profile";
+  currentPage?: "profile" | "appointment";
 }
 
 const { title, currentPage } = Astro.props;
@@ -11,15 +11,17 @@ const { title, currentPage } = Astro.props;
 
 <Layout title={title}>
   <div class="min-h-screen bg-[#FAFAF8]">
-    <header class="flex items-center justify-between h-[68px] px-10 bg-white border-b border-gray-200">
+    <header
+      class="flex items-center justify-between h-[68px] px-10 bg-white border-b border-gray-200"
+    >
       <span class="text-xl font-bold text-orange-500">MentalCare</span>
 
       <nav class="flex items-center gap-8">
         <a
           href="#"
-          class={`text-sm font-semibold ${currentPage === "dashboard" ? "text-orange-500" : "text-gray-400 hover:text-gray-600"}`}
+          class={`text-sm font-semibold ${currentPage === "appointment" ? "text-orange-500" : "text-gray-400 hover:text-gray-600"}`}
         >
-          ダッシュボード
+          予約管理
         </a>
         <a
           href="/counselor/profile"
@@ -29,7 +31,9 @@ const { title, currentPage } = Astro.props;
         </a>
       </nav>
 
-      <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 text-sm font-semibold">
+      <div
+        class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 text-sm font-semibold"
+      >
         C
       </div>
     </header>

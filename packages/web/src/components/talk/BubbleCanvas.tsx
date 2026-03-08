@@ -225,12 +225,15 @@ function BubbleCanvasInner() {
     const { idx, offsetX, offsetY } = dragState.current;
     const b = bodiesRef.current[idx];
     if (!b) return;
-    const newCx = (e.clientX - container.left - offsetX) / container.width * ASSUMED_W;
-    const newCy = (e.clientY - container.top - offsetY) / container.height * ASSUMED_H;
-    b.cx = Math.max(b.r, Math.min(ASSUMED_W - b.r, newCx));
-    b.cy = Math.max(b.r, Math.min(ASSUMED_H - b.r, newCy));
-    b.vx = 0;
-    b.vy = 0;
+    b.cx = Math.max(b.r, Math.min(ASSUMED_W - b.r, (e.clientX - container.left - offsetX) / container.width * ASSUMED_W));
+    b.cy = Math.max(b.r, Math.min(ASSUMED_H - b.r, (e.clientY - container.top - offsetY) / container.height * ASSUMED_H));
+    // RAFの起動を待たず直接描画更新、衝突も起こすためにも wake する
+    wake();
+    setPositions(bodiesRef.current.map((b) => ({
+      size: b.size,
+      leftPct: (b.cx / ASSUMED_W) * 100,
+      topPct: (b.cy / ASSUMED_H) * 100,
+    })));
   };
 
   const handleMouseUp = (i: number) => {

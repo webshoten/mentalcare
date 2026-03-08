@@ -467,6 +467,65 @@
           "children": [
             {
               "type": "frame",
+              "id": "Ayvzi",
+              "x": 750,
+              "y": 300,
+              "name": "bubble_offline_sample",
+              "opacity": 0.4,
+              "clip": true,
+              "width": 175,
+              "height": 175,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1771844420927.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 9999,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "RJWsR",
+                  "x": 0,
+                  "y": 123,
+                  "name": "o3",
+                  "width": 175,
+                  "height": 52,
+                  "fill": "#000000BB",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "trAPb",
+                      "fill": "#FFFFFF",
+                      "content": "山本 けんじ",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "JQjYi",
+                      "fill": "#9CA3AF",
+                      "content": "14:00 〜 17:00",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
               "id": "v589m",
               "x": 625,
               "y": 155,

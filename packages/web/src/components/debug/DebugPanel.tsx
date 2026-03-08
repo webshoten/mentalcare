@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   createAppointment,
   deleteAppointment,
@@ -12,6 +12,14 @@ import { fetchCounselors, seedDatabase } from "../../graphql/counselor";
 import { QueryProvider } from "../QueryProvider";
 
 type Tab = "tables" | "chime" | "chime-status" | "links";
+
+const VALID_TABS: Tab[] = ["tables", "chime", "chime-status", "links"];
+
+function tabFromUrl(): Tab {
+  if (typeof window === "undefined") return "tables";
+  const param = new URLSearchParams(window.location.search).get("tab");
+  return VALID_TABS.includes(param as Tab) ? (param as Tab) : "tables";
+}
 
 const STATUS_STYLE: Record<string, string> = {
   OPEN: "bg-blue-900/60 text-blue-300",
@@ -962,7 +970,19 @@ function TablesTab({
 // DebugPanel 本体
 // ──────────────────────────────
 function DebugPanelInner() {
-  const [activeTab, setActiveTab] = useState<Tab>("tables");
+  const [activeTab, setActiveTab] = useState<Tab>(tabFromUrl);
+
+  // ブラウザバック/フォワードに追従
+  useEffect(() => {
+    const onPopState = () => setActiveTab(tabFromUrl());
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  const handleTabChange = (tab: Tab) => {
+    history.pushState(null, "", `?tab=${tab}`);
+    setActiveTab(tab);
+  };
 
   const {
     data: counselorData,
@@ -1021,7 +1041,7 @@ function DebugPanelInner() {
       </header>
 
       {/* タブバー */}
-      <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+      <TabBar activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* コンテンツ */}
       <div

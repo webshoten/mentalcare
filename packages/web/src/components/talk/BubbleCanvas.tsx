@@ -17,6 +17,8 @@ type Appointment = {
   counselorId: string;
   status: string;
   availability: string;
+  scheduledStart?: string | null;
+  scheduledEnd?: string | null;
   counselor?: AppointmentCounselor | null;
 };
 
@@ -26,7 +28,7 @@ type Position = {
   topPct: number;
 };
 
-function statusInfo(availability: string, status?: string) {
+function statusInfo(availability: string, status?: string, scheduledStart?: string | null, scheduledEnd?: string | null) {
   if (status === "ACTIVE") {
     return { label: "● 通話中", color: "#9CA3AF", dotColor: "#9CA3AF", bg: "#F3F4F6", border: "#E5E7EB", disabled: true };
   }
@@ -40,8 +42,10 @@ function statusInfo(availability: string, status?: string) {
       return { label: "◎ 15分後〜", color: "#B45309", dotColor: "#F59E0B", bg: "#FEF3C7", border: "#FCD34D", disabled: false };
     case "LATER":
       return { label: "◎ 30分後〜", color: "#B45309", dotColor: "#F59E0B", bg: "#FEF3C7", border: "#FCD34D", disabled: false };
-    default:
-      return { label: "● オフライン", color: "#9CA3AF", dotColor: "#9CA3AF", bg: "#F3F4F6", border: "#E5E7EB", disabled: true };
+    default: {
+      const label = scheduledStart && scheduledEnd ? `${scheduledStart} 〜 ${scheduledEnd}` : "● オフライン";
+      return { label, color: "#9CA3AF", dotColor: "#9CA3AF", bg: "#F3F4F6", border: "#E5E7EB", disabled: true };
+    }
   }
 }
 
@@ -63,25 +67,32 @@ const MIN_GAP = 16;
 
 function computePositions(appointments: Appointment[]): Position[] {
   const placed: Array<{ cx: number; cy: number; r: number }> = [];
+  const CX = ASSUMED_W / 2;
+  const CY = ASSUMED_H / 2;
 
   return appointments.map((a, i) => {
     const size = bubbleSize(a.counselor?.rating);
     const r = size / 2;
-    let cx = r;
-    let cy = r;
+    let cx = CX;
+    let cy = CY;
 
-    for (let attempt = 0; attempt < 300; attempt++) {
-      const seed = i * 300 + attempt;
-      const tryCx = r + sr(seed * 2) * (ASSUMED_W - size);
-      const tryCy = r + sr(seed * 2 + 1) * (ASSUMED_H - size);
-
-      const noOverlap = placed.every(
-        (p) => Math.hypot(tryCx - p.cx, tryCy - p.cy) >= r + p.r + MIN_GAP,
-      );
-
-      cx = tryCx;
-      cy = tryCy;
-      if (noOverlap) break;
+    // 中心から外側へスパイラル状に候補を探す
+    outer: for (let radius = 0; radius < Math.max(ASSUMED_W, ASSUMED_H); radius += 24) {
+      const steps = radius === 0 ? 1 : Math.max(8, Math.round((2 * Math.PI * radius) / 32));
+      for (let step = 0; step < steps; step++) {
+        const angle = (step / steps) * 2 * Math.PI + i * 1.1;
+        const tryCx = CX + radius * Math.cos(angle);
+        const tryCy = CY + radius * Math.sin(angle);
+        if (tryCx - r < 0 || tryCx + r > ASSUMED_W || tryCy - r < 0 || tryCy + r > ASSUMED_H) continue;
+        const noOverlap = placed.every(
+          (p) => Math.hypot(tryCx - p.cx, tryCy - p.cy) >= r + p.r + MIN_GAP,
+        );
+        if (noOverlap) {
+          cx = tryCx;
+          cy = tryCy;
+          break outer;
+        }
+      }
     }
 
     placed.push({ cx, cy, r });
@@ -227,7 +238,7 @@ function BubbleCanvasInner() {
           </div>
 
           {(() => {
-            const s = statusInfo(selected.availability, selected.status);
+            const s = statusInfo(selected.availability, selected.status, selected.scheduledStart, selected.scheduledEnd);
             return (
               <div
                 className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
@@ -299,7 +310,7 @@ function BubbleCanvasInner() {
           const animIdx = (i % 3) + 1;
           const animDuration = 4 + sr(i * 7 + 3) * 3;
           const name = a.counselor?.name ?? "—";
-          const si = statusInfo(a.availability, a.status);
+          const si = statusInfo(a.availability, a.status, a.scheduledStart, a.scheduledEnd);
 
           return (
             <div
@@ -315,7 +326,7 @@ function BubbleCanvasInner() {
                 boxShadow: isDragging ? "0 8px 24px rgba(0,0,0,0.18)" : "0 2px 8px rgba(0,0,0,0.10)",
                 transition: isDragging ? "none" : "box-shadow 0.2s",
                 animation: isDragging ? "none" : `bubbleFloat${animIdx} ${animDuration}s ease-in-out infinite`,
-                filter: si.disabled ? "grayscale(0.8) opacity(0.55)" : undefined,
+                opacity: si.disabled ? 0.4 : 1,
               }}
               onMouseDown={(e) => handleMouseDown(e, i)}
               onMouseUp={() => handleMouseUp(i)}

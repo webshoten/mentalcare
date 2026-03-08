@@ -53,7 +53,6 @@ export const AppointmentsQuery = graphql(`
       scheduledEnd
       createdAt
       endedAt
-      chimeMeetingId
     }
   }
 `);
@@ -61,8 +60,10 @@ export const AppointmentsQuery = graphql(`
 export const ChimeStatusQuery = graphql(`
   query ChimeStatus {
     chimeStatus {
+      sessionId
       appointmentId
-      appointmentStatus
+      talkerId
+      sessionStatus
       chimeMeetingId
       attendees {
         attendeeId
@@ -120,11 +121,10 @@ export const CreateAppointmentMutation = graphql(`
 `);
 
 export const JoinAppointmentMutation = graphql(`
-  mutation JoinAppointment($appointmentId: ID!) {
-    joinAppointment(appointmentId: $appointmentId) {
+  mutation JoinAppointment($appointmentId: ID!, $talkerId: ID) {
+    joinAppointment(appointmentId: $appointmentId, talkerId: $talkerId) {
       id
       status
-      chimeMeetingId
     }
   }
 `);
@@ -190,7 +190,7 @@ export const createAppointment = (
   scheduledStart: string,
   scheduledEnd: string,
 ) => executeGraphQL(CreateAppointmentMutation, { counselorId, scheduledStart, scheduledEnd });
-export const joinAppointment = (appointmentId: string) =>
-  executeGraphQL(JoinAppointmentMutation, { appointmentId });
+export const joinAppointment = (appointmentId: string, talkerId?: string) =>
+  executeGraphQL(JoinAppointmentMutation, { appointmentId, talkerId });
 export const endAppointment = (appointmentId: string) =>
   executeGraphQL(EndAppointmentMutation, { appointmentId });

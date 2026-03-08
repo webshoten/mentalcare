@@ -72,8 +72,11 @@ function BubbleCanvasInner() {
   const [positions, setPositions] = useState<Position[]>([]);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
 
+  // MVP: Seed で作成した talker-1 を使用
+  const TALKER_ID = "talker-1";
+
   const { mutate: beginSession, isPending: isStarting } = useMutation({
-    mutationFn: (appointmentId: string) => joinAppointment(appointmentId),
+    mutationFn: (appointmentId: string) => joinAppointment(appointmentId, TALKER_ID),
     onSuccess: (data) => {
       window.location.href = `/talk/appointment/${data.joinAppointment.id}`;
     },

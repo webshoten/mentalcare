@@ -4,6 +4,7 @@ import {
   calculateAvailability,
 } from "@mentalcare/core/appointment";
 import { CounselorRepository } from "@mentalcare/core/counselor";
+import { SessionRepository } from "@mentalcare/core/session";
 import {
   ChimeSDKMeetingsClient,
   CreateMeetingCommand,
@@ -47,22 +48,32 @@ export const appointmentResolvers = {
       });
     },
 
-    joinAppointment: async (_: unknown, { appointmentId }: { appointmentId: string }) => {
+    joinAppointment: async (
+      _: unknown,
+      { appointmentId, talkerId }: { appointmentId: string; talkerId?: string },
+    ) => {
       const appointment = await AppointmentRepository.join(appointmentId);
-      // OPEN→WAITING（カウンセラーが入室）のとき Chime Meeting を自動作成
-      if (appointment.status === "WAITING" && !appointment.chimeMeetingId) {
-        const result = await chime.send(
+
+      // WAITING→ACTIVE（相談者が入室）のとき Session 作成 + Chime Meeting 自動作成
+      if (appointment.status === "ACTIVE" && talkerId) {
+        const sessionId = crypto.randomUUID();
+        const meetingResult = await chime.send(
           new CreateMeetingCommand({
             ClientRequestToken: crypto.randomUUID(),
             MediaRegion: "ap-northeast-1",
-            ExternalMeetingId: appointmentId,
+            ExternalMeetingId: sessionId,
           }),
         );
-        return AppointmentRepository.setChimeMeetingId(
+        await SessionRepository.create({
+          id: sessionId,
           appointmentId,
-          result.Meeting!.MeetingId!,
-        );
+          talkerId,
+          chimeMeetingId: meetingResult.Meeting!.MeetingId!,
+          status: "ACTIVE",
+          startedAt: new Date().toISOString(),
+        });
       }
+
       return appointment;
     },
 
@@ -77,11 +88,15 @@ export const appointmentResolvers = {
     deleteAppointment: async (_: unknown, { appointmentId }: { appointmentId: string }) => {
       const appointment = await AppointmentRepository.findById(appointmentId);
       if (!appointment) return false;
-      if (appointment.chimeMeetingId) {
-        try {
-          await chime.send(new DeleteMeetingCommand({ MeetingId: appointment.chimeMeetingId }));
-        } catch {
-          // Meeting が既に期限切れでも削除を続行
+      // 紐づく Session の Chime Meeting を削除
+      const sessions = await SessionRepository.findByAppointmentId(appointmentId);
+      for (const session of sessions) {
+        if (session.chimeMeetingId) {
+          try {
+            await chime.send(new DeleteMeetingCommand({ MeetingId: session.chimeMeetingId }));
+          } catch {
+            // Meeting が既に期限切れでも削除を続行
+          }
         }
       }
       await AppointmentRepository.delete(appointmentId);

@@ -26,6 +26,14 @@ declare module "sst" {
       "type": "sst.aws.Astro"
       "url": string
     }
+    "SessionTable": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
+    "TalkerTable": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />

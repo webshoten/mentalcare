@@ -2,13 +2,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
   createAppointment,
-  deleteAppointment,
   fetchAppointments,
   fetchChimeStatus,
   joinAppointment,
   joinChimeMeeting,
 } from "../../graphql/appointment";
 import { fetchCounselors, seedDatabase } from "../../graphql/counselor";
+import { fetchSessions } from "../../graphql/session";
+import { fetchTalkers } from "../../graphql/talker";
 import { QueryProvider } from "../QueryProvider";
 
 type Tab = "tables" | "chime" | "chime-status" | "links";
@@ -77,7 +78,6 @@ type Appointment = {
   scheduledEnd: string;
   createdAt: string;
   endedAt: string | null;
-  chimeMeetingId?: string | null;
 };
 type Counselor = {
   id: string;
@@ -85,6 +85,20 @@ type Counselor = {
   rating: number | null;
   specialty: string | null;
   experienceYears: number | null;
+};
+type Talker = {
+  id: string;
+  name: string;
+  createdAt: string;
+};
+type Session = {
+  id: string;
+  appointmentId: string;
+  talkerId: string;
+  chimeMeetingId: string | null;
+  status: string;
+  startedAt: string;
+  endedAt: string | null;
 };
 
 function LinksTab({
@@ -167,9 +181,11 @@ function LinksTab({
 // Chime 接続状態タブ
 // ──────────────────────────────
 type ChimeAttendeeInfo = { attendeeId: string; externalUserId: string };
-type ChimeAppointmentStatus = {
+type ChimeSessionStatus = {
+  sessionId: string;
   appointmentId: string;
-  appointmentStatus: string;
+  talkerId: string;
+  sessionStatus: string;
   chimeMeetingId: string | null;
   attendees: ChimeAttendeeInfo[] | null;
 };
@@ -181,12 +197,7 @@ function ChimeStatusTab() {
     refetchInterval: 20_000,
   });
 
-  const { mutate: doDelete, variables: deletingId } = useMutation({
-    mutationFn: (appointmentId: string) => deleteAppointment(appointmentId),
-    onSuccess: () => refetch(),
-  });
-
-  const rows = (data?.chimeStatus ?? []) as ChimeAppointmentStatus[];
+  const rows = (data?.chimeStatus ?? []) as ChimeSessionStatus[];
   const activeMeetings = rows.filter((r) => r.chimeMeetingId && (r.attendees?.length ?? 0) > 0).length;
   const totalAttendees = rows.reduce((sum, r) => sum + (r.attendees?.length ?? 0), 0);
   const noMeeting = rows.filter((r) => !r.chimeMeetingId).length;
@@ -213,7 +224,7 @@ function ChimeStatusTab() {
       {/* テーブル */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <span className="text-gray-200 font-bold text-sm">Appointment × Chime 接続状態</span>
+          <span className="text-gray-200 font-bold text-sm">Session × Chime 接続状態</span>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded border border-[#334155] bg-[#1E293B]">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
@@ -232,30 +243,36 @@ function ChimeStatusTab() {
           <table className="w-full text-xs">
             <thead>
               <tr className="bg-[#1E293B] text-[#64748B]">
-                {["appointmentId", "status", "chimeMeetingId", "接続中 / 登録", "Attendee 状態", "操作"].map((col) => (
+                {["sessionId", "appointmentId", "talkerId", "status", "chimeMeetingId", "接続中 / 登録", "Attendee 状態"].map((col) => (
                   <th key={col} className="text-left px-3 py-2 font-semibold whitespace-nowrap">{col}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan={5} className="px-3 py-6 text-gray-500 text-center">読み込み中...</td></tr>
+                <tr><td colSpan={7} className="px-3 py-6 text-gray-500 text-center">読み込み中...</td></tr>
               ) : rows.length === 0 ? (
-                <tr><td colSpan={6} className="px-3 py-6 text-gray-500 text-center">Appointment なし</td></tr>
+                <tr><td colSpan={7} className="px-3 py-6 text-gray-500 text-center">Session なし</td></tr>
               ) : (
                 rows.map((row, i) => {
                   const count = row.attendees?.length ?? 0;
                   const hasMeeting = !!row.chimeMeetingId;
                   const countColor = count >= 2 ? "#22C55E" : count === 1 ? "#F97316" : "#475569";
                   return (
-                    <tr key={row.appointmentId} className={i % 2 === 0 ? "bg-[#0F172A]" : "bg-[#111827]"}>
+                    <tr key={row.sessionId} className={i % 2 === 0 ? "bg-[#0F172A]" : "bg-[#111827]"}>
                       <td className="px-3 py-3 text-indigo-300 font-mono whitespace-nowrap">
+                        {row.sessionId.slice(0, 8)}…
+                      </td>
+                      <td className="px-3 py-3 text-gray-300 font-mono whitespace-nowrap">
                         {row.appointmentId.slice(0, 8)}…
+                      </td>
+                      <td className="px-3 py-3 text-gray-300 whitespace-nowrap">
+                        {row.talkerId}
                       </td>
                       <td className="px-3 py-3">
                         <Badge
-                          text={row.appointmentStatus}
-                          className={STATUS_STYLE[row.appointmentStatus] ?? "bg-gray-800 text-gray-400"}
+                          text={row.sessionStatus}
+                          className={STATUS_STYLE[row.sessionStatus] ?? "bg-gray-800 text-gray-400"}
                         />
                       </td>
                       <td className="px-3 py-3 text-[#94A3B8] font-mono text-[10px] whitespace-nowrap">
@@ -292,16 +309,6 @@ function ChimeStatusTab() {
                             ))}
                           </div>
                         )}
-                      </td>
-                      <td className="px-3 py-3">
-                        <button
-                          type="button"
-                          onClick={() => doDelete(row.appointmentId)}
-                          disabled={deletingId === row.appointmentId}
-                          className="text-[10px] font-bold px-2.5 py-1 rounded border border-red-900 bg-red-950/60 text-red-400 hover:bg-red-900/60 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                        >
-                          {deletingId === row.appointmentId ? "削除中…" : "削除"}
-                        </button>
                       </td>
                     </tr>
                   );
@@ -519,11 +526,6 @@ function AppointmentSetup({
           <span className="text-gray-500 text-[10px] shrink-0">
             counselor: {selected.counselorId.slice(0, 8)}…
           </span>
-          {selected.chimeMeetingId && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-900/50 text-green-400 shrink-0">
-              Chime Meeting あり
-            </span>
-          )}
           <button
             type="button"
             onClick={onClear}
@@ -537,16 +539,16 @@ function AppointmentSetup({
   );
 }
 
-// Chime パネル（Appointment 連携版）
+// Chime パネル（Session 連携版）
 function ChimePanel({
   side,
   appointmentId,
-  chimeMeetingId,
+  appointmentStatus,
   onJoinedAppointment,
 }: {
   side: "counselor" | "client";
   appointmentId: string | null;
-  chimeMeetingId: string | null;
+  appointmentStatus: string | null;
   onJoinedAppointment?: () => void;
 }) {
   const isCounselor = side === "counselor";
@@ -560,12 +562,13 @@ function ChimePanel({
   const addLog = (message: string, color: string) =>
     setLogs((prev) => [...prev, { time: timestamp(), color, message }]);
 
-  // Counselor Step 1: joinAppointment → OPEN→WAITING + Chime Meeting auto-created
+  // joinAppointment（カウンセラー: OPEN→WAITING / 相談者: WAITING→ACTIVE + Session 作成）
   const handleJoinAppointment = async () => {
     if (!appointmentId) return;
     setJoinStep("pending");
     try {
-      const data = await joinAppointment(appointmentId);
+      const talkerId = isCounselor ? undefined : "talker-1";
+      const data = await joinAppointment(appointmentId, talkerId);
       setJoinStep("done");
       addLog(`joinAppointment → ${data.joinAppointment.status}`, "#22C55E");
       onJoinedAppointment?.();
@@ -616,9 +619,11 @@ function ChimePanel({
   };
 
   const noAppointment = !appointmentId;
+  // Session が作成された（ACTIVE）ら接続可能
+  const isActive = appointmentStatus === "ACTIVE";
   const canConnect = isCounselor
-    ? joinStep === "done" && !!chimeMeetingId
-    : !!chimeMeetingId;
+    ? isActive
+    : joinStep === "done";
 
   return (
     <div className="flex flex-col gap-4 h-full">
@@ -631,12 +636,12 @@ function ChimePanel({
       </div>
       <p className="text-[#64748B] text-[11px] -mt-2">
         {isCounselor
-          ? "joinAppointment で待機状態にして Chime Meeting を自動作成し、接続します"
-          : "カウンセラーが入室後、joinChimeMeeting で同じ Meeting に接続します"}
+          ? "joinAppointment で待機状態にし、相談者入室後に joinChimeMeeting で接続します"
+          : "joinAppointment で入室（Session + Chime Meeting 自動作成）し、joinChimeMeeting で接続します"}
       </p>
 
-      {/* Counselor Step 1: joinAppointment */}
-      {isCounselor && (
+      {/* Step 1: joinAppointment */}
+      {(isCounselor || (!isCounselor && appointmentStatus === "WAITING")) && (
         <div
           className={`flex flex-col gap-2 rounded-lg p-3 border ${
             joinStep === "done"
@@ -662,42 +667,18 @@ function ChimePanel({
             {joinStep === "done" && <span className="ml-auto text-green-400 text-xs">✓</span>}
           </div>
           <p className={`text-[10px] ${noAppointment ? "text-gray-600" : "text-gray-400"}`}>
-            OPEN → WAITING に遷移、Chime Meeting を自動作成
+            {isCounselor
+              ? "OPEN → WAITING に遷移（待機開始）"
+              : "WAITING → ACTIVE に遷移、Session + Chime Meeting 自動作成"}
           </p>
           <StepBtn
-            label="▶ カウンセラーとして待機する"
+            label={isCounselor ? "▶ カウンセラーとして待機する" : "▶ 相談者として入室する"}
             state={joinStep}
             disabled={noAppointment || joinStep === "done"}
             onClick={handleJoinAppointment}
           />
         </div>
       )}
-
-      {/* chimeMeetingId display */}
-      <div
-        className={`flex items-center gap-2 px-3 py-2 rounded-md border ${
-          chimeMeetingId ? "bg-[#0F2A1A] border-[#166534]" : "bg-[#1E293B] border-[#334155]"
-        }`}
-      >
-        <span
-          className={`text-[10px] font-bold shrink-0 ${chimeMeetingId ? "text-green-400" : "text-[#94A3B8]"}`}
-        >
-          Meeting ID
-        </span>
-        <span
-          className={`text-[10px] font-mono truncate flex-1 ${chimeMeetingId ? "text-green-300" : "text-[#475569]"}`}
-        >
-          {chimeMeetingId ??
-            (isCounselor
-              ? "（joinAppointment 後に自動設定）"
-              : "（カウンセラー入室後に自動表示）")}
-        </span>
-        {chimeMeetingId && (
-          <span className="shrink-0 text-[9px] font-bold px-2 py-0.5 rounded bg-[#166534] text-green-400">
-            自動入力
-          </span>
-        )}
-      </div>
 
       {/* Step: SDK 初期化 → 接続 */}
       <div
@@ -715,7 +696,7 @@ function ChimePanel({
               canConnect ? "bg-indigo-600 text-white" : "bg-[#1E293B] text-gray-500"
             }`}
           >
-            {isCounselor ? "2" : "1"}
+            2
           </span>
           <span className={`text-xs font-bold ${canConnect ? "text-gray-100" : "text-gray-500"}`}>
             SDK 初期化 → 接続
@@ -752,7 +733,7 @@ function ChimeTab() {
 
   const appointments = (appointmentData?.appointments ?? []) as Appointment[];
   const selectedAppointment = appointments.find((a) => a.id === selectedId) ?? null;
-  const chimeMeetingId = selectedAppointment?.chimeMeetingId ?? null;
+  const appointmentStatus = selectedAppointment?.status ?? null;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -774,7 +755,7 @@ function ChimeTab() {
             key={selectedId ?? "none"}
             side="counselor"
             appointmentId={selectedId}
-            chimeMeetingId={chimeMeetingId}
+            appointmentStatus={appointmentStatus}
             onJoinedAppointment={() => refetchAppointments()}
           />
         </div>
@@ -783,7 +764,8 @@ function ChimeTab() {
             key={`client-${selectedId ?? "none"}`}
             side="client"
             appointmentId={selectedId}
-            chimeMeetingId={chimeMeetingId}
+            appointmentStatus={appointmentStatus}
+            onJoinedAppointment={() => refetchAppointments()}
           />
         </div>
       </div>
@@ -797,8 +779,12 @@ function ChimeTab() {
 function TablesTab({
   counselors,
   appointments,
+  talkers,
+  sessions,
   loadingCounselors,
   loadingAppointments,
+  loadingTalkers,
+  loadingSessions,
   seeding,
   seedDone,
   seedFailed,
@@ -808,8 +794,12 @@ function TablesTab({
 }: {
   counselors: Counselor[];
   appointments: Appointment[];
+  talkers: Talker[];
+  sessions: Session[];
   loadingCounselors: boolean;
   loadingAppointments: boolean;
+  loadingTalkers: boolean;
+  loadingSessions: boolean;
   seeding: boolean;
   seedDone: boolean;
   seedFailed: boolean;
@@ -962,6 +952,115 @@ function TablesTab({
           </table>
         </div>
       </section>
+
+      {/* TalkerTable */}
+      <section>
+        <h2 className="text-gray-200 font-bold mb-3">
+          TalkerTable
+          <span className="ml-2 text-gray-500 font-normal text-xs">{talkers.length} items</span>
+        </h2>
+        <div className="overflow-x-auto rounded-lg border border-[#1E293B]">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="bg-[#1E293B] text-gray-400">
+                {["id", "name", "createdAt"].map((col) => (
+                  <th key={col} className="text-left px-3 py-2 font-semibold whitespace-nowrap">
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {loadingTalkers ? (
+                <tr>
+                  <td colSpan={3} className="px-3 py-4 text-gray-500 text-center">
+                    読み込み中...
+                  </td>
+                </tr>
+              ) : talkers.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="px-3 py-4 text-gray-500 text-center">
+                    データなし
+                  </td>
+                </tr>
+              ) : (
+                talkers.map((t, i) => (
+                  <tr key={t.id} className={i % 2 === 0 ? "bg-[#0F172A]" : "bg-[#111827]"}>
+                    <td className="px-3 py-2 text-indigo-300 whitespace-nowrap">{t.id}</td>
+                    <td className="px-3 py-2 text-gray-200 whitespace-nowrap">{t.name}</td>
+                    <td className="px-3 py-2 text-gray-400 whitespace-nowrap">
+                      {new Date(t.createdAt).toLocaleString("ja-JP")}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* SessionTable */}
+      <section>
+        <h2 className="text-gray-200 font-bold mb-3">
+          SessionTable
+          <span className="ml-2 text-gray-500 font-normal text-xs">{sessions.length} items</span>
+        </h2>
+        <div className="overflow-x-auto rounded-lg border border-[#1E293B]">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="bg-[#1E293B] text-gray-400">
+                {["id", "appointmentId", "talkerId", "chimeMeetingId", "status", "startedAt", "endedAt"].map((col) => (
+                  <th key={col} className="text-left px-3 py-2 font-semibold whitespace-nowrap">
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {loadingSessions ? (
+                <tr>
+                  <td colSpan={7} className="px-3 py-4 text-gray-500 text-center">
+                    読み込み中...
+                  </td>
+                </tr>
+              ) : sessions.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-3 py-4 text-gray-500 text-center">
+                    データなし
+                  </td>
+                </tr>
+              ) : (
+                sessions.map((s, i) => (
+                  <tr key={s.id} className={i % 2 === 0 ? "bg-[#0F172A]" : "bg-[#111827]"}>
+                    <td className="px-3 py-2 text-indigo-300 font-mono whitespace-nowrap">
+                      {s.id.slice(0, 8)}…
+                    </td>
+                    <td className="px-3 py-2 text-gray-300 font-mono whitespace-nowrap">
+                      {s.appointmentId.slice(0, 8)}…
+                    </td>
+                    <td className="px-3 py-2 text-gray-300 whitespace-nowrap">{s.talkerId}</td>
+                    <td className="px-3 py-2 text-[#94A3B8] font-mono text-[10px] whitespace-nowrap">
+                      {s.chimeMeetingId ? `${s.chimeMeetingId.slice(0, 22)}…` : <span className="text-[#334155]">—</span>}
+                    </td>
+                    <td className="px-3 py-2">
+                      <Badge
+                        text={s.status}
+                        className={STATUS_STYLE[s.status] ?? "bg-gray-800 text-gray-400"}
+                      />
+                    </td>
+                    <td className="px-3 py-2 text-gray-400 whitespace-nowrap">
+                      {new Date(s.startedAt).toLocaleString("ja-JP")}
+                    </td>
+                    <td className="px-3 py-2 text-gray-400 whitespace-nowrap">
+                      {s.endedAt ? new Date(s.endedAt).toLocaleString("ja-JP") : "—"}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }
@@ -996,8 +1095,22 @@ function DebugPanelInner() {
     refetch: refetchAppointments,
   } = useQuery({ queryKey: ["debug-appointments"], queryFn: fetchAppointments });
 
+  const {
+    data: talkerData,
+    isLoading: loadingTalkers,
+    refetch: refetchTalkers,
+  } = useQuery({ queryKey: ["debug-talkers"], queryFn: fetchTalkers });
+
+  const {
+    data: sessionData,
+    isLoading: loadingSessions,
+    refetch: refetchSessions,
+  } = useQuery({ queryKey: ["debug-sessions"], queryFn: fetchSessions });
+
   const counselors = counselorData?.counselors ?? [];
   const appointments = appointmentData?.appointments ?? [];
+  const talkers = talkerData?.talkers ?? [];
+  const sessions = sessionData?.sessions ?? [];
 
   const {
     mutate: runSeed,
@@ -1017,6 +1130,8 @@ function DebugPanelInner() {
   const handleRefresh = () => {
     refetchCounselors();
     refetchAppointments();
+    refetchTalkers();
+    refetchSessions();
   };
 
   return (
@@ -1051,8 +1166,12 @@ function DebugPanelInner() {
           <TablesTab
             counselors={counselors}
             appointments={appointments}
+            talkers={talkers}
+            sessions={sessions}
             loadingCounselors={loadingCounselors}
             loadingAppointments={loadingAppointments}
+            loadingTalkers={loadingTalkers}
+            loadingSessions={loadingSessions}
             seeding={seeding}
             seedDone={seedDone}
             seedFailed={seedFailed}

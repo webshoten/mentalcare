@@ -38,7 +38,6 @@
     createdAt: String!
     endedAt: String
     counselor: Counselor
-    chimeMeetingId: String    # Chime Meeting ID（WAITING 以降にセット）
   }
 
   type SeedResult {
@@ -74,14 +73,42 @@
     externalUserId: String!
   }
 
-  type ChimeAppointmentStatus {
+  type ChimeSessionStatus {
+    sessionId: String!
     appointmentId: String!
-    appointmentStatus: AppointmentStatus!
+    talkerId: String!
+    sessionStatus: SessionStatus!
     chimeMeetingId: String
     attendees: [ChimeAttendeeInfo!]
   }
 
+  type Talker {
+    id: ID!
+    name: String!
+    photoUrl: String
+    createdAt: String!
+  }
+
+  enum SessionStatus {
+    ACTIVE
+    ENDED
+  }
+
+  type Session {
+    id: ID!
+    appointmentId: String!
+    talkerId: String!
+    chimeMeetingId: String
+    status: SessionStatus!
+    startedAt: String!
+    endedAt: String
+  }
+
   type Query {
+    # 相談者一覧（デバッグ用）
+    talkers: [Talker!]!
+    # セッション一覧（デバッグ用）
+    sessions: [Session!]!
     # バブル画面用：ENDED 以外の全 Appointment（表示制御はフロント側）
     openAppointments: [Appointment!]!
     # カウンセラーの現在のアポイントメント（OPEN / WAITING / ACTIVE）
@@ -94,14 +121,14 @@
     counselor(id: ID!): Counselor
     counselorStats: CounselorStats!
     # Chime 接続状態監視（デバッグ用）
-    chimeStatus: [ChimeAppointmentStatus!]!
+    chimeStatus: [ChimeSessionStatus!]!
   }
 
   type Mutation {
     # カウンセラーが枠を作成 → OPEN
     createAppointment(counselorId: ID!, scheduledStart: String!, scheduledEnd: String!): Appointment!
-    # 入室（OPEN→WAITING / WAITING→ACTIVE）
-    joinAppointment(appointmentId: ID!): Appointment!
+    # 入室（OPEN→WAITING / WAITING→ACTIVE。ACTIVE 時に Session 作成 + Chime Meeting 作成）
+    joinAppointment(appointmentId: ID!, talkerId: ID): Appointment!
     # 通話終了 → ENDED（TTL セット）
     endAppointment(appointmentId: ID!): Appointment!
     # 待機中離脱 → OPEN（相談者が接続待ちのまま離れたときに枠を解放）

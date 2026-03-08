@@ -5,43 +5,48 @@ import {
   GetMeetingCommand,
   ListAttendeesCommand,
 } from "@aws-sdk/client-chime-sdk-meetings";
-import { AppointmentRepository } from "@mentalcare/core/appointment";
+import { SessionRepository } from "@mentalcare/core/session";
 
 const chime = new ChimeSDKMeetingsClient({ region: "us-east-1" });
 
 export const chimeResolvers = {
   Query: {
     chimeStatus: async () => {
-      const appointments = await AppointmentRepository.findAll();
+      const sessions = await SessionRepository.findAll();
       const results = await Promise.all(
-        appointments.map(async (a) => {
-          if (!a.chimeMeetingId) {
+        sessions.map(async (s) => {
+          if (!s.chimeMeetingId) {
             return {
-              appointmentId: a.id,
-              appointmentStatus: a.status,
+              sessionId: s.id,
+              appointmentId: s.appointmentId,
+              talkerId: s.talkerId,
+              sessionStatus: s.status,
               chimeMeetingId: null,
               attendees: null,
             };
           }
           try {
             const result = await chime.send(
-              new ListAttendeesCommand({ MeetingId: a.chimeMeetingId }),
+              new ListAttendeesCommand({ MeetingId: s.chimeMeetingId }),
             );
             return {
-              appointmentId: a.id,
-              appointmentStatus: a.status,
-              chimeMeetingId: a.chimeMeetingId,
+              sessionId: s.id,
+              appointmentId: s.appointmentId,
+              talkerId: s.talkerId,
+              sessionStatus: s.status,
+              chimeMeetingId: s.chimeMeetingId,
               attendees: (result.Attendees ?? []).map((at) => ({
                 attendeeId: at.AttendeeId!,
                 externalUserId: at.ExternalUserId!,
               })),
             };
           } catch {
-            // Meeting が期限切れ・存在しない場合
             return {
-              appointmentId: a.id,
-              appointmentStatus: a.status,
-              chimeMeetingId: a.chimeMeetingId,
+              sessionId: s.id,
+              appointmentId: s.appointmentId,
+              talkerId: s.talkerId,
+              sessionStatus: s.status,
+              chimeMeetingId: s.chimeMeetingId,
               attendees: [],
             };
           }
@@ -89,18 +94,20 @@ export const chimeResolvers = {
     },
 
     joinChimeMeeting: async (_: unknown, { appointmentId }: { appointmentId: string }) => {
-      const appointment = await AppointmentRepository.findById(appointmentId);
-      if (!appointment) throw new Error("Appointment not found");
-      if (!appointment.chimeMeetingId) throw new Error("Chime Meeting が未作成です（WAITING 以降でのみ利用可能）");
+      // Appointment に紐づく ACTIVE な Session から chimeMeetingId を取得
+      const sessions = await SessionRepository.findByAppointmentId(appointmentId);
+      const activeSession = sessions.find((s) => s.status === "ACTIVE");
+      if (!activeSession) throw new Error("ACTIVE な Session が見つかりません");
+      if (!activeSession.chimeMeetingId) throw new Error("Chime Meeting が未作成です");
 
       const meetingResult = await chime.send(
-        new GetMeetingCommand({ MeetingId: appointment.chimeMeetingId }),
+        new GetMeetingCommand({ MeetingId: activeSession.chimeMeetingId }),
       );
       const m = meetingResult.Meeting!;
 
       const attendeeResult = await chime.send(
         new CreateAttendeeCommand({
-          MeetingId: appointment.chimeMeetingId,
+          MeetingId: activeSession.chimeMeetingId,
           ExternalUserId: `user-${Date.now()}`,
         }),
       );

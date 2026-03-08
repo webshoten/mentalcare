@@ -2,6 +2,8 @@ import { createSchema } from "graphql-yoga";
 import { appointmentResolvers } from "./appointment/resolver";
 import { chimeResolvers } from "./chime/resolver";
 import { counselorResolvers } from "./counselor/resolver";
+import { sessionResolvers } from "./session/resolver";
+import { talkerResolvers } from "./talker/resolver";
 import { typeDefs } from "./typedefs";
 
 export const schema = createSchema({
@@ -11,6 +13,8 @@ export const schema = createSchema({
       ...counselorResolvers.Query,
       ...appointmentResolvers.Query,
       ...chimeResolvers.Query,
+      ...talkerResolvers.Query,
+      ...sessionResolvers.Query,
     },
     Mutation: {
       ...counselorResolvers.Mutation,

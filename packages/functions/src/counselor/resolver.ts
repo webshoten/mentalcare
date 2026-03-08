@@ -6,6 +6,7 @@ import {
   type Counselor,
   CounselorRepository,
 } from "@mentalcare/core/counselor";
+import { TalkerRepository } from "@mentalcare/core/talker";
 import { Resource } from "sst";
 
 const s3 = new S3Client({});
@@ -110,6 +111,13 @@ export const counselorResolvers = {
           );
         }
       }
+
+      // Talker（相談者）を1件シード
+      await TalkerRepository.create({
+        id: "talker-1",
+        name: "匿名の相談者",
+        createdAt: now,
+      });
 
       return { seeded: counselors.length };
     },

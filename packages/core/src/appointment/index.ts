@@ -29,7 +29,6 @@ export type Appointment = {
   createdAt: string;
   endedAt?: string;
   ttl?: number;
-  chimeMeetingId?: string;
 };
 
 // ──────────────────────────────
@@ -259,19 +258,6 @@ export const AppointmentRepository = {
         Key: { id },
       }),
     );
-  },
-
-  async setChimeMeetingId(id: string, chimeMeetingId: string): Promise<Appointment> {
-    const result = await client.send(
-      new UpdateCommand({
-        TableName: Resource.AppointmentTable.name,
-        Key: { id },
-        UpdateExpression: "SET chimeMeetingId = :chimeMeetingId",
-        ExpressionAttributeValues: { ":chimeMeetingId": chimeMeetingId },
-        ReturnValues: "ALL_NEW",
-      }),
-    );
-    return result.Attributes as Appointment;
   },
 
   async updateStatus(

@@ -26,6 +26,20 @@ export default $config({
       ttl: "ttl",
     });
 
+    const talkerTable = new sst.aws.Dynamo("TalkerTable", {
+      fields: { id: "string" },
+      primaryIndex: { hashKey: "id" },
+    });
+
+    const sessionTable = new sst.aws.Dynamo("SessionTable", {
+      fields: { id: "string", appointmentId: "string" },
+      primaryIndex: { hashKey: "id" },
+      globalIndexes: {
+        byAppointment: { hashKey: "appointmentId" },
+      },
+      ttl: "ttl",
+    });
+
     const api = new sst.aws.ApiGatewayV2("MyApi");
 
     const chimePermissions = [
@@ -44,12 +58,12 @@ export default $config({
 
     api.route("POST /graphql", {
       handler: "packages/functions/src/api.handler",
-      link: [counselorTable, counselorPhotoBucket, appointmentTable],
+      link: [counselorTable, counselorPhotoBucket, appointmentTable, talkerTable, sessionTable],
       permissions: chimePermissions,
     });
     api.route("GET /graphql", {
       handler: "packages/functions/src/api.handler",
-      link: [counselorTable, counselorPhotoBucket, appointmentTable],
+      link: [counselorTable, counselorPhotoBucket, appointmentTable, talkerTable, sessionTable],
       permissions: chimePermissions,
     });
 

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { joinAppointment, fetchOpenAppointments } from "../../graphql/appointment";
 import { QueryProvider } from "../QueryProvider";
@@ -26,6 +26,13 @@ type Position = {
   size: number;
   leftPct: number;
   topPct: number;
+};
+
+type Body = {
+  cx: number;
+  cy: number;
+  r: number;
+  size: number;
 };
 
 function statusInfo(availability: string, status?: string, scheduledStart?: string | null, scheduledEnd?: string | null) {
@@ -56,53 +63,10 @@ function bubbleSize(rating: number | null | undefined): number {
   return Math.round(BUBBLE_SIZE_MIN + ((r - 1) / 4) * 120);
 }
 
-function sr(seed: number): number {
-  const x = Math.sin(seed + 1) * 10000;
-  return x - Math.floor(x);
-}
-
 const ASSUMED_W = 1200;
 const ASSUMED_H = 580;
 const MIN_GAP = 16;
-
-function computePositions(appointments: Appointment[]): Position[] {
-  const placed: Array<{ cx: number; cy: number; r: number }> = [];
-  const CX = ASSUMED_W / 2;
-  const CY = ASSUMED_H / 2;
-
-  return appointments.map((a, i) => {
-    const size = bubbleSize(a.counselor?.rating);
-    const r = size / 2;
-    let cx = CX;
-    let cy = CY;
-
-    // 中心から外側へスパイラル状に候補を探す
-    outer: for (let radius = 0; radius < Math.max(ASSUMED_W, ASSUMED_H); radius += 24) {
-      const steps = radius === 0 ? 1 : Math.max(8, Math.round((2 * Math.PI * radius) / 32));
-      for (let step = 0; step < steps; step++) {
-        const angle = (step / steps) * 2 * Math.PI + i * 1.1;
-        const tryCx = CX + radius * Math.cos(angle);
-        const tryCy = CY + radius * Math.sin(angle);
-        if (tryCx - r < 0 || tryCx + r > ASSUMED_W || tryCy - r < 0 || tryCy + r > ASSUMED_H) continue;
-        const noOverlap = placed.every(
-          (p) => Math.hypot(tryCx - p.cx, tryCy - p.cy) >= r + p.r + MIN_GAP,
-        );
-        if (noOverlap) {
-          cx = tryCx;
-          cy = tryCy;
-          break outer;
-        }
-      }
-    }
-
-    placed.push({ cx, cy, r });
-    return {
-      size,
-      leftPct: (cx / ASSUMED_W) * 100,
-      topPct: (cy / ASSUMED_H) * 100,
-    };
-  });
-}
+const GOLDEN = Math.PI * (3 - Math.sqrt(5));
 
 function BubbleCanvasInner() {
   const [selected, setSelected] = useState<Appointment | null>(null);
@@ -117,8 +81,12 @@ function BubbleCanvasInner() {
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const bodiesRef = useRef<Body[]>([]);
+  const rafRef = useRef<number | null>(null);
   const dragState = useRef<{ idx: number; offsetX: number; offsetY: number } | null>(null);
   const dragMoved = useRef(false);
+  const draggingIdxRef = useRef<number | null>(null);
+  const awakeRef = useRef(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ["openAppointments"],
@@ -129,15 +97,104 @@ function BubbleCanvasInner() {
   const appointments = (data?.openAppointments ?? []) as Appointment[];
   const positionKey = appointments.map((a) => `${a.id}:${a.counselor?.rating}`).join(",");
 
-  const initialPositions = useMemo(
-    () => computePositions(appointments),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [positionKey],
-  );
+  // アポイントメントが変わったら物理ボディを初期化
+  useEffect(() => {
+    const n = appointments.length;
+    if (n === 0) { bodiesRef.current = []; return; }
+
+    const CX = ASSUMED_W / 2;
+    const CY = ASSUMED_H / 2;
+
+    const rawSizes = appointments.map((a) => bubbleSize(a.counselor?.rating));
+    const totalArea = rawSizes.reduce((sum, s) => sum + Math.PI * (s / 2) ** 2, 0);
+    const availableArea = ASSUMED_W * ASSUMED_H * 0.6;
+    const scaleFactor = totalArea > availableArea ? Math.sqrt(availableArea / totalArea) : 1;
+
+    bodiesRef.current = rawSizes.map((rawS, i) => {
+      const size = Math.round(rawS * scaleFactor);
+      return {
+        cx: CX + Math.cos(i * GOLDEN) * (i === 0 ? 0 : 2),
+        cy: CY + Math.sin(i * GOLDEN) * (i === 0 ? 0 : 2),
+        r: size / 2,
+        size,
+      };
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionKey]);
+
+  // 物理演算ループ（収束したら自動停止）
+  const tickRef = useRef<() => void>(() => {});
 
   useEffect(() => {
-    setPositions(initialPositions);
-  }, [initialPositions]);
+    const CX = ASSUMED_W / 2;
+    const CY = ASSUMED_H / 2;
+
+    const tick = () => {
+      const bs = bodiesRef.current;
+      const n = bs.length;
+      const dIdx = draggingIdxRef.current;
+      let maxDelta = 0;
+
+      // 衝突解消（位置を直接修正、速度なし）
+      for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+          const a = bs[i];
+          const b = bs[j];
+          const dx = a.cx - b.cx;
+          const dy = a.cy - b.cy;
+          const dist = Math.hypot(dx, dy) || 0.01;
+          const minDist = a.r + b.r + MIN_GAP;
+          if (dist < minDist) {
+            const push = ((minDist - dist) / dist) * 0.5;
+            if (i !== dIdx) { a.cx += dx * push; a.cy += dy * push; }
+            if (j !== dIdx) { b.cx -= dx * push; b.cy -= dy * push; }
+          }
+        }
+      }
+
+      // 中心への引き寄せ（小さなステップで指数収束）
+      for (let i = 0; i < n; i++) {
+        if (i === dIdx) continue;
+        const b = bs[i];
+        const dx = (CX - b.cx) * 0.018;
+        const dy = (CY - b.cy) * 0.018;
+        b.cx += dx;
+        b.cy += dy;
+        b.cx = Math.max(b.r, Math.min(ASSUMED_W - b.r, b.cx));
+        b.cy = Math.max(b.r, Math.min(ASSUMED_H - b.r, b.cy));
+        maxDelta = Math.max(maxDelta, Math.abs(dx), Math.abs(dy));
+      }
+
+      setPositions(bs.map((b) => ({
+        size: b.size,
+        leftPct: (b.cx / ASSUMED_W) * 100,
+        topPct: (b.cy / ASSUMED_H) * 100,
+      })));
+
+      // 動きが十分小さければスリープ
+      if (maxDelta < 0.05 && dIdx === null) {
+        awakeRef.current = false;
+        return;
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    tickRef.current = tick;
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+  }, []);
+
+  const wake = () => {
+    if (awakeRef.current) return;
+    awakeRef.current = true;
+    rafRef.current = requestAnimationFrame(tickRef.current);
+  };
+
+  // 初期配置後にウェイク
+  useEffect(() => {
+    if (bodiesRef.current.length > 0) wake();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionKey]);
 
   const handleMouseDown = (e: React.MouseEvent, i: number) => {
     e.preventDefault();
@@ -146,16 +203,18 @@ function BubbleCanvasInner() {
     dragMoved.current = false;
     const container = containerRef.current?.getBoundingClientRect();
     if (!container) return;
-    const p = positions[i];
-    if (!p) return;
-    const bubbleCx = (p.leftPct / 100) * container.width;
-    const bubbleCy = (p.topPct / 100) * container.height;
+    const b = bodiesRef.current[i];
+    if (!b) return;
+    const bodyCx = (b.cx / ASSUMED_W) * container.width;
+    const bodyCy = (b.cy / ASSUMED_H) * container.height;
     dragState.current = {
       idx: i,
-      offsetX: e.clientX - container.left - bubbleCx,
-      offsetY: e.clientY - container.top - bubbleCy,
+      offsetX: e.clientX - container.left - bodyCx,
+      offsetY: e.clientY - container.top - bodyCy,
     };
+    draggingIdxRef.current = i;
     setDraggingIdx(i);
+    wake();
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -164,19 +223,14 @@ function BubbleCanvasInner() {
     const container = containerRef.current?.getBoundingClientRect();
     if (!container) return;
     const { idx, offsetX, offsetY } = dragState.current;
-    const newCx = e.clientX - container.left - offsetX;
-    const newCy = e.clientY - container.top - offsetY;
-    setPositions((prev) =>
-      prev.map((p, j) =>
-        j === idx
-          ? {
-              ...p,
-              leftPct: Math.max(0, Math.min(100, (newCx / container.width) * 100)),
-              topPct: Math.max(0, Math.min(100, (newCy / container.height) * 100)),
-            }
-          : p,
-      ),
-    );
+    const b = bodiesRef.current[idx];
+    if (!b) return;
+    const newCx = (e.clientX - container.left - offsetX) / container.width * ASSUMED_W;
+    const newCy = (e.clientY - container.top - offsetY) / container.height * ASSUMED_H;
+    b.cx = Math.max(b.r, Math.min(ASSUMED_W - b.r, newCx));
+    b.cy = Math.max(b.r, Math.min(ASSUMED_H - b.r, newCy));
+    b.vx = 0;
+    b.vy = 0;
   };
 
   const handleMouseUp = (i: number) => {
@@ -187,11 +241,13 @@ function BubbleCanvasInner() {
       }
     }
     dragState.current = null;
+    draggingIdxRef.current = null;
     setDraggingIdx(null);
   };
 
   const handleMouseLeave = () => {
     dragState.current = null;
+    draggingIdxRef.current = null;
     setDraggingIdx(null);
   };
 
@@ -307,8 +363,6 @@ function BubbleCanvasInner() {
           const nameFs = Math.max(10, Math.round(p.size * 0.059));
           const statusFs = Math.max(9, Math.round(p.size * 0.05));
           const isDragging = draggingIdx === i;
-          const animIdx = (i % 3) + 1;
-          const animDuration = 4 + sr(i * 7 + 3) * 3;
           const name = a.counselor?.name ?? "—";
           const si = statusInfo(a.availability, a.status, a.scheduledStart, a.scheduledEnd);
 
@@ -325,7 +379,6 @@ function BubbleCanvasInner() {
                 zIndex: isDragging ? 10 : 1,
                 boxShadow: isDragging ? "0 8px 24px rgba(0,0,0,0.18)" : "0 2px 8px rgba(0,0,0,0.10)",
                 transition: isDragging ? "none" : "box-shadow 0.2s",
-                animation: isDragging ? "none" : `bubbleFloat${animIdx} ${animDuration}s ease-in-out infinite`,
                 opacity: si.disabled ? 0.4 : 1,
               }}
               onMouseDown={(e) => handleMouseDown(e, i)}

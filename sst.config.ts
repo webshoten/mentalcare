@@ -28,13 +28,27 @@ export default $config({
 
     const api = new sst.aws.ApiGatewayV2("MyApi");
 
+    const chimePermissions = [
+      {
+        actions: [
+          "chime:CreateMeeting",
+          "chime:DeleteMeeting",
+          "chime:CreateAttendee",
+          "chime:DeleteAttendee",
+        ],
+        resources: ["*"],
+      },
+    ];
+
     api.route("POST /graphql", {
       handler: "packages/functions/src/api.handler",
       link: [counselorTable, counselorPhotoBucket, appointmentTable],
+      permissions: chimePermissions,
     });
     api.route("GET /graphql", {
       handler: "packages/functions/src/api.handler",
       link: [counselorTable, counselorPhotoBucket, appointmentTable],
+      permissions: chimePermissions,
     });
 
     if ($dev) {

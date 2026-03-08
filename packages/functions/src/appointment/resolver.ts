@@ -4,6 +4,12 @@ import {
   calculateAvailability,
 } from "@mentalcare/core/appointment";
 import { CounselorRepository } from "@mentalcare/core/counselor";
+import {
+  ChimeSDKMeetingsClient,
+  CreateMeetingCommand,
+} from "@aws-sdk/client-chime-sdk-meetings";
+
+const chime = new ChimeSDKMeetingsClient({ region: "us-east-1" });
 
 export const appointmentResolvers = {
   Query: {
@@ -40,8 +46,24 @@ export const appointmentResolvers = {
       });
     },
 
-    joinAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
-      AppointmentRepository.join(appointmentId),
+    joinAppointment: async (_: unknown, { appointmentId }: { appointmentId: string }) => {
+      const appointment = await AppointmentRepository.join(appointmentId);
+      // OPEN→WAITING（カウンセラーが入室）のとき Chime Meeting を自動作成
+      if (appointment.status === "WAITING" && !appointment.chimeMeetingId) {
+        const result = await chime.send(
+          new CreateMeetingCommand({
+            ClientRequestToken: crypto.randomUUID(),
+            MediaRegion: "ap-northeast-1",
+            ExternalMeetingId: appointmentId,
+          }),
+        );
+        return AppointmentRepository.setChimeMeetingId(
+          appointmentId,
+          result.Meeting!.MeetingId!,
+        );
+      }
+      return appointment;
+    },
 
     endAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
       AppointmentRepository.updateStatus(appointmentId, "ENDED", {

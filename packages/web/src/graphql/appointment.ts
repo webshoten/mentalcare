@@ -53,6 +53,43 @@ export const AppointmentsQuery = graphql(`
       scheduledEnd
       createdAt
       endedAt
+      chimeMeetingId
+    }
+  }
+`);
+
+export const ChimeStatusQuery = graphql(`
+  query ChimeStatus {
+    chimeStatus {
+      appointmentId
+      appointmentStatus
+      chimeMeetingId
+      attendees {
+        attendeeId
+        externalUserId
+      }
+    }
+  }
+`);
+
+export const JoinChimeMeetingMutation = graphql(`
+  mutation JoinChimeMeeting($appointmentId: ID!) {
+    joinChimeMeeting(appointmentId: $appointmentId) {
+      meeting {
+        meetingId
+        mediaRegion
+        mediaPlacement {
+          audioHostUrl
+          audioFallbackUrl
+          signalingUrl
+          turnControlUrl
+        }
+      }
+      attendee {
+        attendeeId
+        externalUserId
+        joinToken
+      }
     }
   }
 `);
@@ -100,6 +137,38 @@ export const EndAppointmentMutation = graphql(`
     }
   }
 `);
+
+export const CreateChimeMeetingMutation = graphql(`
+  mutation CreateChimeMeeting {
+    createChimeMeeting {
+      meetingId
+      mediaRegion
+      mediaPlacement {
+        audioHostUrl
+        audioFallbackUrl
+        signalingUrl
+        turnControlUrl
+      }
+    }
+  }
+`);
+
+export const CreateChimeAttendeeMutation = graphql(`
+  mutation CreateChimeAttendee($meetingId: String!) {
+    createChimeAttendee(meetingId: $meetingId) {
+      attendeeId
+      externalUserId
+      joinToken
+    }
+  }
+`);
+
+export const createChimeMeeting = () => executeGraphQL(CreateChimeMeetingMutation);
+export const createChimeAttendee = (meetingId: string) =>
+  executeGraphQL(CreateChimeAttendeeMutation, { meetingId });
+export const fetchChimeStatus = () => executeGraphQL(ChimeStatusQuery);
+export const joinChimeMeeting = (appointmentId: string) =>
+  executeGraphQL(JoinChimeMeetingMutation, { appointmentId });
 
 export const fetchOpenAppointments = () => executeGraphQL(OpenAppointmentsQuery);
 export const fetchAppointment = (id: string) => executeGraphQL(AppointmentQuery, { id });

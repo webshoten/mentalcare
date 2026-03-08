@@ -38,10 +38,47 @@
     createdAt: String!
     endedAt: String
     counselor: Counselor
+    chimeMeetingId: String    # Chime Meeting ID（WAITING 以降にセット）
   }
 
   type SeedResult {
     seeded: Int!
+  }
+
+  type ChimeMediaPlacement {
+    audioHostUrl: String!
+    audioFallbackUrl: String!
+    signalingUrl: String!
+    turnControlUrl: String!
+  }
+
+  type ChimeMeeting {
+    meetingId: String!
+    mediaPlacement: ChimeMediaPlacement!
+    mediaRegion: String!
+  }
+
+  type ChimeAttendee {
+    attendeeId: String!
+    externalUserId: String!
+    joinToken: String!
+  }
+
+  type JoinChimeMeetingResult {
+    meeting: ChimeMeeting!
+    attendee: ChimeAttendee!
+  }
+
+  type ChimeAttendeeInfo {
+    attendeeId: String!
+    externalUserId: String!
+  }
+
+  type ChimeAppointmentStatus {
+    appointmentId: String!
+    appointmentStatus: AppointmentStatus!
+    chimeMeetingId: String
+    attendees: [ChimeAttendeeInfo!]
   }
 
   type Query {
@@ -56,6 +93,8 @@
     counselors: [Counselor!]!
     counselor(id: ID!): Counselor
     counselorStats: CounselorStats!
+    # Chime 接続状態監視（デバッグ用）
+    chimeStatus: [ChimeAppointmentStatus!]!
   }
 
   type Mutation {
@@ -69,4 +108,10 @@
     leaveAppointment(appointmentId: ID!): Appointment!
     # デバッグ用：カウンセラーデータのシード
     seedDatabase: SeedResult!
+    # デバッグ用：Chime ミーティング作成
+    createChimeMeeting: ChimeMeeting!
+    # デバッグ用：Chime アテンディー作成
+    createChimeAttendee(meetingId: String!): ChimeAttendee!
+    # Appointment に紐づく Chime Meeting に Attendee として参加（再接続にも使用）
+    joinChimeMeeting(appointmentId: ID!): JoinChimeMeetingResult!
   }

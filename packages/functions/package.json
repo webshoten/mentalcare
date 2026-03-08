@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "type": "module",
   "dependencies": {
+    "@aws-sdk/client-chime-sdk-meetings": "^3.1004.0",
     "@mentalcare/core": "*",
     "aws-jwt-verify": "^5.1.0",
     "graphql": "^16.11.0",

@@ -24,8 +24,8 @@ type Appointment = {
 
 type Position = {
   size: number;
-  leftPct: number;
-  topPct: number;
+  cx: number;
+  cy: number;
 };
 
 type Body = {
@@ -56,16 +56,15 @@ function statusInfo(availability: string, status?: string, scheduledStart?: stri
   }
 }
 
-const BUBBLE_SIZE_MIN = 100;
+const BUBBLE_SIZE = 140;
 
-function bubbleSize(rating: number | null | undefined): number {
-  const r = Math.max(1, Math.min(5, rating ?? 3));
-  return Math.round(BUBBLE_SIZE_MIN + ((r - 1) / 4) * 120);
+function bubbleSize(_rating: number | null | undefined): number {
+  return BUBBLE_SIZE;
 }
 
 const ASSUMED_W = 1200;
 const ASSUMED_H = 580;
-const MIN_GAP = 16;
+const MIN_GAP = 5;
 const GOLDEN = Math.PI * (3 - Math.sqrt(5));
 
 function BubbleCanvasInner() {
@@ -102,19 +101,22 @@ function BubbleCanvasInner() {
     const n = appointments.length;
     if (n === 0) { bodiesRef.current = []; return; }
 
-    const CX = ASSUMED_W / 2;
-    const CY = ASSUMED_H / 2;
+    const W = containerRef.current?.clientWidth ?? ASSUMED_W;
+    const H = containerRef.current?.clientHeight ?? ASSUMED_H;
+    const CX = W / 2;
+    const CY = H / 2;
 
     const rawSizes = appointments.map((a) => bubbleSize(a.counselor?.rating));
     const totalArea = rawSizes.reduce((sum, s) => sum + Math.PI * (s / 2) ** 2, 0);
-    const availableArea = ASSUMED_W * ASSUMED_H * 0.6;
+    const availableArea = W * H * 0.6;
     const scaleFactor = totalArea > availableArea ? Math.sqrt(availableArea / totalArea) : 1;
 
     bodiesRef.current = rawSizes.map((rawS, i) => {
       const size = Math.round(rawS * scaleFactor);
+      const spread = Math.sqrt(i) * (size + MIN_GAP);
       return {
-        cx: CX + Math.cos(i * GOLDEN) * (i === 0 ? 0 : 2),
-        cy: CY + Math.sin(i * GOLDEN) * (i === 0 ? 0 : 2),
+        cx: CX + Math.cos(i * GOLDEN) * spread,
+        cy: CY + Math.sin(i * GOLDEN) * spread,
         r: size / 2,
         size,
       };
@@ -126,49 +128,62 @@ function BubbleCanvasInner() {
   const tickRef = useRef<() => void>(() => {});
 
   useEffect(() => {
-    const CX = ASSUMED_W / 2;
-    const CY = ASSUMED_H / 2;
-
     const tick = () => {
       const bs = bodiesRef.current;
       const n = bs.length;
       const dIdx = draggingIdxRef.current;
-      let maxDelta = 0;
 
-      // 衝突解消（位置を直接修正、速度なし）
+      const W = containerRef.current?.clientWidth ?? ASSUMED_W;
+      const H = containerRef.current?.clientHeight ?? ASSUMED_H;
+      const CX = W / 2;
+      const CY = H / 2;
+
+      // フレーム前の位置を記録（収束判定用）
+      const prevCx = bs.map((b) => b.cx);
+      const prevCy = bs.map((b) => b.cy);
+
+      // 中心への引き寄せ（衝突解消の前に適用）
       for (let i = 0; i < n; i++) {
-        for (let j = i + 1; j < n; j++) {
-          const a = bs[i];
-          const b = bs[j];
-          const dx = a.cx - b.cx;
-          const dy = a.cy - b.cy;
-          const dist = Math.hypot(dx, dy) || 0.01;
-          const minDist = a.r + b.r + MIN_GAP;
-          if (dist < minDist) {
-            const push = ((minDist - dist) / dist) * 0.5;
-            if (i !== dIdx) { a.cx += dx * push; a.cy += dy * push; }
-            if (j !== dIdx) { b.cx -= dx * push; b.cy -= dy * push; }
+        if (i === dIdx) continue;
+        const b = bs[i];
+        b.cx += (CX - b.cx) * 0.018;
+        b.cy += (CY - b.cy) * 0.018;
+        b.cx = Math.max(b.r, Math.min(W - b.r, b.cx));
+        b.cy = Math.max(b.r, Math.min(H - b.r, b.cy));
+      }
+
+      // 衝突解消（複数パスで確実に解消）
+      for (let iter = 0; iter < 8; iter++) {
+        for (let i = 0; i < n; i++) {
+          for (let j = i + 1; j < n; j++) {
+            const a = bs[i];
+            const b = bs[j];
+            const dx = a.cx - b.cx;
+            const dy = a.cy - b.cy;
+            const dist = Math.hypot(dx, dy) || 0.01;
+            const minDist = a.r + b.r + MIN_GAP;
+            if (dist < minDist) {
+              const overlap = (minDist - dist) / 2;
+              const nx = dx / dist;
+              const ny = dy / dist;
+              if (i !== dIdx) { a.cx += nx * overlap; a.cy += ny * overlap; }
+              if (j !== dIdx) { b.cx -= nx * overlap; b.cy -= ny * overlap; }
+            }
           }
         }
       }
 
-      // 中心への引き寄せ（小さなステップで指数収束）
+      // 今フレームで実際に動いた最大距離（px）で収束を判定
+      let maxDelta = 0;
       for (let i = 0; i < n; i++) {
         if (i === dIdx) continue;
-        const b = bs[i];
-        const dx = (CX - b.cx) * 0.018;
-        const dy = (CY - b.cy) * 0.018;
-        b.cx += dx;
-        b.cy += dy;
-        b.cx = Math.max(b.r, Math.min(ASSUMED_W - b.r, b.cx));
-        b.cy = Math.max(b.r, Math.min(ASSUMED_H - b.r, b.cy));
-        maxDelta = Math.max(maxDelta, Math.abs(dx), Math.abs(dy));
+        maxDelta = Math.max(maxDelta, Math.abs(bs[i].cx - prevCx[i]), Math.abs(bs[i].cy - prevCy[i]));
       }
 
       setPositions(bs.map((b) => ({
         size: b.size,
-        leftPct: (b.cx / ASSUMED_W) * 100,
-        topPct: (b.cy / ASSUMED_H) * 100,
+        cx: b.cx,
+        cy: b.cy,
       })));
 
       // 動きが十分小さければスリープ
@@ -199,18 +214,16 @@ function BubbleCanvasInner() {
   const handleMouseDown = (e: React.MouseEvent, i: number) => {
     e.preventDefault();
     const a = appointments[i];
-    if (!a || statusInfo(a.availability, a.status).disabled) return;
+    if (!a) return;
     dragMoved.current = false;
     const container = containerRef.current?.getBoundingClientRect();
     if (!container) return;
     const b = bodiesRef.current[i];
     if (!b) return;
-    const bodyCx = (b.cx / ASSUMED_W) * container.width;
-    const bodyCy = (b.cy / ASSUMED_H) * container.height;
     dragState.current = {
       idx: i,
-      offsetX: e.clientX - container.left - bodyCx,
-      offsetY: e.clientY - container.top - bodyCy,
+      offsetX: e.clientX - container.left - b.cx,
+      offsetY: e.clientY - container.top - b.cy,
     };
     draggingIdxRef.current = i;
     setDraggingIdx(i);
@@ -225,8 +238,10 @@ function BubbleCanvasInner() {
     const { idx, offsetX, offsetY } = dragState.current;
     const b = bodiesRef.current[idx];
     if (!b) return;
-    b.cx = Math.max(b.r, Math.min(ASSUMED_W - b.r, (e.clientX - container.left - offsetX) / container.width * ASSUMED_W));
-    b.cy = Math.max(b.r, Math.min(ASSUMED_H - b.r, (e.clientY - container.top - offsetY) / container.height * ASSUMED_H));
+    const W = container.width;
+    const H = container.height;
+    b.cx = Math.max(b.r, Math.min(W - b.r, e.clientX - container.left - offsetX));
+    b.cy = Math.max(b.r, Math.min(H - b.r, e.clientY - container.top - offsetY));
     // RAFの起動を待たず直接描画更新、衝突も起こすためにも wake する
     wake();
     setPositions(bodiesRef.current.map((b) => ({
@@ -376,9 +391,9 @@ function BubbleCanvasInner() {
               style={{
                 width: p.size,
                 height: p.size,
-                left: `calc(${p.leftPct}% - ${p.size / 2}px)`,
-                top: `calc(${p.topPct}% - ${p.size / 2}px)`,
-                cursor: si.disabled ? "default" : isDragging ? "grabbing" : "grab",
+                left: p.cx - p.size / 2,
+                top: p.cy - p.size / 2,
+                cursor: isDragging ? "grabbing" : "grab",
                 zIndex: isDragging ? 10 : 1,
                 boxShadow: isDragging ? "0 8px 24px rgba(0,0,0,0.18)" : "0 2px 8px rgba(0,0,0,0.10)",
                 transition: isDragging ? "none" : "box-shadow 0.2s",

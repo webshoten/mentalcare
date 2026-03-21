@@ -60,11 +60,13 @@ export default $config({
       handler: "packages/functions/src/api.handler",
       link: [counselorTable, counselorPhotoBucket, appointmentTable, talkerTable, sessionTable],
       permissions: chimePermissions,
+      runtime: "nodejs22.x",
     });
     api.route("GET /graphql", {
       handler: "packages/functions/src/api.handler",
       link: [counselorTable, counselorPhotoBucket, appointmentTable, talkerTable, sessionTable],
       permissions: chimePermissions,
+      runtime: "nodejs22.x",
     });
 
     if ($dev) {

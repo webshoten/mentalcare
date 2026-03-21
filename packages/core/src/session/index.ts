@@ -88,6 +88,23 @@ export const SessionRepository = {
     return session;
   },
 
+  async end(id: string): Promise<Session> {
+    const result = await client.send(
+      new UpdateCommand({
+        TableName: Resource.SessionTable.name,
+        Key: { id },
+        UpdateExpression: "SET #status = :ended, endedAt = :endedAt",
+        ExpressionAttributeNames: { "#status": "status" },
+        ExpressionAttributeValues: {
+          ":ended": "ENDED",
+          ":endedAt": new Date().toISOString(),
+        },
+        ReturnValues: "ALL_NEW",
+      }),
+    );
+    return result.Attributes as Session;
+  },
+
   async setChimeMeetingId(id: string, chimeMeetingId: string): Promise<Session> {
     const result = await client.send(
       new UpdateCommand({

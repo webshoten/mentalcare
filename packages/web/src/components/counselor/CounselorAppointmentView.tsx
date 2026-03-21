@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import { endAppointment } from "../../graphql/appointment";
+import { endSession } from "../../graphql/appointment";
 import { useAppointment } from "../../hooks/useAppointment";
 import { useCallState } from "../../hooks/useCallState";
+import { useChimeAudio } from "../../hooks/useChimeAudio";
 import { useElapsedSeconds } from "../../hooks/useElapsedSeconds";
 import { useEndOnUnload } from "../../hooks/useEndOnUnload";
 import { useRedirectOnEnded } from "../../hooks/useRedirectOnEnded";
@@ -45,17 +45,20 @@ function WaitingView() {
 function ConnectedView({
   appointmentId,
   counselorId,
+  sessionId,
   elapsedSec,
+  chime,
 }: {
   appointmentId: string;
   counselorId: string;
+  sessionId: string;
   elapsedSec: number;
+  chime: ReturnType<typeof useChimeAudio>;
 }) {
-  const [muted, setMuted] = useState(false);
-  const [speakerOn, setSpeakerOn] = useState(true);
+  const { muted, toggleMute, toggleSpeaker } = chime;
 
   const { mutate: end } = useMutation({
-    mutationFn: () => endAppointment(appointmentId),
+    mutationFn: () => endSession(sessionId),
     onSuccess: () => {
       window.location.href = `/counselor/${counselorId}/appointment/${appointmentId}/end?reason=self`;
     },
@@ -99,7 +102,7 @@ function ConnectedView({
         <div className="flex flex-col items-center gap-2">
           <button
             type="button"
-            onClick={() => setMuted((v) => !v)}
+            onClick={toggleMute}
             className={`w-16 h-16 rounded-full flex items-center justify-center transition-colors ${
               muted ? "bg-white text-gray-900" : "bg-gray-700 text-white"
             }`}
@@ -131,17 +134,13 @@ function ConnectedView({
         <div className="flex flex-col items-center gap-2">
           <button
             type="button"
-            onClick={() => setSpeakerOn((v) => !v)}
+            onClick={toggleSpeaker}
             className={`w-16 h-16 rounded-full flex items-center justify-center transition-colors ${
-              speakerOn ? "bg-gray-700 text-white" : "bg-white text-gray-900"
+              !muted ? "bg-gray-700 text-white" : "bg-white text-gray-900"
             }`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              {speakerOn ? (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-              )}
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
             </svg>
           </button>
           <span className="text-gray-400 text-xs">スピーカー</span>
@@ -158,12 +157,14 @@ function CounselorAppointmentViewInner({ appointmentId }: Props) {
   const { data } = useAppointment(appointmentId, 3_000);
   const status = data?.appointment?.status;
   const counselorId = data?.appointment?.counselorId ?? null;
+  const sessionId = data?.appointment?.activeSession?.id ?? null;
   const callState = useCallState(status);
   const elapsedSec = useElapsedSeconds(callState === "connected");
-  useEndOnUnload(appointmentId, status);
-  useRedirectOnEnded(status, counselorId ? `/counselor/${counselorId}/appointment/${appointmentId}/end?reason=remote` : null);
+  const chime = useChimeAudio(sessionId);
+  useEndOnUnload(appointmentId, status, sessionId);
+  useRedirectOnEnded(sessionId, counselorId ? `/counselor/${counselorId}/appointment/${appointmentId}/end?reason=remote` : null);
 
-  if (callState === "waiting") {
+  if (callState === "waiting" || !sessionId) {
     return (
       <div className="min-h-screen bg-white">
         <WaitingView />
@@ -173,7 +174,13 @@ function CounselorAppointmentViewInner({ appointmentId }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <ConnectedView appointmentId={appointmentId} counselorId={counselorId ?? ""} elapsedSec={elapsedSec} />
+      <ConnectedView
+        appointmentId={appointmentId}
+        counselorId={counselorId ?? ""}
+        sessionId={sessionId}
+        elapsedSec={elapsedSec}
+        chime={chime}
+      />
     </div>
   );
 }

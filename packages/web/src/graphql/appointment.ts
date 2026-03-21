@@ -39,6 +39,11 @@ export const AppointmentQuery = graphql(`
         specialty
         rating
       }
+      activeSession {
+        id
+        status
+        chimeMeetingId
+      }
     }
   }
 `);
@@ -74,8 +79,8 @@ export const ChimeStatusQuery = graphql(`
 `);
 
 export const JoinChimeMeetingMutation = graphql(`
-  mutation JoinChimeMeeting($appointmentId: ID!) {
-    joinChimeMeeting(appointmentId: $appointmentId) {
+  mutation JoinChimeMeeting($sessionId: ID!) {
+    joinChimeMeeting(sessionId: $sessionId) {
       meeting {
         meetingId
         mediaRegion
@@ -123,8 +128,11 @@ export const CreateAppointmentMutation = graphql(`
 export const JoinAppointmentMutation = graphql(`
   mutation JoinAppointment($appointmentId: ID!, $talkerId: ID) {
     joinAppointment(appointmentId: $appointmentId, talkerId: $talkerId) {
-      id
-      status
+      appointment {
+        id
+        status
+      }
+      sessionId
     }
   }
 `);
@@ -177,8 +185,20 @@ export const createChimeMeeting = () => executeGraphQL(CreateChimeMeetingMutatio
 export const createChimeAttendee = (meetingId: string) =>
   executeGraphQL(CreateChimeAttendeeMutation, { meetingId });
 export const fetchChimeStatus = () => executeGraphQL(ChimeStatusQuery);
-export const joinChimeMeeting = (appointmentId: string) =>
-  executeGraphQL(JoinChimeMeetingMutation, { appointmentId });
+export const EndSessionMutation = graphql(`
+  mutation EndSession($sessionId: ID!) {
+    endSession(sessionId: $sessionId) {
+      id
+      status
+      endedAt
+    }
+  }
+`);
+
+export const joinChimeMeeting = (sessionId: string) =>
+  executeGraphQL(JoinChimeMeetingMutation, { sessionId });
+export const endSession = (sessionId: string) =>
+  executeGraphQL(EndSessionMutation, { sessionId });
 
 export const fetchOpenAppointments = () => executeGraphQL(OpenAppointmentsQuery);
 export const fetchAppointment = (id: string) => executeGraphQL(AppointmentQuery, { id });

@@ -7402,7 +7402,7 @@
       "id": "jcvBp",
       "x": 0,
       "y": 1500,
-      "name": "カウンセラーダッシュボード",
+      "name": "カウンセラー予約管理",
       "width": 1440,
       "height": 900,
       "fill": "$--background",
@@ -7426,10 +7426,10 @@
                   "name": "item1",
                   "descendants": {
                     "xGT5g": {
-                      "iconFontName": "dashboard"
+                      "iconFontName": "calendar_month"
                     },
                     "TXca3": {
-                      "content": "ダッシュボード"
+                      "content": "予約管理"
                     }
                   }
                 },
@@ -7472,7 +7472,7 @@
               "id": "k03SW",
               "name": "pageTitle",
               "fill": "$--foreground",
-              "content": "ダッシュボード",
+              "content": "予約管理",
               "fontFamily": "$--font-primary",
               "fontSize": 24,
               "fontWeight": "700"
@@ -8437,7 +8437,7 @@
                           "type": "text",
                           "id": "Cyo0s",
                           "fill": "#94A3B8",
-                          "content": "/counselor/dashboard/counselor-1",
+                          "content": "/counselor/counselor-1/appointment",
                           "fontFamily": "Inter",
                           "fontSize": 10,
                           "fontWeight": "normal"
@@ -8470,7 +8470,7 @@
                           "type": "text",
                           "id": "1zAQJ",
                           "fill": "#94A3B8",
-                          "content": "/counselor/dashboard/counselor-2",
+                          "content": "/counselor/counselor-2/appointment",
                           "fontFamily": "Inter",
                           "fontSize": 10,
                           "fontWeight": "normal"
@@ -8503,7 +8503,7 @@
                           "type": "text",
                           "id": "mvM31",
                           "fill": "#94A3B8",
-                          "content": "/counselor/dashboard/counselor-3",
+                          "content": "/counselor/counselor-3/appointment",
                           "fontFamily": "Inter",
                           "fontSize": 10,
                           "fontWeight": "normal"
@@ -8536,7 +8536,7 @@
                           "type": "text",
                           "id": "Bc4wY",
                           "fill": "#94A3B8",
-                          "content": "/counselor/dashboard/counselor-4",
+                          "content": "/counselor/counselor-4/appointment",
                           "fontFamily": "Inter",
                           "fontSize": 10,
                           "fontWeight": "normal"
@@ -8569,7 +8569,7 @@
                           "type": "text",
                           "id": "yJjOC",
                           "fill": "#94A3B8",
-                          "content": "/counselor/dashboard/counselor-5",
+                          "content": "/counselor/counselor-5/appointment",
                           "fontFamily": "Inter",
                           "fontSize": 10,
                           "fontWeight": "normal"
@@ -8602,7 +8602,7 @@
                           "type": "text",
                           "id": "fzL14",
                           "fill": "#94A3B8",
-                          "content": "/counselor/dashboard/counselor-6",
+                          "content": "/counselor/counselor-6/appointment",
                           "fontFamily": "Inter",
                           "fontSize": 10,
                           "fontWeight": "normal"
@@ -8635,7 +8635,7 @@
                           "type": "text",
                           "id": "txg3R",
                           "fill": "#475569",
-                          "content": "/counselor/dashboard/counselor-7",
+                          "content": "/counselor/counselor-7/appointment",
                           "fontFamily": "Inter",
                           "fontSize": 10,
                           "fontWeight": "normal"
@@ -9393,7 +9393,7 @@
                   "id": "Pz23A",
                   "name": "btnTxt1",
                   "fill": "#FFFFFF",
-                  "content": "ダッシュボードに戻る",
+                  "content": "予約管理に戻る",
                   "fontFamily": "Inter",
                   "fontSize": 14,
                   "fontWeight": "bold"
@@ -9487,7 +9487,7 @@
               "id": "wrR8M",
               "name": "sub2",
               "fill": "#6B7280",
-              "content": "お疲れさまでした。\n相談者がセッションを終了しました。\nダッシュボードに戻り、次の相談を受け付けましょう。",
+              "content": "お疲れさまでした。\n相談者がセッションを終了しました。\n予約管理に戻り、次の相談を受け付けましょう。",
               "fontFamily": "Inter",
               "fontSize": 14,
               "fontWeight": "normal"
@@ -9506,7 +9506,7 @@
                   "id": "cVLmi",
                   "name": "btnTxt2",
                   "fill": "#FFFFFF",
-                  "content": "ダッシュボードに戻る",
+                  "content": "予約管理に戻る",
                   "fontFamily": "Inter",
                   "fontSize": 14,
                   "fontWeight": "bold"
@@ -12513,7 +12513,7 @@
                           "id": "MQ9ia",
                           "name": "couLink1Path",
                           "fill": "#FED7AA",
-                          "content": "/counselor/dashboard/counselor-1",
+                          "content": "/counselor/counselor-1/appointment",
                           "fontFamily": "IBM Plex Mono",
                           "fontSize": 12,
                           "fontWeight": "700"
@@ -12575,7 +12575,7 @@
                           "id": "eNUlc",
                           "name": "couLink2Path",
                           "fill": "#FED7AA",
-                          "content": "/counselor/dashboard/counselor-2",
+                          "content": "/counselor/counselor-2/appointment",
                           "fontFamily": "IBM Plex Mono",
                           "fontSize": 12,
                           "fontWeight": "700"

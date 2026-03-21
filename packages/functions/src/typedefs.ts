@@ -38,6 +38,7 @@ export const typeDefs = /* GraphQL */ `
     createdAt: String!
     endedAt: String
     counselor: Counselor
+    activeSession: Session    # ACTIVE な Session（通話中のみ）
   }
 
   type SeedResult {
@@ -61,6 +62,11 @@ export const typeDefs = /* GraphQL */ `
     attendeeId: String!
     externalUserId: String!
     joinToken: String!
+  }
+
+  type JoinAppointmentResult {
+    appointment: Appointment!
+    sessionId: ID
   }
 
   type JoinChimeMeetingResult {
@@ -127,8 +133,8 @@ export const typeDefs = /* GraphQL */ `
   type Mutation {
     # カウンセラーが枠を作成 → OPEN
     createAppointment(counselorId: ID!, scheduledStart: String!, scheduledEnd: String!): Appointment!
-    # 入室（OPEN→WAITING / WAITING→ACTIVE。ACTIVE 時に Session 作成 + Chime Meeting 作成）
-    joinAppointment(appointmentId: ID!, talkerId: ID): Appointment!
+    # 入室（OPEN→WAITING / WAITING→ACTIVE）。ACTIVE 遷移時に Session を作成する（Chime Meeting は作らない）
+    joinAppointment(appointmentId: ID!, talkerId: ID): JoinAppointmentResult!
     # 通話終了 → ENDED（TTL セット）
     endAppointment(appointmentId: ID!): Appointment!
     # 待機中離脱 → OPEN（相談者が接続待ちのまま離れたときに枠を解放）
@@ -139,8 +145,10 @@ export const typeDefs = /* GraphQL */ `
     createChimeMeeting: ChimeMeeting!
     # デバッグ用：Chime アテンディー作成
     createChimeAttendee(meetingId: String!): ChimeAttendee!
-    # Appointment に紐づく Chime Meeting に Attendee として参加（再接続にも使用）
-    joinChimeMeeting(appointmentId: ID!): JoinChimeMeetingResult!
+    # Session の Chime Meeting に参加。Meeting 未作成なら自動作成し、Attendee を追加して credentials を返す
+    joinChimeMeeting(sessionId: ID!): JoinChimeMeetingResult!
+    # Session 終了。status を ENDED にし、endedAt をセット。紐づく Chime Meeting も削除する
+    endSession(sessionId: ID!): Session!
     # デバッグ用：Appointment と紐づく Chime Meeting を削除
     deleteAppointment(appointmentId: ID!): Boolean!
   }

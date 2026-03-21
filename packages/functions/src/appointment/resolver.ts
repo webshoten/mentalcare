@@ -7,7 +7,6 @@ import { CounselorRepository } from "@mentalcare/core/counselor";
 import { SessionRepository } from "@mentalcare/core/session";
 import {
   ChimeSDKMeetingsClient,
-  CreateMeetingCommand,
   DeleteMeetingCommand,
 } from "@aws-sdk/client-chime-sdk-meetings";
 
@@ -54,27 +53,20 @@ export const appointmentResolvers = {
     ) => {
       const appointment = await AppointmentRepository.join(appointmentId);
 
-      // WAITING→ACTIVE（相談者が入室）のとき Session 作成 + Chime Meeting 自動作成
+      // WAITING→ACTIVE（相談者が入室）のとき Session 作成
       if (appointment.status === "ACTIVE" && talkerId) {
         const sessionId = crypto.randomUUID();
-        const meetingResult = await chime.send(
-          new CreateMeetingCommand({
-            ClientRequestToken: crypto.randomUUID(),
-            MediaRegion: "ap-northeast-1",
-            ExternalMeetingId: sessionId,
-          }),
-        );
         await SessionRepository.create({
           id: sessionId,
           appointmentId,
           talkerId,
-          chimeMeetingId: meetingResult.Meeting!.MeetingId!,
           status: "ACTIVE",
           startedAt: new Date().toISOString(),
         });
+        return { appointment, sessionId };
       }
 
-      return appointment;
+      return { appointment, sessionId: null };
     },
 
     endAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
@@ -113,5 +105,11 @@ export const appointmentResolvers = {
 
     counselor: (parent: Appointment) =>
       CounselorRepository.findById(parent.counselorId),
+
+    activeSession: async (parent: Appointment) => {
+      if (parent.status !== "ACTIVE") return null;
+      const sessions = await SessionRepository.findByAppointmentId(parent.id);
+      return sessions.find((s) => s.status === "ACTIVE") ?? null;
+    },
   },
 };

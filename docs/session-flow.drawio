@@ -1,0 +1,185 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.6.1">
+  <diagram name="ページ-1" id="6H759GfTZWZ9uplnM4sI">
+    <mxGraphModel dx="1261" dy="687" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="相談者(Talker)" vertex="1">
+          <mxGeometry height="1513" width="150" as="geometry" />
+        </mxCell>
+        <mxCell id="3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="フロントエンド" vertex="1">
+          <mxGeometry height="1513" width="150" x="213" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="GraphQL API" vertex="1">
+          <mxGeometry height="1513" width="150" x="581" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="DynamoDB" vertex="1">
+          <mxGeometry height="1513" width="150" x="953" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="AWS Chime" vertex="1">
+          <mxGeometry height="1513" width="150" x="1209" as="geometry" />
+        </mxCell>
+        <mxCell id="7" edge="1" parent="1" source="4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="5" value="Appointment status → WAITING">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="851" y="152" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8" edge="1" parent="1" source="2" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="3" value="バブルから相談開始">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="190" y="249" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9" edge="1" parent="1" source="3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4" value="joinAppointment(appointmentId, talkerId)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="481" y="297" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="10" edge="1" parent="1" source="4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="5" value="Appointment status → ACTIVE">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="851" y="345" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="11" edge="1" parent="1" source="4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="6" value="CreateMeeting">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="978" y="393" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="12" edge="1" parent="1" source="6" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="4" value="meetingId">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="981" y="441" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="13" edge="1" parent="1" source="4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="5" value="Session 作成(ACTIVE, chimeMeetingId)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="851" y="489" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="14" edge="1" parent="1" source="4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="3" value="{ appointment, sessionId }">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="484" y="537" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="15" edge="1" parent="1" source="3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4" value="joinChimeMeeting(sessionId)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="481" y="634" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="16" edge="1" parent="1" source="4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="5" value="Session 取得(sessionId)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="851" y="682" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="17" edge="1" parent="1" source="4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="6" value="GetMeeting + CreateAttendee">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="978" y="730" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="18" edge="1" parent="1" source="6" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="4" value="meeting + attendee(joinToken)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="981" y="778" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="19" edge="1" parent="1" source="4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="3" value="{ meeting, attendee }">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="484" y="826" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="20" edge="1" parent="1" source="3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="6" value="audioVideo.start()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="794" y="874" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="21" edge="1" parent="1" source="2" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="3" value="通話終了ボタン">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="190" y="1167" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="22" edge="1" parent="1" source="3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="6" value="audioVideo.stop()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="794" y="1215" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="23" edge="1" parent="1" source="3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4" value="endSession(sessionId)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="481" y="1263" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="24" edge="1" parent="1" source="4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="5" value="Session status → ENDED, endedAt セット">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="851" y="1311" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="25" edge="1" parent="1" source="4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="6" value="DeleteMeeting">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="978" y="1359" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="26" parent="1" style="fillColor=#ffff88;strokeColor=#9E916F;" value="1. カウンセラー待機（OPEN → WAITING）" vertex="1">
+          <mxGeometry height="49" width="1259" x="50" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="27" parent="1" style="fillColor=#ffff88;strokeColor=#9E916F;" value="2. 相談者入室（WAITING → ACTIVE）" vertex="1">
+          <mxGeometry height="49" width="1259" x="50" y="172" as="geometry" />
+        </mxCell>
+        <mxCell id="28" parent="1" style="fillColor=#ffff88;strokeColor=#9E916F;" value="3. 双方が Chime Meeting に参加" vertex="1">
+          <mxGeometry height="49" width="1259" x="50" y="557" as="geometry" />
+        </mxCell>
+        <mxCell id="29" parent="1" style="fillColor=#ffff88;strokeColor=#9E916F;" value="console.log: 音声接続開始" vertex="1">
+          <mxGeometry height="49" width="1046" x="263" y="894" as="geometry" />
+        </mxCell>
+        <mxCell id="30" parent="1" style="fillColor=#ffff88;strokeColor=#9E916F;" value="カウンセラー側も同様に joinChimeMeeting(sessionId)" vertex="1">
+          <mxGeometry height="49" width="1259" x="50" y="943" as="geometry" />
+        </mxCell>
+        <mxCell id="31" parent="1" style="fillColor=#ffff88;strokeColor=#9E916F;" value="AttendeePresenceChanged(2人目参加)" vertex="1">
+          <mxGeometry height="49" width="1046" x="263" y="992" as="geometry" />
+        </mxCell>
+        <mxCell id="32" parent="1" style="fillColor=#ffff88;strokeColor=#9E916F;" value="console.log: 双方向通話可能" vertex="1">
+          <mxGeometry height="49" width="1046" x="263" y="1041" as="geometry" />
+        </mxCell>
+        <mxCell id="33" parent="1" style="fillColor=#ffff88;strokeColor=#9E916F;" value="4. 通話終了" vertex="1">
+          <mxGeometry height="49" width="1259" x="50" y="1090" as="geometry" />
+        </mxCell>
+        <mxCell id="34" parent="1" style="fillColor=#ffff88;strokeColor=#9E916F;" value="Meeting 終了 = Session ENDED" vertex="1">
+          <mxGeometry height="49" width="247" x="905" y="1379" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

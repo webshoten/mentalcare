@@ -544,11 +544,15 @@ function ChimePanel({
   side,
   appointmentId,
   appointmentStatus,
+  sharedSessionId,
+  onSessionCreated,
   onJoinedAppointment,
 }: {
   side: "counselor" | "client";
   appointmentId: string | null;
   appointmentStatus: string | null;
+  sharedSessionId?: string | null;
+  onSessionCreated?: (sessionId: string) => void;
   onJoinedAppointment?: () => void;
 }) {
   const isCounselor = side === "counselor";
@@ -562,6 +566,8 @@ function ChimePanel({
   const addLog = (message: string, color: string) =>
     setLogs((prev) => [...prev, { time: timestamp(), color, message }]);
 
+  const [sessionId, setSessionId] = useState<string | null>(null);
+
   // joinAppointment（カウンセラー: OPEN→WAITING / 相談者: WAITING→ACTIVE + Session 作成）
   const handleJoinAppointment = async () => {
     if (!appointmentId) return;
@@ -569,8 +575,14 @@ function ChimePanel({
     try {
       const talkerId = isCounselor ? undefined : "talker-1";
       const data = await joinAppointment(appointmentId, talkerId);
+      const result = data.joinAppointment;
       setJoinStep("done");
-      addLog(`joinAppointment → ${data.joinAppointment.status}`, "#22C55E");
+      addLog(`joinAppointment → ${result.appointment.status}`, "#22C55E");
+      if (result.sessionId) {
+        setSessionId(result.sessionId);
+        onSessionCreated?.(result.sessionId);
+        addLog(`Session 作成: ${result.sessionId.slice(0, 8)}…`, "#A5B4FC");
+      }
       onJoinedAppointment?.();
     } catch (e) {
       setJoinStep("error");
@@ -580,10 +592,14 @@ function ChimePanel({
 
   // Step: joinChimeMeeting → SDK 接続
   const handleConnect = async () => {
-    if (!appointmentId) return;
+    const sid = sessionId ?? sharedSessionId;
+    if (!sid) {
+      addLog("sessionId が未取得です", "#EF4444");
+      return;
+    }
     setConnectStep("pending");
     try {
-      const data = await joinChimeMeeting(appointmentId);
+      const data = await joinChimeMeeting(sid);
       const { meeting, attendee } = data.joinChimeMeeting;
       addLog("joinChimeMeeting — Attendee 取得成功", "#22C55E");
 
@@ -636,8 +652,8 @@ function ChimePanel({
       </div>
       <p className="text-[#64748B] text-[11px] -mt-2">
         {isCounselor
-          ? "joinAppointment で待機状態にし、相談者入室後に joinChimeMeeting で接続します"
-          : "joinAppointment で入室（Session + Chime Meeting 自動作成）し、joinChimeMeeting で接続します"}
+          ? "joinAppointment で待機状態にし、相談者入室後に joinChimeMeeting(sessionId) で接続します"
+          : "joinAppointment で入室（Session 作成）し、joinChimeMeeting(sessionId) で Chime Meeting 自動作成 + 接続します"}
       </p>
 
       {/* Step 1: joinAppointment */}
@@ -724,6 +740,7 @@ function ChimePanel({
 
 function ChimeTab() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [sharedSessionId, setSharedSessionId] = useState<string | null>(null);
 
   const { data: appointmentData, refetch: refetchAppointments } = useQuery({
     queryKey: ["chime-tab-appointments"],
@@ -756,6 +773,7 @@ function ChimeTab() {
             side="counselor"
             appointmentId={selectedId}
             appointmentStatus={appointmentStatus}
+            sharedSessionId={sharedSessionId}
             onJoinedAppointment={() => refetchAppointments()}
           />
         </div>
@@ -765,6 +783,7 @@ function ChimeTab() {
             side="client"
             appointmentId={selectedId}
             appointmentStatus={appointmentStatus}
+            onSessionCreated={setSharedSessionId}
             onJoinedAppointment={() => refetchAppointments()}
           />
         </div>

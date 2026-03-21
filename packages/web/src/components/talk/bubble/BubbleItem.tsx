@@ -2,6 +2,13 @@ import { statusInfo } from "@/lib/statusInfo";
 import type { Appointment } from "@/lib/statusInfo";
 import type { Position } from "@/hooks/useBubblePhysics";
 
+const OVERLAY_HEIGHT_RATIO = 0.29;
+const NAME_FONT_RATIO = 0.059;
+const NAME_FONT_MIN = 10;
+const STATUS_FONT_RATIO = 0.05;
+const STATUS_FONT_MIN = 9;
+const INITIAL_FONT_RATIO = 0.3;
+
 type BubbleItemProps = {
   appointment: Appointment;
   position: Position;
@@ -13,13 +20,13 @@ type BubbleItemProps = {
 export function BubbleItem({ appointment, position, isDragging, onMouseDown, onMouseUp }: BubbleItemProps) {
   const name = appointment.counselor?.name ?? "—";
   const si = statusInfo(appointment.availability, appointment.status, appointment.scheduledStart, appointment.scheduledEnd);
-  const overlayH = Math.round(position.size * 0.29);
-  const nameFs = Math.max(10, Math.round(position.size * 0.059));
-  const statusFs = Math.max(9, Math.round(position.size * 0.05));
+  const overlayH = Math.round(position.size * OVERLAY_HEIGHT_RATIO);
+  const nameFs = Math.max(NAME_FONT_MIN, Math.round(position.size * NAME_FONT_RATIO));
+  const statusFs = Math.max(STATUS_FONT_MIN, Math.round(position.size * STATUS_FONT_RATIO));
 
   return (
     <div
-      className="absolute rounded-full overflow-hidden"
+      className="absolute rounded-full overflow-hidden border-2 border-white/80"
       style={{
         width: position.size,
         height: position.size,
@@ -27,7 +34,7 @@ export function BubbleItem({ appointment, position, isDragging, onMouseDown, onM
         top: position.cy - position.size / 2,
         cursor: isDragging ? "grabbing" : "grab",
         zIndex: isDragging ? 10 : 1,
-        boxShadow: isDragging ? "0 8px 24px rgba(0,0,0,0.18)" : "0 2px 8px rgba(0,0,0,0.10)",
+        boxShadow: isDragging ? "0 8px 24px rgba(0,0,0,0.25)" : "0 2px 12px rgba(0,0,0,0.15)",
         transition: isDragging ? "none" : "box-shadow 0.2s",
         opacity: si.disabled ? 0.4 : 1,
       }}
@@ -43,7 +50,7 @@ export function BubbleItem({ appointment, position, isDragging, onMouseDown, onM
       ) : (
         <div
           className="w-full h-full bg-orange-200 flex items-center justify-center text-orange-700 font-bold pointer-events-none"
-          style={{ fontSize: Math.round(position.size * 0.3) }}
+          style={{ fontSize: Math.round(position.size * INITIAL_FONT_RATIO) }}
         >
           {name[0]}
         </div>
@@ -59,7 +66,7 @@ export function BubbleItem({ appointment, position, isDragging, onMouseDown, onM
           className="font-semibold leading-tight"
           style={{
             fontSize: statusFs,
-            color: si.disabled ? "#D1D5DB" : si.color === "#16A34A" ? "#69F0AE" : "#FFB300",
+            color: si.overlayColor,
           }}
         >
           {si.label}

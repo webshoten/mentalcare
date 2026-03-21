@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import { DebugPanel } from "../components/debug/DebugPanel";
 ---
@@ -9,8 +10,9 @@ import { DebugPanel } from "../components/debug/DebugPanel";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Debug | MentalCare</title>
+    <ClientRouter />
   </head>
   <body>
-    <DebugPanel client:load />
+    <DebugPanel client:only="react" />
   </body>
 </html>

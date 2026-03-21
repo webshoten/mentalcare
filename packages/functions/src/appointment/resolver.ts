@@ -18,8 +18,10 @@ export const appointmentResolvers = {
     appointments: () => AppointmentRepository.findAll(),
     appointment: (_: unknown, { id }: { id: string }) =>
       AppointmentRepository.findById(id),
-    counselorAppointment: (_: unknown, { counselorId }: { counselorId: string }) =>
-      AppointmentRepository.findActiveByCounselorId(counselorId),
+    counselorAppointment: (
+      _: unknown,
+      { counselorId }: { counselorId: string },
+    ) => AppointmentRepository.findActiveByCounselorId(counselorId),
   },
 
   Mutation: {
@@ -32,9 +34,15 @@ export const appointmentResolvers = {
       }: { counselorId: string; scheduledStart: string; scheduledEnd: string },
     ) => {
       // 既存の OPEN アポイントメントがあれば時刻だけ更新（ID はそのまま）
-      const existing = await AppointmentRepository.findActiveByCounselorId(counselorId);
+      const existing = await AppointmentRepository.findActiveByCounselorId(
+        counselorId,
+      );
       if (existing && existing.status === "OPEN") {
-        return AppointmentRepository.updateSchedule(existing.id, scheduledStart, scheduledEnd);
+        return AppointmentRepository.updateSchedule(
+          existing.id,
+          scheduledStart,
+          scheduledEnd,
+        );
       }
       // なければ新規作成
       return AppointmentRepository.create({
@@ -69,23 +77,35 @@ export const appointmentResolvers = {
       return { appointment, sessionId: null };
     },
 
-    endAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
+    endAppointment: (
+      _: unknown,
+      { appointmentId }: { appointmentId: string },
+    ) =>
       AppointmentRepository.updateStatus(appointmentId, "ENDED", {
         endedAt: new Date().toISOString(),
       }),
 
-    leaveAppointment: (_: unknown, { appointmentId }: { appointmentId: string }) =>
-      AppointmentRepository.leave(appointmentId),
+    leaveAppointment: (
+      _: unknown,
+      { appointmentId }: { appointmentId: string },
+    ) => AppointmentRepository.leave(appointmentId),
 
-    deleteAppointment: async (_: unknown, { appointmentId }: { appointmentId: string }) => {
+    deleteAppointment: async (
+      _: unknown,
+      { appointmentId }: { appointmentId: string },
+    ) => {
       const appointment = await AppointmentRepository.findById(appointmentId);
       if (!appointment) return false;
       // 紐づく Session の Chime Meeting を削除
-      const sessions = await SessionRepository.findByAppointmentId(appointmentId);
+      const sessions = await SessionRepository.findByAppointmentId(
+        appointmentId,
+      );
       for (const session of sessions) {
         if (session.chimeMeetingId) {
           try {
-            await chime.send(new DeleteMeetingCommand({ MeetingId: session.chimeMeetingId }));
+            await chime.send(
+              new DeleteMeetingCommand({ MeetingId: session.chimeMeetingId }),
+            );
           } catch {
             // Meeting が既に期限切れでも削除を続行
           }
@@ -97,15 +117,29 @@ export const appointmentResolvers = {
   },
 
   Appointment: {
+    /**
+     *  Appointment の availability を返す
+     */
     availability: (parent: Appointment) =>
-      calculateAvailability(parent.scheduledStart, parent.scheduledEnd).availability,
+      calculateAvailability(parent.scheduledStart, parent.scheduledEnd)
+        .availability,
 
+    /**
+     *  Appointment の availableAt を返す
+     */
     availableAt: (parent: Appointment) =>
-      calculateAvailability(parent.scheduledStart, parent.scheduledEnd).availableAt ?? null,
+      calculateAvailability(parent.scheduledStart, parent.scheduledEnd)
+        .availableAt ?? null,
 
+    /**
+     *  Appointment に紐づくカウンセラー情報を返す
+     */
     counselor: (parent: Appointment) =>
       CounselorRepository.findById(parent.counselorId),
 
+    /**
+     * Appointment に紐づく ACTIVE な Session を返す
+     */
     activeSession: async (parent: Appointment) => {
       if (parent.status !== "ACTIVE") return null;
       const sessions = await SessionRepository.findByAppointmentId(parent.id);

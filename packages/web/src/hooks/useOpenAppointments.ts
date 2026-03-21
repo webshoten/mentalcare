@@ -7,6 +7,7 @@ export function useOpenAppointments() {
     queryKey: ["openAppointments"],
     queryFn: fetchOpenAppointments,
     refetchInterval: 20_000,
+    staleTime: 20_000,
   });
 
   const appointments = (data?.openAppointments ?? []) as Appointment[];

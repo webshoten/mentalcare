@@ -3,7 +3,8 @@
         "biomejs.biome",
         "ms-vscode.vscode-typescript-next",
         "astro-build.astro-vscode",
-        "hediet.vscode-drawio"
+        "hediet.vscode-drawio",
+        "exodiusstudios.comment-anchors"
     ],
     "unwantedRecommendations": [
         "dbaeumer.vscode-eslint"

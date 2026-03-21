@@ -195,6 +195,7 @@ function ChimeStatusTab() {
     queryKey: ["chime-status"],
     queryFn: fetchChimeStatus,
     refetchInterval: 20_000,
+    staleTime: 20_000,
   });
 
   const rows = (data?.chimeStatus ?? []) as ChimeSessionStatus[];
@@ -746,6 +747,7 @@ function ChimeTab() {
     queryKey: ["chime-tab-appointments"],
     queryFn: fetchAppointments,
     refetchInterval: 5_000,
+    staleTime: 5_000,
   });
 
   const appointments = (appointmentData?.appointments ?? []) as Appointment[];

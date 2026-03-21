@@ -1,10 +1,10 @@
 ---
-import Layout from "../../../../layouts/Layout.astro";
+import AppointmentLayout from "../../../../layouts/AppointmentLayout.astro";
 import { SessionEnd } from "../../../../components/talk/SessionEnd";
 
 const { id } = Astro.params;
 ---
 
-<Layout title="セッション終了 | MentalCare">
-  <SessionEnd appointmentId={id!} client:load />
-</Layout>
+<AppointmentLayout title="セッション終了 | MentalCare">
+  <SessionEnd appointmentId={id!} client:only="react" />
+</AppointmentLayout>

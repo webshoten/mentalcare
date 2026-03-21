@@ -35,6 +35,7 @@ function CounselorListInner() {
     queryKey: ["counselors"],
     queryFn: fetchCounselors,
     refetchInterval: 20_000,
+    staleTime: 20_000,
   });
 
   const counselors = data?.counselors ?? [];

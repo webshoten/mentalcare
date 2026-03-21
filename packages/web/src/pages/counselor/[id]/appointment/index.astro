@@ -6,5 +6,5 @@ const { id } = Astro.params;
 ---
 
 <CounselorLayout title="予約管理 | MentalCare" currentPage="appointment">
-  <CounselorAppointmentManager counselorId={id!} client:load />
+  <CounselorAppointmentManager counselorId={id!} client:only="react" />
 </CounselorLayout>

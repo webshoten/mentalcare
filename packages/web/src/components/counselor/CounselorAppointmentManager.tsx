@@ -38,6 +38,7 @@ function AppointmentManagerInner({ counselorId }: Props) {
     queryKey: ["counselorAppointment", counselorId],
     queryFn: () => fetchCounselorAppointment(counselorId),
     refetchInterval: 5_000,
+    staleTime: 5_000,
   });
 
   const { mutate: save, isPending: isSaving } = useMutation({

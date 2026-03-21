@@ -33,16 +33,6 @@ export function BubbleConfirmDialog({ selected, onClose, onConfirm, isStarting }
 
         <p className="text-xl font-bold text-gray-900 text-center">{counselorName}</p>
 
-        <p className="text-sm text-gray-400 text-center">
-          ★ {selected?.counselor?.rating?.toFixed(1) ?? "—"}
-        </p>
-
-        <p className="text-sm text-gray-600 text-center leading-relaxed">
-          {counselorName}さんに相談を始めますか？
-          <br />
-          音声での対話になります。
-        </p>
-
         <div className="w-full h-px bg-gray-100" />
 
         <div className="flex gap-3 w-full">

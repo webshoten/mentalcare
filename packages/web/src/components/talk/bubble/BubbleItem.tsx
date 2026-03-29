@@ -1,6 +1,6 @@
 import { statusInfo } from "@/lib/statusInfo";
 import type { Appointment } from "@/lib/statusInfo";
-import type { Position } from "@/hooks/useBubblePhysics";
+import type { Position } from "@/hooks/bubble/useBubblePhysics";
 
 const OVERLAY_HEIGHT_RATIO = 0.29;
 const NAME_FONT_RATIO = 0.059;

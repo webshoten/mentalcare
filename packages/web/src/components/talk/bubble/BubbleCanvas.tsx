@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { joinAppointment } from "@/graphql/appointment";
-import { useBubblePhysics } from "@/hooks/useBubblePhysics";
+import { useBubblePhysics } from "@/hooks/bubble/useBubblePhysics";
 import { useOpenAppointments } from "@/hooks/useOpenAppointments";
 import { statusInfo } from "@/lib/statusInfo";
 import type { Appointment } from "@/lib/statusInfo";
@@ -23,7 +23,7 @@ function BubbleCanvasInner() {
   });
 
   const { appointments, isLoading } = useOpenAppointments();
-  const physicsItems = appointments.map((a) => ({ id: a.id, rating: a.counselor?.rating }));
+  const physicsItems = appointments.map((a) => ({ id: a.id }));
   const { containerRef, positions, draggingIdx, handlers } = useBubblePhysics(physicsItems);
 
   if (isLoading) {

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { calcInitialLayout, type Body } from "@/utils/bubble/calcInitialLayout";
 
 export type Position = {
   size: number;
@@ -6,27 +7,13 @@ export type Position = {
   cy: number;
 };
 
-type Body = {
-  cx: number;
-  cy: number;
-  r: number;
-  size: number;
-};
-
 type BubblePhysicsItem = {
   id: string;
-  rating?: number | null;
 };
 
-const BUBBLE_SIZE = 140;
 const ASSUMED_W = 1200;
 const ASSUMED_H = 580;
 const MIN_GAP = 5;
-const GOLDEN = Math.PI * (3 - Math.sqrt(5));
-
-function bubbleSize(_rating: number | null | undefined): number {
-  return BUBBLE_SIZE;
-}
 
 export function useBubblePhysics(items: BubblePhysicsItem[]) {
   const [positions, setPositions] = useState<Position[]>([]);
@@ -35,38 +22,20 @@ export function useBubblePhysics(items: BubblePhysicsItem[]) {
   const containerRef = useRef<HTMLDivElement>(null);
   const bodiesRef = useRef<Body[]>([]);
   const rafRef = useRef<number | null>(null);
-  const dragState = useRef<{ idx: number; offsetX: number; offsetY: number } | null>(null);
+  const dragState = useRef<
+    { idx: number; offsetX: number; offsetY: number } | null
+  >(null);
   const dragMoved = useRef(false);
   const draggingIdxRef = useRef<number | null>(null);
   const awakeRef = useRef(false);
 
-  const positionKey = items.map((a) => `${a.id}:${a.rating}`).join(",");
+  const positionKey = items.map((a) => a.id).join(",");
 
   useEffect(() => {
-    const n = items.length;
-    if (n === 0) { bodiesRef.current = []; return; }
-
     const W = containerRef.current?.clientWidth ?? ASSUMED_W;
     const H = containerRef.current?.clientHeight ?? ASSUMED_H;
-    const CX = W / 2;
-    const CY = H / 2;
-
-    const rawSizes = items.map((a) => bubbleSize(a.rating));
-    const totalArea = rawSizes.reduce((sum, s) => sum + Math.PI * (s / 2) ** 2, 0);
-    const availableArea = W * H * 0.6;
-    const scaleFactor = totalArea > availableArea ? Math.sqrt(availableArea / totalArea) : 1;
-
-    bodiesRef.current = rawSizes.map((rawS, i) => {
-      const size = Math.round(rawS * scaleFactor);
-      const spread = Math.sqrt(i) * (size + MIN_GAP);
-      return {
-        cx: CX + Math.cos(i * GOLDEN) * spread,
-        cy: CY + Math.sin(i * GOLDEN) * spread,
-        r: size / 2,
-        size,
-      };
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    bodiesRef.current = calcInitialLayout(items.length, W, H);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionKey]);
 
   const tickRef = useRef<() => void>(() => {});
@@ -107,8 +76,14 @@ export function useBubblePhysics(items: BubblePhysicsItem[]) {
               const overlap = (minDist - dist) / 2;
               const nx = dx / dist;
               const ny = dy / dist;
-              if (i !== dIdx) { a.cx += nx * overlap; a.cy += ny * overlap; }
-              if (j !== dIdx) { b.cx -= nx * overlap; b.cy -= ny * overlap; }
+              if (i !== dIdx) {
+                a.cx += nx * overlap;
+                a.cy += ny * overlap;
+              }
+              if (j !== dIdx) {
+                b.cx -= nx * overlap;
+                b.cy -= ny * overlap;
+              }
             }
           }
         }
@@ -117,7 +92,11 @@ export function useBubblePhysics(items: BubblePhysicsItem[]) {
       let maxDelta = 0;
       for (let i = 0; i < n; i++) {
         if (i === dIdx) continue;
-        maxDelta = Math.max(maxDelta, Math.abs(bs[i].cx - prevCx[i]), Math.abs(bs[i].cy - prevCy[i]));
+        maxDelta = Math.max(
+          maxDelta,
+          Math.abs(bs[i].cx - prevCx[i]),
+          Math.abs(bs[i].cy - prevCy[i]),
+        );
       }
 
       setPositions(bs.map((b) => ({
@@ -135,7 +114,9 @@ export function useBubblePhysics(items: BubblePhysicsItem[]) {
     };
 
     tickRef.current = tick;
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
   const wake = () => {
@@ -146,7 +127,7 @@ export function useBubblePhysics(items: BubblePhysicsItem[]) {
 
   useEffect(() => {
     if (bodiesRef.current.length > 0) wake();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionKey]);
 
   const handleMouseDown = (e: React.MouseEvent, i: number) => {
@@ -177,8 +158,14 @@ export function useBubblePhysics(items: BubblePhysicsItem[]) {
     if (!b) return;
     const W = container.width;
     const H = container.height;
-    b.cx = Math.max(b.r, Math.min(W - b.r, e.clientX - container.left - offsetX));
-    b.cy = Math.max(b.r, Math.min(H - b.r, e.clientY - container.top - offsetY));
+    b.cx = Math.max(
+      b.r,
+      Math.min(W - b.r, e.clientX - container.left - offsetX),
+    );
+    b.cy = Math.max(
+      b.r,
+      Math.min(H - b.r, e.clientY - container.top - offsetY),
+    );
     wake();
     setPositions(bodiesRef.current.map((b) => ({
       size: b.size,
